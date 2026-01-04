@@ -1,0 +1,26 @@
+services:
+  chroma:
+    image: chromadb/chroma:latest
+    ports:
+      - "8000:8000"
+    environment:
+      - ANONYMIZED_TELEMETRY=False
+    volumes:
+      - chroma_data:/chroma
+
+  api:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8080
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      # Inside docker-compose, Chroma is reachable via the service name.
+      - CHROMA_HOST=chroma
+      - CHROMA_PORT=8000
+    depends_on:
+      - chroma
+
+volumes:
+  chroma_data:

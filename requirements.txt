@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+chromadb
+sentence-transformers
+pydantic
+python-multipart
+pandas
+requests
+torch
+open-clip-torch
+pillow
+openai
+ 
