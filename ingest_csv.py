@@ -4,7 +4,7 @@ CLI để ingest dữ liệu CSV vào API RAG.
 
 Gợi ý: dùng batch nhỏ (32–64) để tránh API bị quá tải/đứt kết nối khi embed.
 Ví dụ:
-    python ingest_csv.py --csv datasets/fashion_dataset_normalized.csv --api http://localhost:8080/ingest --batch 32
+    python ingest_csv.py --csv datasets/archive/fashion-dataset/styles.csv --api http://localhost:8080/ingest --batch 32
 """
 
 import argparse
@@ -16,18 +16,42 @@ from typing import Any, Dict
 import pandas as pd
 import requests
 
-DEFAULT_CSV = "datasets/fashion_dataset_normalized.csv"
+DEFAULT_CSV = "datasets/archive/fashion-dataset/styles.csv"
 DEFAULT_API = os.getenv("INGEST_API", "http://localhost:8080/ingest")
+
+# Resolve paths relative to the repo root (this file lives at repo root).
+_REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+
+def _to_posix_relpath(path: str) -> str:
+    rel = os.path.relpath(path, start=_REPO_ROOT)
+    return rel.replace("\\", "/")
+
+
+def _guess_image_path(csv_path: str, item_id: str) -> str | None:
+    if not item_id:
+        return None
+    csv_dir = os.path.dirname(os.path.abspath(csv_path))
+    candidates = [
+        os.path.join(csv_dir, "images", f"{item_id}.jpg"),
+        os.path.join(os.path.dirname(csv_dir), "images", f"{item_id}.jpg"),
+    ]
+    for p in candidates:
+        if os.path.exists(p):
+            return p
+    return None
 
 
 def build_text(row: Dict[str, Any]) -> str:
     parts = [
-        row.get("name") or "",
-        row.get("description") or "",
-        row.get("category") or "",
-        row.get("subcategory") or "",
-        row.get("color") or "",
-        str(row.get("price")) if not pd.isna(row.get("price")) else "",
+        row.get("productDisplayName") or "",
+        row.get("articleType") or "",
+        row.get("masterCategory") or "",
+        row.get("subCategory") or "",
+        row.get("baseColour") or "",
+        row.get("season") or "",
+        str(row.get("year")) if not pd.isna(row.get("year")) else "",
+        row.get("usage") or "",
         row.get("gender") or "",
     ]
     return " ".join(map(str, parts))
@@ -50,15 +74,24 @@ def clean_val(val: Any):
     return val
 
 
-def build_metadata(r: Dict[str, Any]) -> Dict[str, Any]:
+def build_metadata(r: Dict[str, Any], csv_path: str) -> Dict[str, Any]:
+    item_id = to_str_safe(r.get("id"), "")
+    img_path = _guess_image_path(csv_path, item_id)
+    image_url = _to_posix_relpath(img_path) if img_path else None
+    
     meta = {
-        "name": clean_val(r.get("name")),
-        "category": clean_val(r.get("category")),
-        "subcategory": clean_val(r.get("subcategory")),
+        "name": clean_val(r.get("productDisplayName")),
+        "category": clean_val(r.get("masterCategory")),
+        "subcategory": clean_val(r.get("subCategory")),
+        "articleType": clean_val(r.get("articleType")),
         "gender": clean_val(r.get("gender")),
-        "color": clean_val(r.get("color")),
-        "price": None if pd.isna(r.get("price")) else r.get("price"),
-        "image_url": clean_val(r.get("image_url")),
+        "color": clean_val(r.get("baseColour")),
+        "season": clean_val(r.get("season")),
+        "usage": clean_val(r.get("usage")),
+        "image_url": image_url,
+        # Optional pricing fields if present in the CSV
+        "price_range_usd": clean_val(r.get("price_range_usd")),
+        "price": clean_val(r.get("price")),
     }
     # Remove None values because Chroma metadata does not accept None
     meta = {k: v for k, v in meta.items() if v is not None}
@@ -74,35 +107,64 @@ def ingest_batch(api: str, batch):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--csv", default=DEFAULT_CSV)
+    # New default dataset location.
+    parser.add_argument("--csv", default=os.getenv("DATASET_CSV", "datasets/archive/fashion-dataset/styles.csv"))
     parser.add_argument("--api", default=DEFAULT_API)
     parser.add_argument("--batch", type=int, default=64)
+    parser.add_argument(
+        "--start",
+        type=int,
+        default=0,
+        help="Row offset to start ingesting from (0-based). Useful for resume.",
+    )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=0,
+        help="Max number of rows to ingest from --start. 0 = no limit.",
+    )
     args = parser.parse_args()
 
     if not os.path.exists(args.csv):
         print(f"CSV không tồn tại: {args.csv}")
         sys.exit(1)
 
-    df = pd.read_csv(args.csv)
-    rows = df.to_dict(orient="records")
+    if args.start < 0:
+        print("--start must be >= 0")
+        sys.exit(1)
+    if args.limit < 0:
+        print("--limit must be >= 0")
+        sys.exit(1)
+
+    df = pd.read_csv(args.csv, on_bad_lines='skip', encoding='utf-8')
+    all_rows = df.to_dict(orient="records")
+    all_total = len(all_rows)
+
+    if args.start > all_total:
+        print(f"--start ({args.start}) is beyond total rows ({all_total})")
+        sys.exit(1)
+
+    end = all_total if args.limit == 0 else min(all_total, args.start + args.limit)
+    rows = all_rows[args.start:end]
     total = len(rows)
-    print(f"[INFO] Rows: {total}")
+    print(f"[INFO] Rows selected: {total} (from {args.start} to {end - 1}, total={all_total})")
 
     for i in range(0, total, args.batch):
         chunk = rows[i : i + args.batch]
         payload_items = []
         for j, r in enumerate(chunk):
-            item_id = to_str_safe(r.get("id"), f"row-{i+j}")
+            global_idx = args.start + i + j
+            item_id = to_str_safe(r.get("id"), f"row-{global_idx}")
             payload_items.append(
                 {
                     "id": item_id,
                     "text": build_text(r),
-                    "metadata": build_metadata(r),
+                    "metadata": build_metadata(r, args.csv),
                 }
             )
 
         ingest_batch(args.api, payload_items)
-        print(f"[INFO] Ingested {i + len(chunk)} / {total}")
+        print(f"[INFO] Ingested {min(i + len(chunk), total)} / {total}")
 
     print("[DONE] Ingest completed.")
 

@@ -2,10 +2,11 @@
 Ingest ảnh vào collection products_image.
 Yêu cầu: open-clip-torch, torch, Pillow, requests.
 Chạy ví dụ:
-python ingest_images.py --csv datasets/fashion_dataset_normalized.csv --api http://localhost:8080/ingest_image --batch 128 --image-column image_url
+python ingest_images.py --csv datasets/archive/fashion-dataset/styles.csv --api http://localhost:8080/ingest_image --batch 128
 """
 
 import argparse
+import base64
 import math
 import os
 import sys
@@ -14,12 +15,32 @@ from typing import Any, Dict
 import pandas as pd
 import requests
 
-DEFAULT_CSV = "datasets/fashion_dataset_normalized.csv"
+DEFAULT_CSV = "datasets/archive/fashion-dataset/styles.csv"
 DEFAULT_API = os.getenv("INGEST_IMAGE_API", "http://localhost:8080/ingest_image")
+
+_REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+
+def _to_posix_relpath(path: str) -> str:
+    rel = os.path.relpath(path, start=_REPO_ROOT)
+    return rel.replace("\\", "/")
+
+
+def _guess_image_dir(csv_path: str) -> str:
+    csv_dir = os.path.dirname(os.path.abspath(csv_path))
+    candidates = [
+        os.path.join(csv_dir, "images"),
+        os.path.join(os.path.dirname(csv_dir), "images"),
+    ]
+    for d in candidates:
+        if os.path.isdir(d):
+            return d
+    # Default to csv_dir/images even if missing (keeps behavior predictable).
+    return candidates[0]
 
 
 def to_str_safe(val: Any, fallback: str) -> str:
-    if val is None:
+    if val is None: 
         return fallback
     if isinstance(val, float) and math.isnan(val):
         return fallback
@@ -36,12 +57,15 @@ def clean_val(val: Any):
 
 def build_metadata(r: Dict[str, Any], img_url: str) -> Dict[str, Any]:
     meta = {
-        "name": clean_val(r.get("name")),
-        "category": clean_val(r.get("category")),
-        "subcategory": clean_val(r.get("subcategory")),
+        "name": clean_val(r.get("productDisplayName")),
+        "category": clean_val(r.get("masterCategory")),
+        "subcategory": clean_val(r.get("subCategory")),
+        "articleType": clean_val(r.get("articleType")),
         "gender": clean_val(r.get("gender")),
-        "color": clean_val(r.get("color")),
-        "price": None if pd.isna(r.get("price")) else r.get("price"),
+        "color": clean_val(r.get("baseColour")),
+        "season": clean_val(r.get("season")),
+        "year": None if pd.isna(r.get("year")) else r.get("year"),
+        "usage": clean_val(r.get("usage")),
         "image_url": img_url,
     }
     meta = {k: v for k, v in meta.items() if v is not None}
@@ -49,45 +73,91 @@ def build_metadata(r: Dict[str, Any], img_url: str) -> Dict[str, Any]:
 
 
 def ingest_batch(api: str, batch):
-    resp = requests.post(api, json={"items": batch}, timeout=120)
-    resp.raise_for_status()
-    return resp.json()
+    try:
+        resp = requests.post(api, json={"items": batch}, timeout=120)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.exceptions.HTTPError as e:
+        print(f"[ERROR] HTTP {resp.status_code}")
+        print(f"[ERROR] Response: {resp.text}")
+        print(f"[ERROR] First item in batch: {batch[0] if batch else 'empty'}")
+        raise
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--csv", default=DEFAULT_CSV)
+    # New default dataset location.
+    parser.add_argument("--csv", default=os.getenv("DATASET_CSV", "datasets/archive/fashion-dataset/styles.csv"))
     parser.add_argument("--api", default=DEFAULT_API)
     parser.add_argument("--batch", type=int, default=128)
     parser.add_argument("--image-column", default="image_url")
+    parser.add_argument(
+        "--start",
+        type=int,
+        default=0,
+        help="Row offset to start ingesting from (0-based). Useful for resume.",
+    )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=0,
+        help="Max number of rows to ingest from --start. 0 = no limit.",
+    )
     args = parser.parse_args()
 
     if not os.path.exists(args.csv):
         print(f"CSV không tồn tại: {args.csv}")
         sys.exit(1)
 
-    df = pd.read_csv(args.csv)
-    if args.image_column not in df.columns:
-        print(f"Không thấy cột ảnh: {args.image_column}")
+    if args.start < 0:
+        print("--start must be >= 0")
+        sys.exit(1)
+    if args.limit < 0:
+        print("--limit must be >= 0")
         sys.exit(1)
 
-    rows = df.to_dict(orient="records")
+    df = pd.read_csv(args.csv, on_bad_lines='skip', encoding='utf-8')
+    all_rows = df.to_dict(orient="records")
+    all_total = len(all_rows)
+
+    if args.start > all_total:
+        print(f"--start ({args.start}) is beyond total rows ({all_total})")
+        sys.exit(1)
+
+    end = all_total if args.limit == 0 else min(all_total, args.start + args.limit)
+    rows = all_rows[args.start:end]
     total = len(rows)
-    print(f"[INFO] Rows: {total}")
+    print(f"[INFO] Rows selected: {total} (from {args.start} to {end - 1}, total={all_total})")
+
+    img_dir = _guess_image_dir(args.csv)
 
     for i in range(0, total, args.batch):
         chunk = rows[i : i + args.batch]
         payload_items = []
         for j, r in enumerate(chunk):
-            img_url = r.get(args.image_column)
-            if not isinstance(img_url, str) or not img_url:
+            global_idx = args.start + i + j
+            item_id = to_str_safe(r.get("id"), f"row-{global_idx}")
+            # Tạo đường dẫn ảnh tuyệt đối từ id
+            img_path = os.path.join(img_dir, f"{item_id}.jpg")
+            
+            # Kiểm tra xem file ảnh có tồn tại không
+            if not os.path.exists(img_path):
                 continue
-            item_id = to_str_safe(r.get("id"), f"row-{i+j}")
+            
+            # Đọc ảnh và mã hóa thành base64
+            try:
+                with open(img_path, "rb") as f:
+                    img_base64 = base64.b64encode(f.read()).decode("utf-8")
+            except Exception as e:
+                print(f"[WARN] Không thể đọc ảnh {img_path}: {e}")
+                continue
+                
             payload_items.append(
                 {
                     "id": item_id,
-                    "image_url": img_url,
-                    "metadata": build_metadata(r, img_url),
+                    "image_url": f"data:image/jpeg;base64,{img_base64}",
+                    # Store a repo-relative path for display/debugging.
+                    "metadata": build_metadata(r, _to_posix_relpath(img_path)),
                 }
             )
 
@@ -96,7 +166,7 @@ def main():
             continue
 
         ingest_batch(args.api, payload_items)
-        print(f"[INFO] Ingested images {i + len(chunk)} / {total}")
+        print(f"[INFO] Ingested images {min(i + len(chunk), total)} / {total}")
 
     print("[DONE] Ingest images completed.")
 

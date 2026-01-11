@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fashion Chatbot Demo</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --text: #e5e7eb;
+      --muted: rgba(229,231,235,0.75);
+      --border: rgba(255,255,255,0.12);
+      --accent: #2563eb;
+      --accent-2: #22c55e;
+      --shadow: 0 16px 60px rgba(0,0,0,0.45);
+      --shadow-soft: 0 8px 24px rgba(0,0,0,0.25);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 0;
+      background:
+        radial-gradient(900px 600px at 15% 10%, rgba(37,99,235,0.25), transparent 55%),
+        radial-gradient(700px 520px at 85% 12%, rgba(34,197,94,0.14), transparent 60%),
+        radial-gradient(900px 900px at 70% 90%, rgba(99,102,241,0.18), transparent 65%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 18px 16px;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      background: rgba(11,18,32,0.55);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header .brand {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    header .brand h2 { margin: 0; font-size: 16px; letter-spacing: 0.2px; font-weight: 700; }
+    header .brand .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--accent-2); display: inline-block; box-shadow: 0 0 0 3px rgba(34,197,94,0.16); }
+
+    main { max-width: 980px; margin: 0 auto; padding: 16px; }
+
+    .chat-app {
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: calc(100vh - 92px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .chat-title {
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.08);
+      flex: 0 0 auto;
+      font-weight: 800;
+      color: #fff;
+    }
+    .avatar.assistant { background: rgba(37,99,235,0.25); }
+    .title-wrap { min-width: 0; }
+    .title-wrap .name { font-weight: 750; font-size: 14px; margin: 0; }
+    .title-wrap .sub { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
+
+    .header-actions { display:flex; gap: 8px; align-items:center; flex-wrap: wrap; justify-content: flex-end; }
+    .muted { color: var(--muted); }
+
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-secondary { background: rgba(255,255,255,0.08); color: var(--text); }
+    .btn-ghost { background: rgba(255,255,255,0.06); color: var(--text); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.08); }
+
+    .chat-body {
+      flex: 1 1 auto;
+      overflow: auto;
+      padding: 16px 16px 12px;
+      background:
+        radial-gradient(600px 420px at 10% 30%, rgba(255,255,255,0.06), transparent 65%),
+        radial-gradient(700px 520px at 80% 60%, rgba(255,255,255,0.05), transparent 70%),
+        rgba(0,0,0,0.10);
+    }
+
+    .msg-row {
+      display:flex;
+      align-items: flex-end;
+      gap: 10px;
+      margin: 10px 0;
+    }
+    .msg-row.user { justify-content: flex-end; }
+    .msg-row.assistant { justify-content: flex-start; }
+    .msg-row.user .avatar { display: none; }
+
+    .bubble {
+      /*
+        Keep user/assistant bubbles the same width.
+        Reserve a bit of horizontal space so assistant rows (with avatar + gap)
+        never overflow on narrow screens.
+      */
+      width: min(720px, calc(100% - 54px));
+      max-width: min(720px, calc(100% - 54px));
+      padding: 10px 12px;
+      border-radius: 16px;
+      line-height: 1.5;
+      overflow-wrap: break-word;
+      /* Keep layout whitespace collapsed; preserve newlines only inside .content */
+      white-space: normal;
+      box-shadow: var(--shadow-soft);
+      height: auto;
+    }
+    .bubble.user {
+      background: linear-gradient(180deg, rgba(37,99,235,0.92), rgba(37,99,235,0.78));
+      border: 1px solid rgba(255,255,255,0.14);
+      color: #fff;
+      border-bottom-right-radius: 6px;
+    }
+    .bubble.assistant {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(17,24,39,0.08);
+      color: #111827;
+      border-bottom-left-radius: 6px;
+    }
+    .bubble .meta {
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    .bubble .meta .who { font-weight: 700; }
+    .bubble .meta .time { font-variant-numeric: tabular-nums; }
+    .bubble .content { font-size: 14px; white-space: pre-wrap; }
+
+    .typing {
+      display:inline-flex;
+      gap: 4px;
+      align-items:center;
+      padding: 6px 0;
+    }
+    .typing i {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(17,24,39,0.35);
+      display:inline-block;
+      animation: blink 1.2s infinite ease-in-out;
+    }
+    .typing i:nth-child(2) { animation-delay: 0.15s; }
+    .typing i:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes blink {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.25; }
+      40% { transform: translateY(-2px); opacity: 0.85; }
+    }
+
+    details { margin-top: 10px; }
+    summary { cursor: pointer; }
+    .source-item { border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px; margin: 8px 0; background: #f9fafb; }
+
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin-top: 10px; }
+    .product-card { border: 1px solid #e5e7eb; border-radius: 12px; background: #ffffff; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+    .product-img-wrap { background: #f3f4f6; height: 170px; display:flex; align-items:center; justify-content:center; }
+    .product-img { max-width: 100%; max-height: 100%; object-fit: contain; display:block; }
+    .product-body { padding: 10px 12px; }
+    .product-title { font-weight: 700; font-size: 14px; line-height: 1.3; margin-bottom: 6px; }
+    .product-meta { color: #6b7280; font-size: 12px; line-height: 1.4; }
+    .badge { display:inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid #e5e7eb; background: #f9fafb; margin-right: 6px; margin-top: 6px; }
+    .product-actions { margin-top: 8px; display:flex; gap:8px; flex-wrap:wrap; }
+    .link-btn { display:inline-block; padding: 6px 10px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; color: #111827; text-decoration: none; font-size: 12px; }
+    .link-btn:hover { border-color: #9ca3af; }
+
+    .composer {
+      border-top: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      padding: 12px 12px;
+    }
+    .composer-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+    textarea {
+      width: 100%;
+      min-height: 44px;
+      max-height: 140px;
+      resize: vertical;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.18);
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+    }
+    textarea::placeholder { color: rgba(229,231,235,0.55); }
+    textarea:focus { border-color: rgba(37,99,235,0.6); box-shadow: 0 0 0 3px rgba(37,99,235,0.18); }
+
+    .composer-actions {
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .composer-sub {
+      margin-top: 8px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .attach-row { display:flex; align-items:center; gap: 8px; flex-wrap: wrap; }
+    .status { font-size: 12px; color: var(--muted); }
+
+    .img-preview-wrap {
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(0,0,0,0.16);
+      padding: 10px;
+      display:none;
+    }
+    .img-preview-head { display:flex; align-items:center; justify-content: space-between; gap: 10px; }
+    .img-preview {
+      margin-top: 8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .img-preview img { max-width:100%; max-height:170px; object-fit:contain; border-radius: 12px; }
+
+    .msg-image {
+      margin-top: 8px;
+      max-width: 100%;
+      max-height: 240px;
+      width: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+      border: 1px solid rgba(17,24,39,0.10);
+      background: rgba(243,244,246,0.85);
+      display: block;
+    }
+
+    @media (max-width: 520px) {
+      .composer-grid { grid-template-columns: 1fr; }
+      .composer-actions { justify-content: stretch; }
+      .composer-actions button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h2>Fashion Chatbot Demo</h2>
+      <div class="pill"><span class="dot"></span> API: <span id="apiBaseLabel">http://127.0.0.1:8080</span></div>
+    </div>
+  </header>
+  <main>
+    <div class="chat-app">
+      <div class="chat-header">
+        <div class="chat-title">
+          <div class="avatar assistant">F</div>
+          <div class="title-wrap">
+            <p class="name">Fashion Assistant</p>
+            <p class="sub">Ask for outfits, budget, color, occasion — or attach an image to search</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="clearBtn" type="button" class="btn-secondary">New chat</button>
+        </div>
+      </div>
+
+      <div id="chatWindow" class="chat-body" aria-label="Chat messages"></div>
+
+      <div class="composer" aria-label="Message composer">
+        <div class="composer-grid">
+          <div>
+            <textarea id="chatInput" rows="2" placeholder="Type a message… (Enter to send, Shift+Enter for new line)"></textarea>
+
+            <div class="img-preview-wrap" id="chatImagePreviewWrap">
+              <div class="img-preview-head">
+                <div class="muted" style="font-size:12px;">Attached image</div>
+                <button id="removeImageBtn" type="button" class="btn-ghost" style="padding:6px 10px; font-size:12px;">Remove</button>
+              </div>
+              <div class="img-preview">
+                <img id="chatImagePreview" alt="Attached preview" />
+              </div>
+            </div>
+
+            <div class="composer-sub">
+              <div class="attach-row">
+                <input id="chatImageFile" type="file" accept="image/*" style="display:none;" />
+                <button id="attachBtn" type="button" class="btn-ghost">Attach image</button>
+                <span id="attachHint" class="muted" style="font-size:12px;">(or paste with Ctrl+V)</span>
+              </div>
+              <div id="chatStatus" class="status"></div>
+            </div>
+          </div>
+
+          <div class="composer-actions">
+            <button id="sendBtn" type="button">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const chatWindow = document.getElementById('chatWindow');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const chatStatus = document.getElementById('chatStatus');
+
+    const chatImageFile = document.getElementById('chatImageFile');
+    const attachBtn = document.getElementById('attachBtn');
+    const removeImageBtn = document.getElementById('removeImageBtn');
+    const chatImagePreviewWrap = document.getElementById('chatImagePreviewWrap');
+    const chatImagePreview = document.getElementById('chatImagePreview');
+
+    // Holds a pasted clipboard image (when user Ctrl+V a copied image).
+    let pastedImageFile = null;
+    let pastedObjectUrl = null;
+
+    // Settings removed: keep the demo dead-simple.
+    // If you change backend port, update this constant.
+    // Use 127.0.0.1 instead of localhost to avoid IPv6 (::1) resolution issues on Windows
+    // when the API is bound to IPv4 only.
+    const API_BASE = 'http://127.0.0.1:8080';
+
+    const messages = []; // {role: 'user'|'assistant', content: string, ts: number, isTyping?: boolean}
+    let typingMsgIndex = -1;
+
+    // Track object URLs we create for chat bubbles, so we can revoke them on reset.
+    const chatObjectUrls = [];
+
+    function escapeHtml(s) {
+      return String(s || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function apiUrl(path) {
+      return `${API_BASE}${path}`;
+    }
+
+    function setChatStatus(text) {
+      chatStatus.textContent = text;
+    }
+
+    function getAttachedImage() {
+      if (chatImageFile.files && chatImageFile.files[0]) return chatImageFile.files[0];
+      if (pastedImageFile) return pastedImageFile;
+      return null;
+    }
+
+    function clearAttachedImage() {
+      chatImageFile.value = '';
+      pastedImageFile = null;
+      if (pastedObjectUrl) {
+        try { URL.revokeObjectURL(pastedObjectUrl); } catch (_) {}
+        pastedObjectUrl = null;
+      }
+      chatImagePreview.src = '';
+      chatImagePreviewWrap.style.display = 'none';
+    }
+
+    function showPreviewFromBlob(blob) {
+      if (pastedObjectUrl) {
+        try { URL.revokeObjectURL(pastedObjectUrl); } catch (_) {}
+      }
+      pastedObjectUrl = URL.createObjectURL(blob);
+      chatImagePreview.src = pastedObjectUrl;
+      chatImagePreviewWrap.style.display = 'block';
+    }
+
+
+    function formatTime(ts) {
+      try {
+        const d = new Date(ts);
+        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      } catch (_) {
+        return '';
+      }
+    }
+
+    function renderTypingHtml() {
+      return `<span class="typing" aria-label="Assistant is typing"><i></i><i></i><i></i></span>`;
+    }
+
+    function renderChat() {
+      chatWindow.innerHTML = messages.map((m, idx) => {
+        const cls = m.role === 'user' ? 'user' : 'assistant';
+        const who = m.role === 'user' ? 'You' : 'Assistant';
+        const safe = escapeHtml(m.content || '');
+        const imgSrc = (m && m.imageSrc) ? String(m.imageSrc) : '';
+        const time = m.ts ? formatTime(m.ts) : '';
+        const isTyping = Boolean(m.isTyping);
+        const metaHtml = `<div class="meta"><span class="who">${who}</span><span class="time">${escapeHtml(time)}</span></div>`;
+        const contentHtml = isTyping
+          ? `<div class="content">${renderTypingHtml()}</div>`
+          : `<div class="content">${safe}</div>`;
+
+        const imageHtml = (!isTyping && imgSrc)
+          ? `<img class="msg-image" src="${escapeHtml(imgSrc)}" alt="Uploaded image" />`
+          : '';
+
+        return `
+          <div class="msg-row ${cls}" data-idx="${idx}">
+            ${m.role === 'assistant' ? '<div class="avatar assistant">F</div>' : ''}
+            <div class="bubble ${cls}">
+              ${metaHtml}
+              ${contentHtml}
+              ${imageHtml}
+              ${m.productsHtml || ''}
+              ${m.sourcesHtml || ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function inferGenderFilterFromText(text) {
+      const t = String(text || '').toLowerCase();
+      if (/\b(unisex)\b/.test(t)) return 'Unisex';
+      if (/\b(women|womens|woman|female|ladies)\b/.test(t)) return 'Women';
+      if (/\b(men|mens|man|male|gents)\b/.test(t)) return 'Men';
+      return '';
+    }
+
+    function buildSourcesHtml(sources) {
+      if (!Array.isArray(sources) || sources.length === 0) return '';
+      const items = sources.map((s, idx) => {
+        const id = (s.metadata && s.metadata.id) ? s.metadata.id : (s.id || '');
+        const price = (s.metadata && s.metadata.price) ? `, price: ${s.metadata.price}` : '';
+        const color = (s.metadata && s.metadata.color) ? `, color: ${s.metadata.color}` : '';
+        const text = escapeHtml(s.text || '');
+        return `<div class="source-item"><strong>Source ${idx+1}</strong>: ${id}${price}${color}<br>${text}</div>`;
+      }).join('');
+      return `<details><summary>View sources</summary>${items}</details>`;
+    }
+
+    function formatUsd(val) {
+      if (val === null || val === undefined || val === '') return '';
+      const num = Number(val);
+      if (!Number.isFinite(num)) return String(val);
+      return `$${num.toFixed(2)}`;
+    }
+
+    function normalizeImageSrc(url) {
+      const s = String(url || '').trim();
+      if (!s) return '';
+      // Keep absolute URLs/data/file URLs unchanged.
+      if (/^(https?:|data:image\/|file:)/i.test(s)) return s;
+      // Windows absolute path (e.g., C:\path\to\img.jpg)
+      if (/^[a-zA-Z]:[\\/]/.test(s)) {
+        return 'file:///' + s.replace(/\\/g, '/');
+      }
+      // The demo lives in /demo, but most paths are repo-root relative.
+      // Prefix "../" so paths like "datasets/..." or "archive/..." resolve correctly.
+      if (!s.startsWith('../') && !s.startsWith('./')) {
+        return '../' + s.replace(/^\/+/, '');
+      }
+      return s;
+    }
+
+    function buildProductsHtml(products) {
+      if (!Array.isArray(products) || products.length === 0) return '';
+      const cards = products.map((p) => {
+        const name = escapeHtml(p.name || p.id || '');
+        const img = normalizeImageSrc(p.image_url);
+        const price = formatUsd(p.price);
+        const color = escapeHtml(p.color || '');
+        const gender = escapeHtml(p.gender || '');
+        const cat = escapeHtml(p.category || '');
+        const sub = escapeHtml(p.subcategory || '');
+        const snippet = escapeHtml(p.snippet || '');
+
+        const badges = [
+          price ? `<span class="badge">${escapeHtml(price)}</span>` : '',
+          color ? `<span class="badge">${color}</span>` : '',
+          gender ? `<span class="badge">${gender}</span>` : '',
+          cat ? `<span class="badge">${cat}${sub ? ` / ${sub}` : ''}</span>` : '',
+        ].filter(Boolean).join('');
+
+        const imgHtml = img
+          ? `<div class="product-img-wrap"><img class="product-img" src="${escapeHtml(img)}" alt="${name}" loading="lazy" /></div>`
+          : `<div class="product-img-wrap"><span class="muted" style="font-size:12px;">No image</span></div>`;
+
+        const actions = img
+          ? `<div class="product-actions"><a class="link-btn" href="${escapeHtml(img)}" target="_blank" rel="noreferrer">Open image</a></div>`
+          : '';
+
+        return `
+          <div class="product-card">
+            ${imgHtml}
+            <div class="product-body">
+              <div class="product-title">${name}</div>
+              <div class="product-meta">${badges}</div>
+              ${snippet ? `<div class="product-meta" style="margin-top:6px;">${snippet}</div>` : ''}
+              ${actions}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `<div class="product-grid">${cards}</div>`;
+    }
+
+    function cleanSnippet(text, maxLen = 180) {
+      const s = String(text || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      if (s.length > maxLen) return s.slice(0, maxLen - 1).trimEnd() + '…';
+      return s;
+    }
+
+    function resultsToProducts(results) {
+      if (!Array.isArray(results)) return [];
+      return results.map((r) => {
+        const meta = (r && r.metadata) ? r.metadata : {};
+        return {
+          id: r.id,
+          name: meta.name || meta.title || r.id,
+          image_url: meta.image_url,
+          price: meta.price,
+          color: meta.color,
+          gender: meta.gender,
+          category: meta.category,
+          subcategory: meta.subcategory,
+          snippet: cleanSnippet(r.text || ''),
+        };
+      });
+    }
+
+    // For Chroma distances: lower is more similar. This threshold is heuristic.
+    // If the best distance is higher than this, we treat it as "no close match".
+    const IMAGE_MATCH_DISTANCE_THRESHOLD = 0.08;
+
+    async function searchByImageAndPostToChat(file, captionText) {
+      const caption = (captionText || '').trim();
+      const userMsg = caption ? `📷 Image search: ${caption}` : '📷 Image search';
+      // Snapshot the uploaded image into the chat bubble.
+      // (We use an object URL so the UI can still show the image even after clearing the attach state.)
+      const msgUrl = URL.createObjectURL(file);
+      chatObjectUrls.push(msgUrl);
+      messages.push({ role: 'user', content: userMsg, ts: Date.now(), imageSrc: msgUrl });
+      typingMsgIndex = messages.push({ role: 'assistant', content: '', ts: Date.now(), isTyping: true }) - 1;
+      renderChat();
+
+      const fd = new FormData();
+      // If this is a pasted blob, provide a filename.
+      fd.append('file', file, file.name || 'pasted-image.png');
+
+      const resp = await fetch(apiUrl('/search/image/upload?top_k=3'), {
+        method: 'POST',
+        body: fd,
+      });
+      if (!resp.ok) {
+        const txt = await resp.text();
+        throw new Error(txt || resp.statusText);
+      }
+      const data = await resp.json();
+      const products = resultsToProducts(data.results || []);
+      const bestScore = (data && Array.isArray(data.results) && data.results[0]) ? Number(data.results[0].score) : NaN;
+      const hasCloseMatch = Number.isFinite(bestScore) ? (bestScore <= IMAGE_MATCH_DISTANCE_THRESHOLD) : true;
+
+      const assistantContent = products.length
+        ? (hasCloseMatch
+            ? 'I searched using your image. Here are the closest matches I found:'
+            : "I can't find that exact product in my data. However, here are the most similar items I do have:")
+        : "I couldn't find close matches for that image. Try a clearer product photo (front view, good lighting).";
+
+      const assistantMsg = {
+        role: 'assistant',
+        content: assistantContent,
+        ts: Date.now(),
+        productsHtml: buildProductsHtml(products),
+      };
+
+      if (typingMsgIndex >= 0 && messages[typingMsgIndex]) {
+        messages[typingMsgIndex] = assistantMsg;
+      } else {
+        messages.push(assistantMsg);
+      }
+      typingMsgIndex = -1;
+      renderChat();
+    }
+
+    async function sendMessage() {
+      const content = (chatInput.value || '').trim(); 
+      const attached = getAttachedImage();
+      const inferredGender = inferGenderFilterFromText(content);
+      const topk = 3;
+      const temp = 0.2;
+
+      if (!content && !attached) return;
+
+      // If an image is attached, treat this as an image-search turn.
+      // (Text becomes an optional caption.)
+      if (attached) {
+        sendBtn.disabled = true;
+        attachBtn.disabled = true;
+        removeImageBtn.disabled = true;
+        setChatStatus('Uploading image and searching...');
+        try {
+          await searchByImageAndPostToChat(attached, content);
+          setChatStatus('OK');
+        } catch (err) {
+          const failMsg = { role: 'assistant', content: 'Sorry — image search failed.\nDetails: ' + (err.message || err), ts: Date.now() };
+          if (typingMsgIndex >= 0 && messages[typingMsgIndex]) {
+            messages[typingMsgIndex] = failMsg;
+          } else {
+            messages.push(failMsg);
+          }
+          typingMsgIndex = -1;
+          renderChat();
+          setChatStatus('Error');
+        } finally {
+          sendBtn.disabled = false;
+          attachBtn.disabled = false;
+          removeImageBtn.disabled = false;
+          chatInput.value = '';
+          clearAttachedImage();
+        }
+        return;
+      }
+
+      // Otherwise: normal text chat.
+      messages.push({ role: 'user', content, ts: Date.now() });
+      typingMsgIndex = messages.push({ role: 'assistant', content: '', ts: Date.now(), isTyping: true }) - 1;
+      renderChat();
+      chatInput.value = '';
+
+      sendBtn.disabled = true;
+      setChatStatus('Calling /chat ...');
+
+      const payload = {
+        query: content,
+        messages: messages.filter(m => !m.isTyping).map(m => ({ role: m.role, content: m.content })),
+        top_k: topk,
+        filters: inferredGender ? { gender: inferredGender } : {},
+        max_tokens: 256,
+        temperature: temp,
+      };
+
+      try {
+        const resp = await fetch(apiUrl('/chat'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!resp.ok) {
+          const txt = await resp.text();
+          throw new Error(txt || resp.statusText);
+        }
+        const data = await resp.json();
+        const assistantMsg = {
+          role: 'assistant',
+          content: data.answer || '',
+          ts: Date.now(),
+          productsHtml: buildProductsHtml(data.products),
+          sourcesHtml: buildSourcesHtml(data.sources)
+        };
+        if (typingMsgIndex >= 0 && messages[typingMsgIndex]) {
+          messages[typingMsgIndex] = assistantMsg;
+        } else {
+          messages.push(assistantMsg);
+        }
+        typingMsgIndex = -1;
+        renderChat();
+        setChatStatus('OK');
+      } catch (err) {
+        const failMsg = { role: 'assistant', content: 'Sorry — I can’t reach the server or the server returned an error.\nDetails: ' + (err.message || err), ts: Date.now() };
+        if (typingMsgIndex >= 0 && messages[typingMsgIndex]) {
+          messages[typingMsgIndex] = failMsg;
+        } else {
+          messages.push(failMsg);
+        }
+        typingMsgIndex = -1;
+        renderChat();
+        setChatStatus('Error');
+      } finally {
+        sendBtn.disabled = false;
+      }
+    }
+
+    function clearChat() {
+      messages.length = 0;
+      typingMsgIndex = -1;
+
+      // Revoke any object URLs created for chat image bubbles.
+      while (chatObjectUrls.length) {
+        const u = chatObjectUrls.pop();
+        try { URL.revokeObjectURL(u); } catch (_) {}
+      }
+
+      clearAttachedImage();
+      renderChat();
+      setChatStatus('Started a new chat.');
+      chatInput.focus();
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    clearBtn.addEventListener('click', clearChat);
+
+    attachBtn.addEventListener('click', () => chatImageFile.click());
+    removeImageBtn.addEventListener('click', clearAttachedImage);
+    chatImageFile.addEventListener('change', () => {
+      const f = (chatImageFile.files && chatImageFile.files[0]) ? chatImageFile.files[0] : null;
+      if (!f) {
+        // Only clear the file selection; keep any pasted image if present.
+        chatImageFile.value = '';
+        if (!pastedImageFile) {
+          chatImagePreview.src = '';
+          chatImagePreviewWrap.style.display = 'none';
+        }
+        return;
+      }
+      // If a local file is selected, clear any pasted image.
+      pastedImageFile = null;
+      if (pastedObjectUrl) {
+        try { URL.revokeObjectURL(pastedObjectUrl); } catch (_) {}
+        pastedObjectUrl = null;
+      }
+      const url = URL.createObjectURL(f);
+      chatImagePreview.src = url;
+      chatImagePreviewWrap.style.display = 'block';
+      setChatStatus('Image attached. Click “Send” to search.');
+    });
+
+    // Paste handling: allow Ctrl+V of an image copied from the internet.
+    // Note: some websites only copy a URL/HTML; this demo supports image bytes only.
+    chatInput.addEventListener('paste', (e) => {
+      const cd = e.clipboardData;
+      if (!cd) return;
+
+      // 1) Try to read an actual image from the clipboard.
+      const items = cd.items ? Array.from(cd.items) : [];
+      const imgItem = items.find(it => it && typeof it.type === 'string' && it.type.startsWith('image/'));
+      if (imgItem && imgItem.getAsFile) {
+        const f = imgItem.getAsFile();
+        if (f) {
+          // Use pasted image as the attached image for search.
+          pastedImageFile = new File([f], 'pasted-image.png', { type: f.type || 'image/png' });
+          // Clear file input to avoid confusion.
+          chatImageFile.value = '';
+          showPreviewFromBlob(pastedImageFile);
+          setChatStatus('Image pasted from clipboard. Click “Send” to search.');
+          // Prevent the image from being pasted into the textarea as text.
+          e.preventDefault();
+          return;
+        }
+      }
+    });
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // Init
+    const apiBaseLabel = document.getElementById('apiBaseLabel');
+    if (apiBaseLabel) apiBaseLabel.textContent = API_BASE;
+
+    messages.push({ role: 'assistant', content: "Hi! What are you shopping for today? Tell me the occasion, your budget, and your size/fit preference (if you have them).", ts: Date.now() });
+    renderChat();
+  </script>
+</body>
+</html>
