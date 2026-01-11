@@ -11,8 +11,11 @@ Backend viết bằng **FastAPI**, lưu vector trong **ChromaDB**, embed văn b�
 
 ## Kiến trúc nhanh
 
-- API (FastAPI): `http://127.0.0.1:8080`
-- ChromaDB (vector database): `http://127.0.0.1:8000` (khi chạy bằng Docker Compose)
+- API (FastAPI): `http://127.0.0.1:8081`
+- ChromaDB (vector database): `http://127.0.0.1:8001` (khi chạy bằng Docker Compose)
+
+> Ghi chú: nếu máy bạn đã có service khác dùng cổng 8080/8000, bạn có thể đổi host port trong `docker-compose.yml` (ví dụ 8081/8001). Hãy dùng đúng URL theo port mapping hiện tại.
+
 - 2 collections:
   - `products` (text)
   - `products_image` (image)
@@ -76,12 +79,12 @@ Ghi chú:
 docker compose up --build
 ```
 
-- ChromaDB sẽ chạy ở cổng `8000`
-- API sẽ chạy ở cổng `8080`
+- ChromaDB sẽ chạy ở cổng `8001`
+- API sẽ chạy ở cổng `8081`
 
 2. Mở tài liệu API (Swagger):
 
-- `http://127.0.0.1:8080/docs`
+- `http://127.0.0.1:8081/docs`
 
 > Lưu ý: `docker-compose.yml` dùng `env_file: .env` cho service `api`. Hãy đảm bảo `.env` tồn tại và hợp lệ.
 
@@ -147,7 +150,7 @@ Script: `ingest_csv.py`
 Ví dụ chạy:
 
 ```bash
-python ingest_csv.py --csv datasets/archive/fashion-dataset/styles.csv --api http://127.0.0.1:8080/ingest --batch 64
+python ingest_csv.py --csv datasets/archive/fashion-dataset/styles.csv --api http://127.0.0.1:8081/ingest --batch 64
 ```
 
 ### 2) Ingest hình ảnh (image)
@@ -160,7 +163,7 @@ Script: `ingest_images.py`
 Ví dụ chạy:
 
 ```bash
-python ingest_images.py --csv datasets/archive/fashion-dataset/styles.csv --api http://127.0.0.1:8080/ingest_image --batch 128
+python ingest_images.py --csv datasets/archive/fashion-dataset/styles.csv --api http://127.0.0.1:8081/ingest_image --batch 128
 ```
 
 Gợi ý:
@@ -175,7 +178,7 @@ File UI: `demo/index.html`
 
 - Mở trực tiếp file bằng trình duyệt (hoặc dùng Live Server trong VS Code).
 - Demo mặc định gọi API:
-  - `const API_BASE = 'http://127.0.0.1:8080';`
+  - `const API_BASE = 'http://127.0.0.1:8081';`
 
 Tính năng demo:
 
@@ -194,7 +197,7 @@ Tính năng demo:
 - `POST /search/image/upload` – search theo ảnh upload
 - `POST /chat` – chat nhiều lượt + RAG (trả về `answer`, `products`, `sources`)
 
-Bạn xem schema chi tiết tại Swagger: `http://127.0.0.1:8080/docs`.
+Bạn xem schema chi tiết tại Swagger: `http://127.0.0.1:8081/docs`.
 
 Ví dụ gọi nhanh `POST /chat`:
 
@@ -210,7 +213,7 @@ Windows (PowerShell):
 
 ```powershell
 $body = @{ query = "I need a white men's dress shirt for work, budget under `$40"; top_k = 3 } | ConvertTo-Json
-Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8080/chat" -ContentType "application/json" -Body $body
+Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8081/chat" -ContentType "application/json" -Body $body
 ```
 
 ---
@@ -219,7 +222,7 @@ Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8080/chat" -ContentType "a
 
 - **Demo không gọi được API**:
 
-  - Đảm bảo API chạy ở `127.0.0.1:8080`.
+  - Đảm bảo API chạy ở `127.0.0.1:8081` (hoặc đúng host port bạn đang map trong `docker-compose.yml`).
   - Trên Windows, dùng `127.0.0.1` giúp tránh lỗi IPv6 `localhost -> ::1`.
 
 - **Kết quả rỗng**:
