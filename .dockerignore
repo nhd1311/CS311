@@ -1,0 +1,11 @@
+# Keep Docker build context small
+.git/
+.venv/
+__pycache__/
+*.pyc
+
+# Large local datasets should not be sent to Docker daemon
+datasets/
+
+# Chroma data is managed by docker volumes when using compose
+chroma_data/

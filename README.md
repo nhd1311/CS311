@@ -129,9 +129,13 @@ Ghi chú:
 
 ## Nạp dữ liệu (Ingest)
 
-Dataset chính:
+Dataset mặc định hiện tại:
 
-- `datasets/fashion_dataset_normalized.csv`
+- `datasets/archive/fashion-dataset/styles.csv`
+
+Ghi chú:
+
+- Nếu bạn có dataset khác, chỉ cần trỏ tham số `--csv` tới file CSV của bạn.
 
 ### 1) Ingest văn bản (text)
 
@@ -143,7 +147,7 @@ Script: `ingest_csv.py`
 Ví dụ chạy:
 
 ```bash
-python ingest_csv.py --csv datasets/fashion_dataset_normalized.csv --api http://127.0.0.1:8080/ingest --batch 64
+python ingest_csv.py --csv datasets/archive/fashion-dataset/styles.csv --api http://127.0.0.1:8080/ingest --batch 64
 ```
 
 ### 2) Ingest hình ảnh (image)
@@ -156,7 +160,7 @@ Script: `ingest_images.py`
 Ví dụ chạy:
 
 ```bash
-python ingest_images.py --csv datasets/fashion_dataset_normalized.csv --api http://127.0.0.1:8080/ingest_image --batch 128 --image-column image_url
+python ingest_images.py --csv datasets/archive/fashion-dataset/styles.csv --api http://127.0.0.1:8080/ingest_image --batch 128
 ```
 
 Gợi ý:
