@@ -5,14 +5,19 @@ Dự án này là một **Fashion Chatbot** dùng **RAG (Retrieval-Augmented Gen
 - **Văn bản** (mô tả/nhu cầu)
 - **Hình ảnh** (tìm sản phẩm tương tự từ ảnh)
 
-Backend viết bằng **FastAPI**, lưu vector trong **ChromaDB**, embed văn bản bằng **Sentence-Transformers** và embed ảnh bằng **OpenCLIP**. Có sẵn UI demo trong `demo/index.html`.
+Backend viết bằng **FastAPI**, lưu vector trong **ChromaDB**, embed văn bản bằng **Sentence-Transformers** và embed ảnh bằng **OpenCLIP**. Có sẵn UI demo trong `index.html`.
 
 ---
 
 ## Kiến trúc nhanh
 
-- API (FastAPI): `http://127.0.0.1:8080`
-- ChromaDB (vector database): `http://127.0.0.1:8000` (khi chạy bằng Docker Compose)
+Khi chạy bằng **Docker Compose** (khuyến nghị):
+
+- API (FastAPI): `http://127.0.0.1:8081`
+- ChromaDB (vector database): `http://127.0.0.1:8001`
+
+> Ghi chú: nếu máy bạn đã có service khác dùng cổng 8080/8000, bạn có thể đổi host port trong `docker-compose.yml` (ví dụ 8081/8001). Hãy dùng đúng URL theo port mapping hiện tại.
+
 - 2 collections:
   - `products` (text)
   - `products_image` (image)
@@ -60,9 +65,13 @@ Các biến quan trọng:
 Ghi chú:
 
 - `app/llm_client.py` hỗ trợ **2 chế độ**:
-  1. **Hugging Face Inference API** nếu `LLM_BASE_URL` chứa `api-inference.huggingface.co`
-  2. **OpenAI-compatible Chat Completions** (mặc định nếu dùng endpoint OpenAI hoặc tương thích OpenAI)
+  1. **Hugging Face (legacy)** nếu `LLM_BASE_URL` chứa `api-inference.huggingface.co` (endpoint này hiện đã bị HF deprecate)
+  2. **OpenAI-compatible Chat Completions** (khuyến nghị): dùng OpenAI / Ollama / LM Studio / hoặc Hugging Face Router `https://router.huggingface.co/v1`
 - Nếu LLM bị lỗi/không cấu hình, hệ thống sẽ **fallback** sang trả lời dựa trên retrieval.
+
+Lưu ý quan trọng khi dùng Docker:
+
+- `env_file: .env` chỉ được đọc khi container được **tạo**. Nếu bạn thay đổi `.env`, hãy **recreate** container `api` (ví dụ: `docker compose down` rồi `docker compose up -d --build`).
 
 ---
 
@@ -76,12 +85,12 @@ Ghi chú:
 docker compose up --build
 ```
 
-- ChromaDB sẽ chạy ở cổng `8000`
-- API sẽ chạy ở cổng `8080`
+- ChromaDB sẽ chạy ở cổng `8001`
+- API sẽ chạy ở cổng `8081`
 
 2. Mở tài liệu API (Swagger):
 
-- `http://127.0.0.1:8080/docs`
+- `http://127.0.0.1:8081/docs`
 
 > Lưu ý: `docker-compose.yml` dùng `env_file: .env` cho service `api`. Hãy đảm bảo `.env` tồn tại và hợp lệ.
 
@@ -118,7 +127,7 @@ pip install -r requirements.txt
 2. Chạy API bằng uvicorn:
 
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8080
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8080
 ```
 
 Ghi chú:
@@ -147,8 +156,10 @@ Script: `ingest_csv.py`
 Ví dụ chạy:
 
 ```bash
-python ingest_csv.py --csv datasets/archive/fashion-dataset/styles.csv --api http://127.0.0.1:8080/ingest --batch 64
+python ingest_csv.py --csv datasets/archive/fashion-dataset/styles.csv --api http://127.0.0.1:8081/ingest --batch 64
 ```
+
+Nếu bạn chạy **local** (API ở port 8080), đổi `--api` thành `http://127.0.0.1:8080/ingest`.
 
 ### 2) Ingest hình ảnh (image)
 
@@ -160,8 +171,10 @@ Script: `ingest_images.py`
 Ví dụ chạy:
 
 ```bash
-python ingest_images.py --csv datasets/archive/fashion-dataset/styles.csv --api http://127.0.0.1:8080/ingest_image --batch 128
+python ingest_images.py --csv datasets/archive/fashion-dataset/styles.csv --api http://127.0.0.1:8081/ingest_image --batch 128
 ```
+
+Nếu bạn chạy **local** (API ở port 8080), đổi `--api` thành `http://127.0.0.1:8080/ingest_image`.
 
 Gợi ý:
 
@@ -171,11 +184,11 @@ Gợi ý:
 
 ## UI Demo
 
-File UI: `demo/index.html`
+File UI: `index.html`
 
 - Mở trực tiếp file bằng trình duyệt (hoặc dùng Live Server trong VS Code).
 - Demo mặc định gọi API:
-  - `const API_BASE = 'http://127.0.0.1:8080';`
+  - `const API_BASE = 'http://127.0.0.1:8081';`
 
 Tính năng demo:
 
@@ -194,14 +207,14 @@ Tính năng demo:
 - `POST /search/image/upload` – search theo ảnh upload
 - `POST /chat` – chat nhiều lượt + RAG (trả về `answer`, `products`, `sources`)
 
-Bạn xem schema chi tiết tại Swagger: `http://127.0.0.1:8080/docs`.
+Bạn xem schema chi tiết tại Swagger: `http://127.0.0.1:8081/docs`.
 
 Ví dụ gọi nhanh `POST /chat`:
 
 macOS/Linux (bash):
 
 ```bash
-curl -X POST http://127.0.0.1:8080/chat \
+curl -X POST http://127.0.0.1:8081/chat \
   -H "Content-Type: application/json" \
   -d "{\"query\":\"I need a white men's dress shirt for work, budget under $40\",\"top_k\":5}"
 ```
@@ -210,16 +223,57 @@ Windows (PowerShell):
 
 ```powershell
 $body = @{ query = "I need a white men's dress shirt for work, budget under `$40"; top_k = 3 } | ConvertTo-Json
-Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8080/chat" -ContentType "application/json" -Body $body
+Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8081/chat" -ContentType "application/json" -Body $body
 ```
+
+> Nếu bạn chạy local (API ở port 8080), đổi URL từ `8081` → `8080`.
 
 ---
 
 ## Troubleshooting
 
+### Tăng tốc hệ thống (Performance)
+
+Nếu bạn thấy hệ thống phản hồi chậm, thường là do 3 nguyên nhân chính:
+
+1. **Gọi LLM qua mạng** (chậm nhất)
+2. **Embedding chạy CPU** (nhất là trên máy yếu / Docker bị giới hạn CPU)
+3. **Search ảnh phải tải ảnh từ URL** (mạng chậm)
+
+Các gợi ý nhanh:
+
+- **LLM qua mạng thường là chậm nhất**: nếu không cần câu trả lời “tự nhiên”, bạn có thể để trống cấu hình LLM; hệ thống sẽ tự **fallback** sang retrieval-only.
+- **Embedding chạy CPU**: nếu máy yếu, lần ingest đầu tiên sẽ tốn thời gian; sau khi ingest xong, query thường nhanh hơn.
+- **Search ảnh**: sẽ tốn thời gian encode ảnh; tránh ingest ảnh nếu bạn chỉ cần search text.
+- Nếu dùng Docker Desktop trên Windows, hãy đảm bảo Docker có đủ CPU/RAM trong Docker Desktop Settings.
+
+Mẹo hữu ích (PyTorch):
+
+- Bạn có thể set `TORCH_NUM_THREADS` để giới hạn số luồng CPU (tuỳ máy). Ví dụ: `TORCH_NUM_THREADS=4`.
+
+Gợi ý thêm:
+
+- Nếu bạn không cần search ảnh, hãy tạm thời không ingest ảnh để tiết kiệm thời gian/CPU.
+
+- **Fatal error in launcher / uvicorn.exe trỏ sai đường dẫn .venv (Windows)**:
+
+  Lỗi dạng:
+  `Fatal error in launcher: Unable to create process using ... DoAn\\.venv\\Scripts\\python.exe ... CS311\\.venv\\Scripts\\uvicorn.exe ...`
+
+  Nguyên nhân thường gặp: bạn đã **copy/đổi tên/move thư mục `.venv`** từ project khác.
+
+  Cách xử lý nhanh:
+
+  - Chạy bằng module để bỏ qua launcher `.exe`:
+    `python -m uvicorn app.main:app --host 0.0.0.0 --port 8080`
+
+  Cách xử lý dứt điểm (khuyến nghị):
+
+  - Xoá `.venv` và tạo lại đúng trong repo hiện tại, rồi `pip install -r requirements.txt`.
+
 - **Demo không gọi được API**:
 
-  - Đảm bảo API chạy ở `127.0.0.1:8080`.
+  - Đảm bảo API chạy ở `127.0.0.1:8081` (hoặc đúng host port bạn đang map trong `docker-compose.yml`).
   - Trên Windows, dùng `127.0.0.1` giúp tránh lỗi IPv6 `localhost -> ::1`.
 
 - **Kết quả rỗng**:
@@ -241,7 +295,7 @@ Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8080/chat" -ContentType "a
 - `app/llm_client.py` – gọi LLM (HF Inference / OpenAI-compatible)
 - `ingest_csv.py` – ingest dữ liệu text từ CSV
 - `ingest_images.py` – ingest dữ liệu ảnh từ CSV
-- `demo/index.html` – UI demo
+- `index.html` – UI demo
 
 ---
 

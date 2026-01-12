@@ -131,6 +131,8 @@ def main():
 
     img_dir = _guess_image_dir(args.csv)
 
+    ingested = 0
+
     for i in range(0, total, args.batch):
         chunk = rows[i : i + args.batch]
         payload_items = []
@@ -166,7 +168,8 @@ def main():
             continue
 
         ingest_batch(args.api, payload_items)
-        print(f"[INFO] Ingested images {min(i + len(chunk), total)} / {total}")
+        ingested += len(payload_items)
+        print(f"[INFO] Ingested images: {ingested} (from {len(payload_items)} in this batch)")
 
     print("[DONE] Ingest images completed.")
 
