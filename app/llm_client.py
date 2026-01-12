@@ -1,5 +1,6 @@
 import os
 import re
+import logging
 from typing import Dict, List, Optional
 
 from openai import OpenAI
@@ -9,6 +10,9 @@ import requests
 LLM_BASE_URL = os.getenv("LLM_BASE_URL", "")
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
 LLM_MODEL = os.getenv("LLM_MODEL", "")
+LLM_DEBUG = (os.getenv("LLM_DEBUG", "0") or "0").strip().lower() in {"1", "true", "yes", "y", "on"}
+
+logger = logging.getLogger(__name__)
 
 _openai_client = None
 
@@ -52,7 +56,20 @@ def generate_answer(
             temperature=temperature,
         )
         return resp.choices[0].message.content.strip()
-    except Exception:
+    except Exception as e:
+        # Do not leak secrets. Provide a short diagnostic in logs to help
+        # users fix configuration issues (invalid key, wrong model, endpoint down, etc.).
+        try:
+            base = (LLM_BASE_URL or "").strip().rstrip("/")
+            model = (LLM_MODEL or "").strip()
+            msg = f"LLM call failed; falling back to retrieval-only. base_url={base!r}, model={model!r}, err={type(e).__name__}: {e}"
+            if LLM_DEBUG:
+                logger.exception(msg)
+            else:
+                logger.warning(msg)
+        except Exception:
+            # Avoid breaking user flow due to logging errors.
+            pass
         return _fallback_answer(question, contexts)
 
 

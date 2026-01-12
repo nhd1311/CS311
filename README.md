@@ -282,7 +282,12 @@ Gợi ý thêm:
   - Nếu chạy local không có Chroma server, bạn đang dùng Chroma in-memory (mất dữ liệu khi restart).
 
 - **LLM không trả lời đúng / fallback**:
-  - Kiểm tra `LLM_MODEL` và `LLM_API_KEY` trong `.env`.
+  - Nếu bạn thấy dòng `(Fallback mode: answering from retrieved results without the LLM.)` trong câu trả lời, nghĩa là hệ thống **không gọi được LLM** và đang trả lời bằng retrieval-only.
+  - Kiểm tra `LLM_BASE_URL`, `LLM_MODEL` và `LLM_API_KEY` trong `.env`.
+  - Bật log chẩn đoán để biết chính xác lỗi gì:
+    - Set `LLM_DEBUG=1` trong `.env`
+    - Recreate container `api` (ví dụ: `docker compose up --build -d`)
+    - Xem log: `docker compose logs --tail 200 api`
   - Nếu không muốn dùng LLM, vẫn có thể dùng retrieval-only (hệ thống tự fallback).
 
 ---

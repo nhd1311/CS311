@@ -20,10 +20,40 @@ def _env_flag(name: str, default: str = "0") -> bool:
     return v in {"1", "true", "yes", "y", "on"}
 
 
+def _env_float(name: str, default: str) -> float:
+    v = (os.getenv(name, default) or "").strip()
+    try:
+        return float(v)
+    except Exception:
+        return float(default)
+
+
+def _env_int(name: str, default: str) -> int:
+    v = (os.getenv(name, default) or "").strip()
+    try:
+        return int(v)
+    except Exception:
+        return int(default)
+
+
 # Chat behavior toggles.
 # Defaults are intentionally permissive: always answer without extra conditions.
 ASK_FOLLOWUPS = _env_flag("ASK_FOLLOWUPS", "0")
 STRICT_EXACT_LOOKUP = _env_flag("STRICT_EXACT_LOOKUP", "0")
+
+# Language behavior.
+# When enabled, the API will reject non-English queries and always respond in English.
+# Note: the assistant/LLM is already instructed to reply in English; this flag only
+# controls whether non-English user queries are rejected.
+ENGLISH_ONLY = _env_flag("ENGLISH_ONLY", "0")
+
+# Relevance gating for retrieval results.
+# Note: Chroma returns distances (lower is better). In this project we often
+# observe L2 distances roughly ~0.6–0.9 for good matches and >~1.3 for weak ones.
+# Tune via env if your metric/model differs.
+RAG_MAX_DISTANCE = _env_float("RAG_MAX_DISTANCE", "1.0")
+RAG_MIN_TOKEN_OVERLAP = _env_float("RAG_MIN_TOKEN_OVERLAP", "0.12")
+RAG_MIN_DISTINCTIVE_MATCHES = _env_int("RAG_MIN_DISTINCTIVE_MATCHES", "1")
 
 
 _STOPWORDS = {
@@ -151,8 +181,108 @@ def _tokenize(text: str) -> List[str]:
     return [t for t in toks if len(t) >= 3 and t not in _STOPWORDS]
 
 
+_NON_ENGLISH_HINT_PATTERNS = [
+    # Vietnamese phrases commonly used in this project
+    r"\bgoi\s*y\b",
+    r"\bphoi\s*do\b",
+    r"\btrang\s*phuc\b",
+    r"\bdi\s*lam\b",
+    r"\bdi\s*tiec\b",
+    r"\bdu\s*tiec\b",
+    r"\bdi\s*choi\b",
+    r"\bdi\s*hoc\b",
+    r"\bdu\s*lich\b",
+    r"\btap\s*gym\b",
+    r"\bthe\s*thao\b",
+    r"\bmau\b",
+    r"\bcho\s*(nam|nu)\b",
+]
+
+
+def _looks_like_english_query(text: str) -> bool:
+    """Best-effort check for whether the user query is English.
+
+    We keep this heuristic intentionally simple:
+    - If it contains non-ASCII characters (Vietnamese diacritics, etc.) -> not English.
+    - If it matches common Vietnamese phrases (even without diacritics) -> not English.
+    """
+    s = (text or "").strip()
+    if not s:
+        return True
+
+    # Reject non-ASCII letters (covers Vietnamese diacritics).
+    if re.search(r"[^\x00-\x7F]", s):
+        return False
+
+    t = s.lower()
+    # Normalize punctuation to spaces for phrase matching.
+    t = re.sub(r"[^a-z0-9\s]+", " ", t)
+    t = re.sub(r"\s+", " ", t).strip()
+    for pat in _NON_ENGLISH_HINT_PATTERNS:
+        if re.search(pat, t):
+            return False
+    return True
+
+
 def _distinctive_tokens(text: str) -> List[str]:
     return [t for t in _tokenize(text) if t not in _GENERIC_TOKENS]
+
+
+def _relevance_filter_docs(
+    query: str, docs: List[Any], max_distance: Optional[float] = None
+) -> List[Any]:
+    """Filter retrieved docs to avoid returning irrelevant items.
+
+    Uses a combination of embedding distance threshold and light lexical checks.
+    Distance is the primary gate (lower is better). Lexical checks help avoid
+    edge cases where the vector DB returns weak matches.
+    """
+
+    if not docs:
+        return []
+
+    q_tokens = set(_tokenize(query))
+    q_dist = set(_distinctive_tokens(query))
+
+    # If the query has no usable tokens (e.g., non-latin), rely on distance only.
+    use_overlap = bool(q_tokens) and RAG_MIN_TOKEN_OVERLAP > 0
+    use_distinctive = bool(q_dist) and RAG_MIN_DISTINCTIVE_MATCHES > 0
+
+    max_dist = RAG_MAX_DISTANCE if max_distance is None else float(max_distance)
+
+    kept = []
+    for d in docs:
+        # 1) Distance gate (primary)
+        try:
+            dist = float(getattr(d, "score", 1e9))
+        except Exception:
+            dist = 1e9
+
+        if max_dist > 0 and dist > max_dist:
+            continue
+
+        # 2) Lexical overlap gate (secondary)
+        if use_overlap:
+            # Include metadata text for matching, when present.
+            meta = getattr(d, "metadata", None) or {}
+            meta_text = " ".join([str(v) for v in meta.values() if v is not None])
+            text = f"{getattr(d, 'text', '')} {meta_text}".strip()
+            dtoks = set(_tokenize(text))
+            overlap = (len(q_tokens & dtoks) / max(1, len(q_tokens)))
+            if overlap < RAG_MIN_TOKEN_OVERLAP:
+                continue
+
+        if use_distinctive:
+            meta = getattr(d, "metadata", None) or {}
+            meta_text = " ".join([str(v) for v in meta.values() if v is not None])
+            text = f"{getattr(d, 'text', '')} {meta_text}".strip()
+            dt = set(_distinctive_tokens(text))
+            if len(q_dist & dt) < RAG_MIN_DISTINCTIVE_MATCHES:
+                continue
+
+        kept.append(d)
+
+    return kept
 
 
 def _looks_like_specific_product_lookup(text: str) -> bool:
@@ -186,19 +316,6 @@ def _looks_like_specific_product_lookup(text: str) -> bool:
         "anh nay",
     ]
     return any(k in t for k in keywords)
-
-
-def _max_token_overlap_ratio(query: str, candidates: List[str]) -> float:
-    q = set(_tokenize(query))
-    if not q:
-        return 1.0
-    best = 0.0
-    for c in candidates:
-        ct = set(_tokenize(c))
-        if not ct:
-            continue
-        best = max(best, len(q & ct) / len(q))
-    return best
 
 
 def _max_distinctive_match_count(query: str, candidates: List[str]) -> int:
@@ -297,6 +414,561 @@ def _normalize_article_type(val: Any) -> str:
     return s
 
 
+def _normalize_color(val: Any) -> str:
+    s = ("" if val is None else str(val)).strip().lower()
+    # Keep letters only for robust comparisons.
+    s = re.sub(r"[^a-z]+", "", s)
+    if s == "grey":
+        return "gray"
+    return s
+
+
+def _desired_colors_from_query(text: str) -> Optional[set[str]]:
+    """Infer desired colors from the user query.
+
+    Returns a set of canonical dataset color names (Title Case), or None.
+    If a color is explicitly mentioned, we will enforce it strictly.
+    """
+    t = (text or "").strip().lower()
+    if not t:
+        return None
+
+    # Map normalized tokens to canonical color labels used in metadata.
+    # Note: the dataset commonly uses "Grey".
+    color_map: Dict[str, str] = {
+        # English
+        "black": "Black",
+        "white": "White",
+        "red": "Red",
+        "blue": "Blue",
+        "green": "Green",
+        "yellow": "Yellow",
+        "pink": "Pink",
+        "purple": "Purple",
+        "orange": "Orange",
+        "brown": "Brown",
+        "gray": "Grey",
+        "grey": "Grey",
+        "silver": "Silver",
+        "gold": "Gold",
+        "beige": "Beige",
+        "cream": "Cream",
+        "navy": "Navy Blue",
+        "maroon": "Maroon",
+        # Vietnamese (accent-less matching)
+        "den": "Black",
+        "trang": "White",
+        "do": "Red",
+        "xanh": "Blue",
+        "vang": "Yellow",
+        "hong": "Pink",
+        "tim": "Purple",
+        "cam": "Orange",
+        "nau": "Brown",
+        "xam": "Grey",
+        "bac": "Silver",
+        "be": "Beige",
+        "kem": "Cream",
+    }
+
+    # Remove diacritics so "đen" -> "den", "trắng" -> "trang".
+    try:
+        import unicodedata
+
+        t2 = "".join(
+            c for c in unicodedata.normalize("NFKD", t) if not unicodedata.combining(c)
+        )
+    except Exception:
+        t2 = t
+
+    toks = re.findall(r"[a-z]+", t2)
+    # Vietnamese "đồ" (clothes) and "đỏ" (red) both normalize to "do".
+    # Treat "do" as a color only when the user explicitly indicates color context (e.g., "màu đỏ").
+    has_color_context = bool(re.search(r"\b(mau|color|colour)\b", t2))
+    found: set[str] = set()
+    for tok in toks:
+        key = _normalize_color(tok)
+        if key == "do" and not has_color_context:
+            # Skip ambiguous token.
+            continue
+        if key in color_map:
+            found.add(color_map[key])
+
+    return found or None
+
+
+def _filter_docs_by_color(docs: List[Any], desired_colors: set[str]) -> List[Any]:
+    """Strictly keep only docs whose metadata.color matches a requested color."""
+    if not docs:
+        return []
+    allowed = {_normalize_color(c) for c in desired_colors}
+    kept: List[Any] = []
+    for d in docs:
+        meta = getattr(d, "metadata", None) or {}
+        c = _normalize_color(meta.get("color"))
+        if not c:
+            # If we can't verify the color, don't return it when the user requested one.
+            continue
+        if c in allowed:
+            kept.append(d)
+    return kept
+
+
+def _normalize_subcategory(val: Any) -> str:
+    s = ("" if val is None else str(val)).strip().lower()
+    s = re.sub(r"[^a-z]+", "", s)
+    return s
+
+
+def _desired_subcategories_from_query(text: str) -> Optional[set[str]]:
+    """Infer desired product subcategory from the user query.
+
+    Returns canonical dataset subcategory labels (e.g., "Bottomwear", "Topwear"),
+    or None if no clear intent is detected.
+    """
+    t = (text or "").strip().lower()
+    if not t:
+        return None
+
+    # Remove diacritics for Vietnamese.
+    try:
+        import unicodedata
+
+        t2 = "".join(
+            c for c in unicodedata.normalize("NFKD", t) if not unicodedata.combining(c)
+        )
+    except Exception:
+        t2 = t
+
+    # If user explicitly says bottomwear/topwear, respect that.
+    # Also infer bottomwear from common garment words.
+    # NOTE: Keep this conservative: only infer when it's strongly implied.
+    tt = t2
+    if re.search(r"\bbottom\s*wear\b", tt) or any(k in tt for k in ["quan", "trousers", "pants", "jeans", "shorts", "skirt", "leggings", "chinos"]):
+        return {"Bottomwear"}
+    if re.search(r"\btop\s*wear\b", tt) or any(k in tt for k in ["shirt", "tshirt", "t-shirt", "tee", "top", "jacket", "hoodie", "sweater", "coat", "ao"]):
+        # Only infer Topwear if it is explicitly requested; garment words are too broad.
+        # We keep this strict to avoid blocking mixed queries.
+        if re.search(r"\btop\s*wear\b", tt):
+            return {"Topwear"}
+
+    # If user explicitly says footwear/bags, we can infer those too.
+    if re.search(r"\bfoot\s*wear\b", tt) or any(k in tt for k in ["shoes", "sneakers", "sandals", "flipflops", "boots", "giay", "dep"]):
+        # Dataset uses many footwear subcategories; don't over-restrict.
+        return None
+    if any(k in tt for k in ["bag", "handbag", "backpack", "tui"]):
+        # Bags subcategory exists, but users often mix accessory terms.
+        return {"Bags"}
+
+    return None
+
+
+def _filter_docs_by_subcategory(docs: List[Any], desired_subcategories: set[str]) -> List[Any]:
+    """Strictly keep only docs whose metadata.subcategory matches requested subcategory."""
+    if not docs:
+        return []
+    allowed = {_normalize_subcategory(s) for s in desired_subcategories}
+    kept: List[Any] = []
+    for d in docs:
+        meta = getattr(d, "metadata", None) or {}
+        sub = _normalize_subcategory(meta.get("subcategory"))
+        if not sub:
+            continue
+        if sub in allowed:
+            kept.append(d)
+    return kept
+
+
+def _normalize_usage(val: Any) -> str:
+    # Dataset values include: Casual, Sports, Ethnic, Formal, Smart Casual, Party, Travel, Home
+    s = ("" if val is None else str(val)).strip().lower()
+    # Keep letters only to normalize spaces/hyphens ("Smart Casual" -> "smartcasual").
+    s = re.sub(r"[^a-z]+", "", s)
+    return s
+
+
+def _desired_usages_from_query(text: str) -> Optional[set[str]]:
+    """Infer desired `usage` labels from the user query.
+
+    Returns a set of canonical dataset usage labels, or None if no occasion intent is detected.
+    This is used for strict filtering ("lọc cứng") when the user clearly asks for an occasion.
+    """
+    t = (text or "").strip().lower()
+    if not t:
+        return None
+
+    # Remove diacritics so Vietnamese matching works ("đi làm" -> "di lam").
+    try:
+        import unicodedata
+
+        t2 = "".join(
+            c for c in unicodedata.normalize("NFKD", t) if not unicodedata.combining(c)
+        )
+    except Exception:
+        t2 = t
+
+    tt = t2
+    wanted: set[str] = set()
+
+    # Sports / gym
+    if any(k in tt for k in ["gym", "workout", "sport", "sports", "training", "run", "running", "tap gym", "the thao", "chay bo", "tap luyen"]):
+        wanted.add("Sports")
+
+    # Travel
+    if any(k in tt for k in ["travel", "trip", "vacation", "journey", "tour", "du lich", "di du lich", "phuot"]):
+        wanted.add("Travel")
+
+    # Home / loungewear
+    if any(k in tt for k in ["home", "at home", "loungewear", "pajama", "pjs", "o nha", "mac nha", "do ngu"]):
+        wanted.add("Home")
+
+    # Ethnic / traditional
+    if any(k in tt for k in ["ethnic", "traditional", "ao dai", "truyen thong", "dan toc", "le hoi", "tet"]):
+        wanted.add("Ethnic")
+
+    # Party / events
+    if any(k in tt for k in ["party", "club", "date", "prom", "wedding", "reception", "di tiec", "du tiec", "dam cuoi", "hen ho"]):
+        wanted.add("Party")
+
+    # Formal / office / interview
+    office_like = any(
+        k in tt
+        for k in [
+            "formal",
+            "business",
+            "office",
+            "work",
+            "interview",
+            "meeting",
+            "cong so",
+            "di lam",
+            "phong van",
+            "hop",
+        ]
+    )
+    if office_like:
+        wanted.add("Formal")
+
+    # Casual / everyday
+    casual_like = any(
+        k in tt
+        for k in [
+            "casual",
+            "everyday",
+            "daily",
+            "street",
+            "hangout",
+            "di choi",
+            "dao pho",
+            "doi thuong",
+        ]
+    )
+
+    # If the user explicitly mixes casual + office, map to Smart Casual (and keep Formal as a fallback).
+    if casual_like and office_like:
+        wanted.add("Smart Casual")
+    elif casual_like:
+        wanted.add("Casual")
+
+    return wanted or None
+
+
+def _filter_docs_by_usage(docs: List[Any], desired_usages: set[str]) -> List[Any]:
+    """Strictly keep only docs whose metadata.usage matches the requested usage labels."""
+    if not docs:
+        return []
+    allowed = {_normalize_usage(u) for u in desired_usages}
+    kept: List[Any] = []
+    for d in docs:
+        meta = getattr(d, "metadata", None) or {}
+        u = _normalize_usage(meta.get("usage"))
+        if not u:
+            # If we can't verify the usage, don't return it when the user requested one.
+            continue
+        if u in allowed:
+            kept.append(d)
+    return kept
+
+
+def _usage_query_hints(desired_usages: set[str]) -> str:
+    """Return extra query terms to help retrieval surface the requested usage."""
+    hints: List[str] = []
+    for u in desired_usages:
+        nu = _normalize_usage(u)
+        if nu == "formal":
+            hints.extend(["formal", "business", "office", "work", "interview"])
+        elif nu == "smartcasual":
+            hints.extend(["smart casual", "business casual", "office"])
+        elif nu == "casual":
+            hints.extend(["casual", "everyday", "daily", "street"])
+        elif nu == "sports":
+            hints.extend(["sports", "sport", "gym", "workout", "training"])
+        elif nu == "party":
+            hints.extend(["party", "wedding", "event", "date"])
+        elif nu == "travel":
+            hints.extend(["travel", "trip", "vacation"])
+        elif nu == "ethnic":
+            hints.extend(["ethnic", "traditional", "festival"])
+        elif nu == "home":
+            hints.extend(["home", "loungewear", "pajama"])
+    # De-dupe while preserving order.
+    seen = set()
+    out: List[str] = []
+    for h in hints:
+        hh = h.strip().lower()
+        if not hh or hh in seen:
+            continue
+        seen.add(hh)
+        out.append(h)
+    return " ".join(out)
+
+
+def _usage_seed_query(desired_usages: set[str]) -> str:
+    """Return a lightweight, catalog-oriented seed query for vague occasion requests."""
+    seeds: List[str] = []
+    for u in desired_usages:
+        nu = _normalize_usage(u)
+        if nu == "formal":
+            seeds.extend(["shirt", "trousers", "pants", "shoes", "tie"])
+        elif nu == "smartcasual":
+            seeds.extend(["shirt", "chinos", "loafers", "shoes"])
+        elif nu == "casual":
+            seeds.extend(["tshirt", "jeans", "sneakers"])
+        elif nu == "sports":
+            seeds.extend(["tshirt", "shorts", "sneakers", "shoes"])
+        elif nu == "party":
+            seeds.extend(["dress", "heels", "shoes", "clutch", "handbag"])
+        elif nu == "travel":
+            seeds.extend(["backpack", "shoes", "sneakers", "tshirt"])
+        elif nu == "ethnic":
+            seeds.extend(["kurta", "saree", "ethnic"])
+        elif nu == "home":
+            seeds.extend(["pajama", "loungewear", "shorts"])
+
+    # De-dupe while preserving order.
+    seen = set()
+    out: List[str] = []
+    for s in seeds:
+        ss = s.strip().lower()
+        if not ss or ss in seen:
+            continue
+        seen.add(ss)
+        out.append(s)
+    return " ".join(out)
+
+
+def _with_where_constraint(filters: Optional[Dict[str, Any]], constraint: Dict[str, Any]) -> Dict[str, Any]:
+    """Return a new Chroma where-filter with an additional constraint.
+
+    - If filters is empty -> just the constraint.
+    - If filters already uses an operator at the top-level -> wrap with $and.
+    - If filters is a simple field dict -> merge by wrapping into $and to be safe.
+    """
+    base = dict(filters or {})
+    if not base:
+        return dict(constraint)
+    if any(str(k).startswith("$") for k in base.keys()):
+        return {"$and": [base, dict(constraint)]}
+    # Multiple simple constraints are normalized later, but wrapping here avoids edge cases.
+    return {"$and": [{k: v} for k, v in base.items()] + [dict(constraint)]}
+
+
+def _looks_like_outfit_request(text: str) -> bool:
+    t = (text or "").strip().lower()
+    if not t:
+        return False
+    # Remove diacritics for Vietnamese.
+    try:
+        import unicodedata
+
+        t = "".join(c for c in unicodedata.normalize("NFKD", t) if not unicodedata.combining(c))
+    except Exception:
+        pass
+
+    keywords = [
+        # English
+        "outfit",
+        "outfits",
+        "complete look",
+        "full look",
+        "set",
+        "combo",
+        "mix and match",
+        # Vietnamese
+        "phoi do",
+        "bo do",
+        "set do",
+    ]
+    return any(k in t for k in keywords)
+
+
+def _wants_innerwear(text: str) -> bool:
+    t = (text or "").strip().lower()
+    if not t:
+        return False
+    try:
+        import unicodedata
+
+        t = "".join(c for c in unicodedata.normalize("NFKD", t) if not unicodedata.combining(c))
+    except Exception:
+        pass
+
+    keywords = [
+        # English
+        "innerwear",
+        "underwear",
+        "brief",
+        "briefs",
+        "boxer",
+        "boxers",
+        "trunk brief",
+        # Vietnamese
+        "do lot",
+        "quan lot",
+        "ao lot",
+    ]
+    return any(k in t for k in keywords)
+
+
+def _filter_out_innerwear(docs: List[Any]) -> List[Any]:
+    if not docs:
+        return []
+    kept: List[Any] = []
+    for d in docs:
+        meta = getattr(d, "metadata", None) or {}
+        if str(meta.get("subcategory") or "").strip().lower() == "innerwear":
+            continue
+        kept.append(d)
+    return kept
+
+
+def _assemble_outfit_docs(docs: List[Any], budget_max: Optional[float], top_k: int) -> List[Any]:
+    """Select a small, outfit-like set of items.
+
+    Goal: prefer a mix (Topwear + Bottomwear + Footwear) when possible.
+    If budget_max is provided, try to keep the total under that budget.
+    """
+    if not docs:
+        return []
+
+    # Bucket candidates by (meta.category/subcategory)
+    topwear: List[Any] = []
+    bottomwear: List[Any] = []
+    footwear: List[Any] = []
+    other: List[Any] = []
+
+    for d in docs:
+        meta = getattr(d, "metadata", None) or {}
+        cat = str(meta.get("category") or "").strip().lower()
+        sub = str(meta.get("subcategory") or "").strip().lower()
+
+        if sub == "topwear":
+            topwear.append(d)
+        elif sub == "bottomwear":
+            bottomwear.append(d)
+        elif cat == "footwear":
+            footwear.append(d)
+        else:
+            other.append(d)
+
+    def _price_of(doc: Any) -> Optional[float]:
+        meta = getattr(doc, "metadata", None) or {}
+        return _parse_price_number(meta.get("price"))
+
+    def _sort_key_affordable(doc: Any):
+        # Prefer priced items (cheaper first), then more relevant (lower distance).
+        p = _price_of(doc)
+        try:
+            dist = float(getattr(doc, "score", 1e9))
+        except Exception:
+            dist = 1e9
+        return (1 if p is None else 0, 1e18 if p is None else p, dist)
+
+    def _sort_key_relevant(doc: Any):
+        try:
+            dist = float(getattr(doc, "score", 1e9))
+        except Exception:
+            dist = 1e9
+        p = _price_of(doc)
+        return (dist, 1e18 if p is None else p)
+
+    # Sort buckets.
+    if budget_max is not None:
+        topwear.sort(key=_sort_key_affordable)
+        bottomwear.sort(key=_sort_key_affordable)
+        footwear.sort(key=_sort_key_affordable)
+        other.sort(key=_sort_key_affordable)
+    else:
+        topwear.sort(key=_sort_key_relevant)
+        bottomwear.sort(key=_sort_key_relevant)
+        footwear.sort(key=_sort_key_relevant)
+        other.sort(key=_sort_key_relevant)
+
+    selected: List[Any] = []
+    remaining = budget_max
+
+    def _try_pick(bucket: List[Any]) -> None:
+        nonlocal remaining
+        for cand in bucket:
+            if cand in selected:
+                continue
+            if remaining is None:
+                selected.append(cand)
+                return
+            price = _price_of(cand)
+            if price is None:
+                continue
+            if price <= remaining + 1e-9:
+                selected.append(cand)
+                remaining -= price
+                return
+
+    # Outfit-like picks.
+    _try_pick(topwear)
+    _try_pick(bottomwear)
+    _try_pick(footwear)
+
+    # Fill remaining slots with other relevant/affordable items.
+    while len(selected) < max(2, min(top_k, 4)):
+        before = len(selected)
+        _try_pick(other)
+        if len(selected) == before:
+            # As a last resort, pick by relevance (ignoring budget) to avoid empty results.
+            pool = [d for d in docs if d not in selected]
+            pool.sort(key=_sort_key_relevant)
+            if pool:
+                selected.append(pool[0])
+            else:
+                break
+
+    return selected[:top_k]
+
+
+def _merge_docs_keep_best(*doc_lists: List[Any]) -> List[Any]:
+    """Merge QueryResult-like objects by id, keeping the one with the lowest distance score."""
+    best_by_id: Dict[str, Any] = {}
+    for lst in doc_lists:
+        for d in lst or []:
+            doc_id = str(getattr(d, "id", ""))
+            if not doc_id:
+                continue
+            try:
+                dist = float(getattr(d, "score", 1e9))
+            except Exception:
+                dist = 1e9
+            cur = best_by_id.get(doc_id)
+            if cur is None:
+                best_by_id[doc_id] = d
+                continue
+            try:
+                cur_dist = float(getattr(cur, "score", 1e9))
+            except Exception:
+                cur_dist = 1e9
+            if dist < cur_dist:
+                best_by_id[doc_id] = d
+    return list(best_by_id.values())
+
+
 def _desired_article_types_from_query(text: str) -> Optional[set[str]]:
     """Infer desired articleType values from the user query.
 
@@ -341,7 +1013,53 @@ def ingest_items(req: IngestRequest):
 
 @app.post("/query")
 def query_items(req: QueryRequest):
+    if ENGLISH_ONLY and not _looks_like_english_query(req.query):
+        return {
+            "results": [],
+            "error": "English only: please rephrase your request in English.",
+        }
+    # Retrieve candidates, then apply post-filters.
     results = retrieve(req.query, top_k=req.top_k, filters=req.filters)
+    desired_usages = _desired_usages_from_query(req.query)
+    relevance_query = req.query
+    if desired_usages is not None:
+        # Help retrieval surface the requested usage before strict filtering.
+        hints = _usage_query_hints(desired_usages)
+        seed = _usage_seed_query(desired_usages)
+        aug = " ".join([req.query, hints, seed]).strip()
+        if hints:
+            more = retrieve(aug, top_k=min(max(req.top_k * 8, req.top_k), 120), filters=req.filters)
+            results = _merge_docs_keep_best(results, more)
+
+        # For relevance gating, only require overlap with the usage label(s).
+        # This avoids false negatives when hints/seeds add many tokens.
+        relevance_query = " ".join(sorted(desired_usages))
+
+        # Hard-filter support: explicitly retrieve within each requested usage.
+        # This helps when semantic similarity doesn't naturally surface Formal/Party/etc. items.
+        k_each = min(max(req.top_k * 8, req.top_k), 120)
+        per_usage = []
+        for u in desired_usages:
+            fu = _with_where_constraint(req.filters, {"usage": u})
+            per_usage.append(retrieve(aug, top_k=k_each, filters=fu))
+        if per_usage:
+            results = _merge_docs_keep_best(results, *per_usage)
+    relaxed_dist = None
+    if desired_usages is not None:
+        # Occasion/usage is a hard constraint; allow a looser distance threshold (helps VN queries).
+        relaxed_dist = max(RAG_MAX_DISTANCE, 3.0)
+    results = _relevance_filter_docs(relevance_query, results, max_distance=relaxed_dist)
+    # Outfit intent: avoid returning innerwear unless explicitly requested.
+    if _looks_like_outfit_request(req.query) and not _wants_innerwear(req.query):
+        results = _filter_out_innerwear(results)
+    if desired_usages is not None:
+        results = _filter_docs_by_usage(results, desired_usages)
+    desired_colors = _desired_colors_from_query(req.query)
+    if desired_colors is not None:
+        results = _filter_docs_by_color(results, desired_colors)
+    desired_subcats = _desired_subcategories_from_query(req.query)
+    if desired_subcats is not None:
+        results = _filter_docs_by_subcategory(results, desired_subcats)
     return {"results": [r.dict() for r in results]}
 
 
@@ -403,7 +1121,14 @@ def chat(req: ChatRequest):
     if not query:
         # Be permissive: return a helpful response instead of failing.
         return {
-            "answer": "Bạn muốn hỏi gì hoặc muốn tìm sản phẩm nào? Hãy nhập câu hỏi/mô tả ngắn để mình hỗ trợ.",
+            "answer": "What would you like to find? Please enter a short English query (e.g., 'men black sneakers under $80').",
+            "products": [],
+            "sources": [],
+        }
+
+    if ENGLISH_ONLY and not _looks_like_english_query(query):
+        return {
+            "answer": "English only: please rephrase your request in English.",
             "products": [],
             "sources": [],
         }
@@ -497,6 +1222,11 @@ def chat(req: ChatRequest):
     budget_max = _extract_max_budget_usd(query)
 
     desired_types = _desired_article_types_from_query(query)
+    desired_colors = _desired_colors_from_query(query)
+    desired_subcats = _desired_subcategories_from_query(query)
+    desired_usages = _desired_usages_from_query(query)
+    is_outfit = _looks_like_outfit_request(query)
+    wants_innerwear = _wants_innerwear(query)
 
     # Merge caller-provided filters with inferred budget constraint.
     effective_filters: Dict[str, Any] = dict(req.filters or {})
@@ -513,11 +1243,127 @@ def chat(req: ChatRequest):
 
     # Retrieve more candidates when we need to filter (to avoid ending up with < top_k).
     candidate_k = req.top_k
-    if budget_max is not None or desired_types is not None:
-        candidate_k = min(max(req.top_k * 8, req.top_k), 50)
+    if budget_max is not None or desired_types is not None or desired_colors is not None or desired_subcats is not None or desired_usages is not None:
+        # Usage filtering can be especially brittle if we don't retrieve enough candidates.
+        candidate_k = min(max(req.top_k * 10, req.top_k), 120)
 
     # RAG: retrieve text docs
-    docs = retrieve(query, top_k=candidate_k, filters=effective_filters)
+    # For outfit requests, broaden retrieval so we get a mix of items (top/bottom/footwear).
+    if is_outfit and desired_subcats is None and not wants_innerwear:
+        k_each = max(min(candidate_k, 25), req.top_k)
+        docs_base = retrieve(query, top_k=k_each, filters=effective_filters)
+        docs_top = retrieve(query + " topwear shirt tshirt jacket", top_k=k_each, filters=effective_filters)
+        docs_bottom = retrieve(query + " bottomwear pants jeans trousers chinos", top_k=k_each, filters=effective_filters)
+        docs_foot = retrieve(query + " footwear shoes sneakers", top_k=k_each, filters=effective_filters)
+        docs = _merge_docs_keep_best(docs_base, docs_top, docs_bottom, docs_foot)
+    else:
+        docs = retrieve(query, top_k=candidate_k, filters=effective_filters)
+
+    relevance_query = query
+
+    # If the user asked for an occasion/usage, run an additional retrieval pass with usage hints
+    # so we have relevant candidates to filter strictly.
+    if desired_usages is not None:
+        hints = _usage_query_hints(desired_usages)
+        seed = _usage_seed_query(desired_usages)
+        aug = " ".join([query, hints, seed]).strip()
+        if hints:
+            docs_usage = retrieve(aug, top_k=candidate_k, filters=effective_filters)
+            docs = _merge_docs_keep_best(docs, docs_usage)
+
+        # For relevance gating, only require overlap with the usage label(s).
+        # This avoids false negatives when hints/seeds add many tokens.
+        relevance_query = " ".join(sorted(desired_usages))
+
+        # Hard-filter support: explicitly retrieve within each requested usage.
+        k_each = max(min(candidate_k, 60), req.top_k)
+        per_usage = []
+        for u in desired_usages:
+            fu = _with_where_constraint(effective_filters, {"usage": u})
+            per_usage.append(retrieve(aug, top_k=k_each, filters=fu))
+        if per_usage:
+            docs = _merge_docs_keep_best(docs, *per_usage)
+
+    # Strict relevance gate: do not return weak matches.
+    relaxed_dist = None
+    if desired_usages is not None:
+        # Occasion/usage is a hard constraint; allow a looser distance threshold (helps VN queries).
+        relaxed_dist = max(RAG_MAX_DISTANCE, 3.0)
+    docs = _relevance_filter_docs(relevance_query, docs, max_distance=relaxed_dist)
+
+    if not docs:
+        # Avoid calling the LLM with an empty/irrelevant context.
+        return {
+            "answer": (
+                "I couldn’t find sufficiently relevant products in the current dataset for that request. "
+                "Try using 2–6 simple keywords (category + color + gender), or loosen constraints like budget."
+            ),
+            "products": [],
+            "sources": [],
+        }
+
+    # If the user asked for outfits, do not suggest innerwear unless they asked for it.
+    if is_outfit and not wants_innerwear:
+        docs = _filter_out_innerwear(docs)
+        if not docs:
+            return {
+                "answer": (
+                    "I couldn’t find relevant outfit items (excluding innerwear) for that request in the dataset. "
+                    "Try using keywords like a specific top (t-shirt/shirt) or bottom (jeans/chinos) plus color/budget."
+                ),
+                "products": [],
+                "sources": [],
+            }
+
+    # Occasion intent filter (strict): if the user asked for an occasion (usage), don't return other usages.
+    if desired_usages is not None:
+        docs = _filter_docs_by_usage(docs, desired_usages)
+        if not docs:
+            wanted = ", ".join(sorted(desired_usages))
+            return {
+                "answer": (
+                    f"I couldn’t find sufficiently relevant items for the requested occasion/usage ({wanted}) in the dataset. "
+                    "Try using broader occasion wording (e.g., casual/formal/sports/travel) or relaxing other constraints like color/budget."
+                ),
+                "products": [],
+                "sources": [],
+            }
+
+    # Subcategory intent filter (strict): e.g. user asked for bottomwear, don't return topwear.
+    if desired_subcats is not None:
+        docs = _filter_docs_by_subcategory(docs, desired_subcats)
+        if not docs:
+            wanted = ", ".join(sorted(desired_subcats))
+            return {
+                "answer": (
+                    f"I couldn’t find sufficiently relevant items in the requested category ({wanted}) in the dataset. "
+                    "Try removing the category constraint or using broader keywords."
+                ),
+                "products": [],
+                "sources": [],
+            }
+
+    # If this is an outfit request and the user didn't already force a subcategory,
+    # try to assemble a small mix (Topwear + Bottomwear + Footwear) within budget.
+    if is_outfit and desired_subcats is None and not wants_innerwear:
+        assembled = _assemble_outfit_docs(docs, budget_max=budget_max, top_k=req.top_k)
+        if assembled:
+            docs = assembled
+
+    # Color intent filter (strict): if the user asked for a color, don't return other colors.
+    if desired_colors is not None:
+        docs = _filter_docs_by_color(docs, desired_colors)
+        docs = docs[: req.top_k]
+        if not docs:
+            wanted = ", ".join(sorted(desired_colors))
+            return {
+                "answer": (
+                    f"I couldn’t find sufficiently relevant items in the requested color ({wanted}) in the dataset. "
+                    "Try removing the color constraint or using broader keywords."
+                ),
+                "products": [],
+                "sources": [],
+            }
 
     # Safety: ensure returned products do not exceed the budget.
     if budget_max is not None:
@@ -556,6 +1402,9 @@ def chat(req: ChatRequest):
             if budget_max is not None:
                 msg += f" Budget cap: ${budget_max:g}."
             return {"answer": msg, "products": [], "sources": []}
+
+    # Final safety: never return more than top_k items.
+    docs = docs[: req.top_k]
     contexts = [d.text for d in docs]
 
     # Build structured product cards for UI rendering.
@@ -573,9 +1422,49 @@ def chat(req: ChatRequest):
                 "gender": meta.get("gender"),
                 "category": meta.get("category"),
                 "subcategory": meta.get("subcategory"),
+                "usage": meta.get("usage"),
                 "snippet": _clean_text_snippet(d.text, max_len=180),
             }
         )
+
+    outfit = None
+    if is_outfit and products:
+        # Build a structured "bundle" while keeping backward-compatible `products`.
+        def _is_top(p: Dict[str, Any]) -> bool:
+            return str(p.get("subcategory") or "").strip().lower() == "topwear"
+
+        def _is_bottom(p: Dict[str, Any]) -> bool:
+            return str(p.get("subcategory") or "").strip().lower() == "bottomwear"
+
+        def _is_footwear(p: Dict[str, Any]) -> bool:
+            return str(p.get("category") or "").strip().lower() == "footwear" or str(p.get("subcategory") or "").strip().lower() == "shoes"
+
+        top_item = next((p for p in products if _is_top(p)), None)
+        bottom_item = next((p for p in products if _is_bottom(p)), None)
+        footwear_item = next((p for p in products if _is_footwear(p)), None)
+
+        picked_ids = {p["id"] for p in [top_item, bottom_item, footwear_item] if p and p.get("id") is not None}
+        accessories = [p for p in products if p.get("id") not in picked_ids]
+
+        def _sum_price(ps: List[Dict[str, Any]]) -> Optional[float]:
+            total = 0.0
+            seen_any = False
+            for pp in ps:
+                v = _parse_price_number(pp.get("price"))
+                if v is None:
+                    continue
+                seen_any = True
+                total += v
+            return total if seen_any else None
+
+        outfit_items = [p for p in [top_item, bottom_item, footwear_item] if p] + accessories
+        outfit = {
+            "topwear": top_item,
+            "bottomwear": bottom_item,
+            "footwear": footwear_item,
+            "accessories": accessories,
+            "estimated_total_price": _sum_price(outfit_items),
+        }
     msg_history = [m.dict() for m in req.messages] if req.messages else None
 
     # Optional strict behavior: if the user is likely asking for an exact item
@@ -617,8 +1506,11 @@ def chat(req: ChatRequest):
                 "Before I lock in the best picks, quick questions:\n"
                 + "\n".join([f"- {q}" for q in followups])
             )
-    return {
+    resp = {
         "answer": answer,
         "products": products,
         "sources": [d.dict() for d in docs],
     }
+    if outfit is not None:
+        resp["outfit"] = outfit
+    return resp
