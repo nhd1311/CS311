@@ -6,7 +6,7 @@ services:
     environment:
       - ANONYMIZED_TELEMETRY=False
     volumes:
-      - chroma_data:/chroma
+      - chroma_data:/data
 
   api:
     build: .
