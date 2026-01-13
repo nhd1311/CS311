@@ -1495,6 +1495,7 @@ def chat(req: ChatRequest):
         max_tokens=req.max_tokens,
         temperature=req.temperature,
         messages=msg_history,
+        products=products,
     )
 
     # Optional: ask follow-ups. Disabled by default to keep chat frictionless.

@@ -10,6 +10,7 @@ import base64
 import math
 import os
 import sys
+import time
 from typing import Any, Dict
 
 import pandas as pd
@@ -72,16 +73,26 @@ def build_metadata(r: Dict[str, Any], img_url: str) -> Dict[str, Any]:
     return meta
 
 
-def ingest_batch(api: str, batch):
-    try:
-        resp = requests.post(api, json={"items": batch}, timeout=120)
-        resp.raise_for_status()
-        return resp.json()
-    except requests.exceptions.HTTPError as e:
-        print(f"[ERROR] HTTP {resp.status_code}")
-        print(f"[ERROR] Response: {resp.text}")
-        print(f"[ERROR] First item in batch: {batch[0] if batch else 'empty'}")
-        raise
+def ingest_batch(api: str, batch, *, timeout_s: int = 900, retries: int = 3):
+    last_err: Exception | None = None
+    for attempt in range(max(1, int(retries))):
+        try:
+            resp = requests.post(api, json={"items": batch}, timeout=int(timeout_s))
+            resp.raise_for_status()
+            return resp.json()
+        except requests.exceptions.HTTPError:
+            print(f"[ERROR] HTTP {resp.status_code}")
+            print(f"[ERROR] Response: {resp.text}")
+            print(f"[ERROR] First item in batch: {batch[0] if batch else 'empty'}")
+            raise
+        except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectTimeout) as e:
+            last_err = e
+            sleep_s = min(30, 2 ** attempt)
+            print(f"[WARN] Timeout when calling {api} (attempt {attempt + 1}/{retries}). Sleeping {sleep_s}s then retry...")
+            time.sleep(sleep_s)
+
+    assert last_err is not None
+    raise last_err
 
 
 def main():
@@ -91,6 +102,18 @@ def main():
     parser.add_argument("--api", default=DEFAULT_API)
     parser.add_argument("--batch", type=int, default=128)
     parser.add_argument("--image-column", default="image_url")
+    parser.add_argument(
+        "--timeout",
+        type=int,
+        default=int(os.getenv("INGEST_IMAGE_TIMEOUT", "900")),
+        help="Requests timeout in seconds for each batch (default: 900).",
+    )
+    parser.add_argument(
+        "--retries",
+        type=int,
+        default=int(os.getenv("INGEST_IMAGE_RETRIES", "3")),
+        help="Number of retries on timeout per batch (default: 3).",
+    )
     parser.add_argument(
         "--start",
         type=int,
@@ -167,7 +190,7 @@ def main():
             print(f"[WARN] Batch {i} trống ảnh, bỏ qua")
             continue
 
-        ingest_batch(args.api, payload_items)
+        ingest_batch(args.api, payload_items, timeout_s=args.timeout, retries=args.retries)
         ingested += len(payload_items)
         print(f"[INFO] Ingested images: {ingested} (from {len(payload_items)} in this batch)")
 

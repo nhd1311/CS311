@@ -11,6 +11,7 @@ import argparse
 import math
 import os
 import sys
+import time
 from typing import Any, Dict
 
 import pandas as pd
@@ -98,11 +99,29 @@ def build_metadata(r: Dict[str, Any], csv_path: str) -> Dict[str, Any]:
     return meta
 
 
-def ingest_batch(api: str, batch):
+def ingest_batch(api: str, batch, *, timeout_s: int = 600, retries: int = 3):
+    """Post one ingest batch to the API.
+
+    Embedding can be slow (CPU/first model load), so we allow a long timeout and
+    a few retries to avoid client-side ReadTimeout aborting a valid long request.
+    """
+
     payload = {"items": batch}
-    resp = requests.post(api, json=payload, timeout=60)
-    resp.raise_for_status()
-    return resp.json()
+    last_err: Exception | None = None
+    for attempt in range(max(1, int(retries))):
+        try:
+            resp = requests.post(api, json=payload, timeout=int(timeout_s))
+            resp.raise_for_status()
+            return resp.json()
+        except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectTimeout) as e:
+            last_err = e
+            # Exponential-ish backoff.
+            sleep_s = min(30, 2 ** attempt)
+            print(f"[WARN] Timeout when calling {api} (attempt {attempt + 1}/{retries}). Sleeping {sleep_s}s then retry...")
+            time.sleep(sleep_s)
+
+    assert last_err is not None
+    raise last_err
 
 
 def main():
@@ -111,6 +130,18 @@ def main():
     parser.add_argument("--csv", default=os.getenv("DATASET_CSV", "datasets/archive/fashion-dataset/styles.csv"))
     parser.add_argument("--api", default=DEFAULT_API)
     parser.add_argument("--batch", type=int, default=64)
+    parser.add_argument(
+        "--timeout",
+        type=int,
+        default=int(os.getenv("INGEST_TIMEOUT", "600")),
+        help="Requests timeout in seconds for each batch (default: 600).",
+    )
+    parser.add_argument(
+        "--retries",
+        type=int,
+        default=int(os.getenv("INGEST_RETRIES", "3")),
+        help="Number of retries on timeout per batch (default: 3).",
+    )
     parser.add_argument(
         "--start",
         type=int,
@@ -163,7 +194,7 @@ def main():
                 }
             )
 
-        ingest_batch(args.api, payload_items)
+        ingest_batch(args.api, payload_items, timeout_s=args.timeout, retries=args.retries)
         print(f"[INFO] Ingested {min(i + len(chunk), total)} / {total}")
 
     print("[DONE] Ingest completed.")
