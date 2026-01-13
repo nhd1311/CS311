@@ -18,6 +18,90 @@ logger = logging.getLogger(__name__)
 _openai_client = None
 
 
+def _format_price_short(val: Any) -> Optional[str]:
+    if val is None:
+        return None
+    try:
+        n = float(val)
+    except Exception:
+        s = str(val).strip()
+        return s or None
+    if not (n >= 0):
+        return None
+    if abs(n - round(n)) < 1e-9:
+        return f"${int(round(n))}"
+    return f"${n:.2f}"
+
+
+def _answer_from_products(question: str, products: List[Dict[str, Any]]) -> str:
+    # Ensure stable, de-duplicated ordering.
+    seen = set()
+    picks: List[Dict[str, Any]] = []
+    for p in products or []:
+        if not isinstance(p, dict):
+            continue
+        pid = p.get("id")
+        if pid is None:
+            continue
+        if pid in seen:
+            continue
+        seen.add(pid)
+        picks.append(p)
+        if len(picks) >= 4:
+            break
+
+    if not picks:
+        return (
+            "I couldn’t find sufficiently relevant products in the current dataset for that request. "
+            "Try using 2–6 simple keywords (category + color + gender), or loosen constraints like budget."
+        )
+
+    lines: List[str] = []
+    q = (question or "").strip()
+    if q:
+        lines.append(f"Quick summary: Here are the closest matches for: {q}.")
+    else:
+        lines.append("Quick summary: Here are the closest matches I found in the dataset.")
+    lines.append("")
+    lines.append("Top picks:")
+
+    for i, p in enumerate(picks, start=1):
+        name = (p.get("name") or str(p.get("id") or "")).strip()
+        pid = p.get("id")
+        price = _format_price_short(p.get("price")) or "price not listed"
+        color = (p.get("color") or "").strip()
+        gender = (p.get("gender") or "").strip()
+        cat = (p.get("category") or "").strip()
+        sub = (p.get("subcategory") or "").strip()
+        usage = (p.get("usage") or "").strip()
+
+        attrs = []
+        if price:
+            attrs.append(str(price))
+        if color:
+            attrs.append(color)
+        if gender:
+            attrs.append(gender)
+        if cat or sub:
+            attrs.append(" / ".join([x for x in [cat, sub] if x]))
+        attr_txt = " - " + " - ".join(attrs) if attrs else ""
+
+        reason_parts = []
+        if usage:
+            reason_parts.append(f"Good for {usage.lower()}.")
+        if sub and not usage:
+            reason_parts.append(f"Matches {sub.lower()}.")
+        if not reason_parts:
+            reason_parts.append("A close match from the dataset.")
+        reason = " ".join(reason_parts)
+
+        lines.append(f"{i}) {name} ({pid}){attr_txt} - {reason}")
+
+    lines.append("")
+    lines.append("Next step: Open a product image card to verify style and details.")
+    return "\n".join(lines).strip()
+
+
 def _get_openai_client() -> OpenAI:
     global _openai_client
     if _openai_client is None:
@@ -42,6 +126,12 @@ def generate_answer(
 
     Falls back to a retrieval-only answer if the LLM is unreachable/misconfigured.
     """
+
+    # IMPORTANT: the UI renders product cards from `products` returned by the API.
+    # To prevent any mismatch between the assistant text and the displayed cards,
+    # we generate the answer deterministically from `products` whenever it is provided.
+    if products:
+        return _answer_from_products(question, products)
 
     prompt = _build_prompt(question, contexts, messages=messages, products=products)
     try:

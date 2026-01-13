@@ -403,6 +403,38 @@ def _extract_max_budget_usd(text: str) -> Optional[float]:
     return min(nums) if nums else None
 
 
+def _extract_min_budget_usd(text: str) -> Optional[float]:
+    """Extract a minimum budget (USD) from free-form text.
+
+    Supports patterns like: "above 200", "over $150", "at least 80", ">= 50", "> 40".
+    Returns the largest found number (most restrictive), if any.
+    """
+    t = (text or "").lower()
+    nums: List[float] = []
+
+    patterns = [
+        r"\babove\s*\$?\s*(\d+(?:\.\d{1,2})?)\b",
+        r"\bover\s*\$?\s*(\d+(?:\.\d{1,2})?)\b",
+        r"\bmore\s+than\s*\$?\s*(\d+(?:\.\d{1,2})?)\b",
+        r"\bat\s+least\s*\$?\s*(\d+(?:\.\d{1,2})?)\b",
+        r"\bminimum\s*\$?\s*(\d+(?:\.\d{1,2})?)\b",
+        r"\b>=\s*\$?\s*(\d+(?:\.\d{1,2})?)\b",
+        r"\b>\s*\$?\s*(\d+(?:\.\d{1,2})?)\b",
+    ]
+
+    for pat in patterns:
+        for m in re.finditer(pat, t):
+            try:
+                nums.append(float(m.group(1)))
+            except Exception:
+                continue
+
+    if not nums:
+        return None
+    nums = [n for n in nums if 0 < n < 1_000_000]
+    return max(nums) if nums else None
+
+
 def _normalize_article_type(val: Any) -> str:
     s = ("" if val is None else str(val)).strip().lower()
     # Keep alphanumerics only to make matching robust (e.g., "T-shirts" -> "tshirts").
@@ -1119,8 +1151,12 @@ def chat(req: ChatRequest):
         # Keep it light: ask at most 2 questions per turn.
         return qs[:2]
 
-    # Budget-aware retrieval: if the user specifies a max budget, enforce it.
+    # Budget-aware retrieval: enforce min/max budget when specified.
+    budget_min = _extract_min_budget_usd(query)
     budget_max = _extract_max_budget_usd(query)
+    if budget_min is not None and budget_max is not None and budget_min > budget_max:
+        # Conflicting constraints; prefer the stricter one (treat as invalid max).
+        budget_max = None
 
     desired_types = _desired_article_types_from_query(query)
     desired_colors = _desired_colors_from_query(query)
@@ -1131,20 +1167,30 @@ def chat(req: ChatRequest):
 
     # Merge caller-provided filters with inferred budget constraint.
     effective_filters: Dict[str, Any] = dict(req.filters or {})
-    if budget_max is not None:
+    if budget_min is not None or budget_max is not None:
         # Prefer numeric compare in Chroma if supported by the installed version.
         # We'll also post-filter below as a safety net.
         price_filter = effective_filters.get("price")
         if isinstance(price_filter, dict):
-            # Merge/override $lte with the most restrictive cap.
-            cur = _parse_price_number(price_filter.get("$lte"))
-            effective_filters["price"] = {"$lte": budget_max if cur is None else min(cur, budget_max)}
+            out = dict(price_filter)
+            if budget_min is not None:
+                cur = _parse_price_number(out.get("$gte"))
+                out["$gte"] = budget_min if cur is None else max(cur, budget_min)
+            if budget_max is not None:
+                cur = _parse_price_number(out.get("$lte"))
+                out["$lte"] = budget_max if cur is None else min(cur, budget_max)
+            effective_filters["price"] = out
         else:
-            effective_filters["price"] = {"$lte": budget_max}
+            out: Dict[str, Any] = {}
+            if budget_min is not None:
+                out["$gte"] = budget_min
+            if budget_max is not None:
+                out["$lte"] = budget_max
+            effective_filters["price"] = out
 
     # Retrieve more candidates when we need to filter (to avoid ending up with < top_k).
     candidate_k = req.top_k
-    if budget_max is not None or desired_types is not None or desired_colors is not None or desired_subcats is not None or desired_usages is not None:
+    if budget_min is not None or budget_max is not None or desired_types is not None or desired_colors is not None or desired_subcats is not None or desired_usages is not None:
         # Usage filtering can be especially brittle if we don't retrieve enough candidates.
         candidate_k = min(max(req.top_k * 10, req.top_k), 120)
 
@@ -1266,22 +1312,25 @@ def chat(req: ChatRequest):
                 "sources": [],
             }
 
-    # Safety: ensure returned products do not exceed the budget.
-    if budget_max is not None:
+    # Safety: ensure returned products obey the budget range.
+    if budget_min is not None or budget_max is not None:
         filtered = []
         for d in docs:
             price = _parse_price_number((d.metadata or {}).get("price"))
             if price is None:
                 continue
-            if price <= budget_max + 1e-9:
-                filtered.append(d)
+            if budget_min is not None and price < budget_min - 1e-9:
+                continue
+            if budget_max is not None and price > budget_max + 1e-9:
+                continue
+            filtered.append(d)
         docs = filtered[: req.top_k]
 
         if not docs:
             return {
                 "answer": (
-                    f"I couldn’t find any items with a listed price under ${budget_max:g} in the dataset. "
-                    "Try increasing the budget or using broader keywords."
+                    "I couldn’t find any items with a listed price in the requested range in the dataset. "
+                    "Try adjusting the budget range or using broader keywords."
                 ),
                 "products": [],
                 "sources": [],
