@@ -10,4 +10,7 @@ torch
 open-clip-torch
 pillow
 openai
+
+# Language detection for strict English-only queries
+langdetect
  

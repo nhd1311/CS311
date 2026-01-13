@@ -39,7 +39,7 @@ Khi chạy bằng **Docker Compose** (khuyến nghị):
 
 ## Cấu hình môi trường (.env)
 
-Trong repo đã có `.env` và `.env.example`.
+Repo chỉ commit file mẫu `.env.example`. Bạn tạo `.env` local (không commit) bằng cách copy từ mẫu.
 
 - Nếu bạn chưa có `.env` đúng, hãy copy từ mẫu:
   - Copy `.env.example` → `.env` và chỉnh lại các biến.
@@ -58,9 +58,14 @@ Các biến quan trọng:
   - `IMAGE_MODEL_PRETRAINED` (mặc định: `openai`)
 
 - **LLM (tùy chọn)**: dùng để tạo câu trả lời dựa trên ngữ cảnh RAG.
+
   - `LLM_BASE_URL`
   - `LLM_API_KEY`
   - `LLM_MODEL`
+
+- **Ngôn ngữ (English-only)**:
+  - API **chỉ chấp nhận câu hỏi tiếng Anh**.
+  - Không hỗ trợ/toggle cho tiếng Việt trong phiên bản này.
 
 Ghi chú:
 

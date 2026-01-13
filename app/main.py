@@ -42,10 +42,8 @@ ASK_FOLLOWUPS = _env_flag("ASK_FOLLOWUPS", "0")
 STRICT_EXACT_LOOKUP = _env_flag("STRICT_EXACT_LOOKUP", "0")
 
 # Language behavior.
-# When enabled, the API will reject non-English queries and always respond in English.
-# Note: the assistant/LLM is already instructed to reply in English; this flag only
-# controls whether non-English user queries are rejected.
-ENGLISH_ONLY = _env_flag("ENGLISH_ONLY", "0")
+# This project is English-only: the API rejects non-English user queries.
+ENGLISH_ONLY = True
 
 # Relevance gating for retrieval results.
 # Note: Chroma returns distances (lower is better). In this project we often
@@ -87,32 +85,6 @@ _STOPWORDS = {
     "with",
     "you",
     "your",
-    # Vietnamese (minimal)
-    "ao",
-    "quan",
-    "vay",
-    "dam",
-    "giay",
-    "dep",
-    "tui",
-    "vi",
-    "mu",
-    "kinh",
-    "do",
-    "cho",
-    "toi",
-    "minh",
-    "ban",
-    "co",
-    "la",
-    "va",
-    "voi",
-    "trong",
-    "duoi",
-    "tren",
-    "mot",
-    "nhung",
-    "nay",
 }
 
 _GENERIC_TOKENS = {
@@ -175,53 +147,93 @@ _GENERIC_TOKENS = {
     "sneakers",
 }
 
+_QUERY_HINT_TOKENS = {
+    # Budget / price
+    "budget",
+    "price",
+    "cheap",
+    "affordable",
+    "under",
+    "below",
+    "max",
+    "maximum",
+    "usd",
+    "dollar",
+    "dollars",
+    # Common shopping intent
+    "buy",
+    "need",
+    "want",
+    "looking",
+    "find",
+    "search",
+    # Occasion hints
+    "work",
+    "office",
+    "formal",
+    "business",
+    "interview",
+    "casual",
+    "party",
+    "wedding",
+    "travel",
+    "gym",
+    "sport",
+    "sports",
+    # Outfit intent
+    "outfit",
+    "outfits",
+    "look",
+}
+
 
 def _tokenize(text: str) -> List[str]:
     toks = re.findall(r"[a-z0-9]+", (text or "").lower())
     return [t for t in toks if len(t) >= 3 and t not in _STOPWORDS]
 
 
-_NON_ENGLISH_HINT_PATTERNS = [
-    # Vietnamese phrases commonly used in this project
-    r"\bgoi\s*y\b",
-    r"\bphoi\s*do\b",
-    r"\btrang\s*phuc\b",
-    r"\bdi\s*lam\b",
-    r"\bdi\s*tiec\b",
-    r"\bdu\s*tiec\b",
-    r"\bdi\s*choi\b",
-    r"\bdi\s*hoc\b",
-    r"\bdu\s*lich\b",
-    r"\btap\s*gym\b",
-    r"\bthe\s*thao\b",
-    r"\bmau\b",
-    r"\bcho\s*(nam|nu)\b",
-]
-
-
 def _looks_like_english_query(text: str) -> bool:
     """Best-effort check for whether the user query is English.
 
-    We keep this heuristic intentionally simple:
-    - If it contains non-ASCII characters (Vietnamese diacritics, etc.) -> not English.
-    - If it matches common Vietnamese phrases (even without diacritics) -> not English.
+    This project is English-only. We reject:
+    - Any non-ASCII text (common for non-English input)
+    - Any text that a language detector does not classify as English
     """
     s = (text or "").strip()
     if not s:
         return True
 
-    # Reject non-ASCII letters (covers Vietnamese diacritics).
+    # Reject non-ASCII characters first.
+    # (This immediately blocks Vietnamese input with diacritics.)
     if re.search(r"[^\x00-\x7F]", s):
         return False
 
-    t = s.lower()
-    # Normalize punctuation to spaces for phrase matching.
-    t = re.sub(r"[^a-z0-9\s]+", " ", t)
-    t = re.sub(r"\s+", " ", t).strip()
-    for pat in _NON_ENGLISH_HINT_PATTERNS:
-        if re.search(pat, t):
-            return False
-    return True
+    # Keyword-style product searches are very common (e.g. "men black sneakers under $80").
+    # Many language detectors perform poorly on such short, noun-heavy inputs.
+    tokens = re.findall(r"[a-z0-9]+", s.lower())
+    alpha = [t for t in tokens if t.isalpha()]
+    if alpha and any((t in _GENERIC_TOKENS) or (t in _QUERY_HINT_TOKENS) for t in alpha):
+        return True
+
+    # If it's short and doesn't look like a catalog/search query, be strict.
+    if len(s) < 20 or len(alpha) < 4:
+        return False
+
+    try:
+        from langdetect import DetectorFactory, detect_langs
+
+        # Make detection deterministic.
+        DetectorFactory.seed = 0
+        langs = detect_langs(s)
+        if not langs:
+            return True
+
+        for cand in langs:
+            if getattr(cand, "lang", None) == "en" and float(getattr(cand, "prob", 0.0)) >= 0.50:
+                return True
+        return False
+    except Exception:
+        return False
 
 
 def _distinctive_tokens(text: str) -> List[str]:
@@ -301,19 +313,6 @@ def _looks_like_specific_product_lookup(text: str) -> bool:
         "model",
         "sku",
         "code",
-        # Vietnamese
-        "co ban",
-        "co mau",
-        "con mau",
-        "tim ",
-        "kiem ",
-        "san pham",
-        "mau nay",
-        "giong",
-        "y nhu",
-        "chinh xac",
-        "hinh nay",
-        "anh nay",
     ]
     return any(k in t for k in keywords)
 
@@ -388,9 +387,6 @@ def _extract_max_budget_usd(text: str) -> Optional[float]:
         r"\bmax(?:imum)?\s*\$?\s*(\d+(?:\.\d{1,2})?)\b",
         r"\b<=\s*\$?\s*(\d+(?:\.\d{1,2})?)\b",
         r"\b<\s*\$?\s*(\d+(?:\.\d{1,2})?)\b",
-        # Vietnamese-ish
-        r"\bdưới\s*(\d+(?:\.\d{1,2})?)\b",
-        r"\btoi\s*da\s*(\d+(?:\.\d{1,2})?)\b",
     ]
 
     for pat in patterns:
@@ -455,42 +451,12 @@ def _desired_colors_from_query(text: str) -> Optional[set[str]]:
         "cream": "Cream",
         "navy": "Navy Blue",
         "maroon": "Maroon",
-        # Vietnamese (accent-less matching)
-        "den": "Black",
-        "trang": "White",
-        "do": "Red",
-        "xanh": "Blue",
-        "vang": "Yellow",
-        "hong": "Pink",
-        "tim": "Purple",
-        "cam": "Orange",
-        "nau": "Brown",
-        "xam": "Grey",
-        "bac": "Silver",
-        "be": "Beige",
-        "kem": "Cream",
     }
 
-    # Remove diacritics so "đen" -> "den", "trắng" -> "trang".
-    try:
-        import unicodedata
-
-        t2 = "".join(
-            c for c in unicodedata.normalize("NFKD", t) if not unicodedata.combining(c)
-        )
-    except Exception:
-        t2 = t
-
-    toks = re.findall(r"[a-z]+", t2)
-    # Vietnamese "đồ" (clothes) and "đỏ" (red) both normalize to "do".
-    # Treat "do" as a color only when the user explicitly indicates color context (e.g., "màu đỏ").
-    has_color_context = bool(re.search(r"\b(mau|color|colour)\b", t2))
+    toks = re.findall(r"[a-z]+", t)
     found: set[str] = set()
     for tok in toks:
         key = _normalize_color(tok)
-        if key == "do" and not has_color_context:
-            # Skip ambiguous token.
-            continue
         if key in color_map:
             found.add(color_map[key])
 
@@ -530,33 +496,23 @@ def _desired_subcategories_from_query(text: str) -> Optional[set[str]]:
     if not t:
         return None
 
-    # Remove diacritics for Vietnamese.
-    try:
-        import unicodedata
-
-        t2 = "".join(
-            c for c in unicodedata.normalize("NFKD", t) if not unicodedata.combining(c)
-        )
-    except Exception:
-        t2 = t
-
     # If user explicitly says bottomwear/topwear, respect that.
     # Also infer bottomwear from common garment words.
     # NOTE: Keep this conservative: only infer when it's strongly implied.
-    tt = t2
-    if re.search(r"\bbottom\s*wear\b", tt) or any(k in tt for k in ["quan", "trousers", "pants", "jeans", "shorts", "skirt", "leggings", "chinos"]):
+    tt = t
+    if re.search(r"\bbottom\s*wear\b", tt) or any(k in tt for k in ["trousers", "pants", "jeans", "shorts", "skirt", "leggings", "chinos"]):
         return {"Bottomwear"}
-    if re.search(r"\btop\s*wear\b", tt) or any(k in tt for k in ["shirt", "tshirt", "t-shirt", "tee", "top", "jacket", "hoodie", "sweater", "coat", "ao"]):
+    if re.search(r"\btop\s*wear\b", tt) or any(k in tt for k in ["shirt", "tshirt", "t-shirt", "tee", "top", "jacket", "hoodie", "sweater", "coat"]):
         # Only infer Topwear if it is explicitly requested; garment words are too broad.
         # We keep this strict to avoid blocking mixed queries.
         if re.search(r"\btop\s*wear\b", tt):
             return {"Topwear"}
 
     # If user explicitly says footwear/bags, we can infer those too.
-    if re.search(r"\bfoot\s*wear\b", tt) or any(k in tt for k in ["shoes", "sneakers", "sandals", "flipflops", "boots", "giay", "dep"]):
+    if re.search(r"\bfoot\s*wear\b", tt) or any(k in tt for k in ["shoes", "sneakers", "sandals", "flipflops", "boots"]):
         # Dataset uses many footwear subcategories; don't over-restrict.
         return None
-    if any(k in tt for k in ["bag", "handbag", "backpack", "tui"]):
+    if any(k in tt for k in ["bag", "handbag", "backpack"]):
         # Bags subcategory exists, but users often mix accessory terms.
         return {"Bags"}
 
@@ -597,37 +553,27 @@ def _desired_usages_from_query(text: str) -> Optional[set[str]]:
     if not t:
         return None
 
-    # Remove diacritics so Vietnamese matching works ("đi làm" -> "di lam").
-    try:
-        import unicodedata
-
-        t2 = "".join(
-            c for c in unicodedata.normalize("NFKD", t) if not unicodedata.combining(c)
-        )
-    except Exception:
-        t2 = t
-
-    tt = t2
+    tt = t
     wanted: set[str] = set()
 
     # Sports / gym
-    if any(k in tt for k in ["gym", "workout", "sport", "sports", "training", "run", "running", "tap gym", "the thao", "chay bo", "tap luyen"]):
+    if any(k in tt for k in ["gym", "workout", "sport", "sports", "training", "run", "running"]):
         wanted.add("Sports")
 
     # Travel
-    if any(k in tt for k in ["travel", "trip", "vacation", "journey", "tour", "du lich", "di du lich", "phuot"]):
+    if any(k in tt for k in ["travel", "trip", "vacation", "journey", "tour"]):
         wanted.add("Travel")
 
     # Home / loungewear
-    if any(k in tt for k in ["home", "at home", "loungewear", "pajama", "pjs", "o nha", "mac nha", "do ngu"]):
+    if any(k in tt for k in ["home", "at home", "loungewear", "pajama", "pjs"]):
         wanted.add("Home")
 
     # Ethnic / traditional
-    if any(k in tt for k in ["ethnic", "traditional", "ao dai", "truyen thong", "dan toc", "le hoi", "tet"]):
+    if any(k in tt for k in ["ethnic", "traditional", "festival"]):
         wanted.add("Ethnic")
 
     # Party / events
-    if any(k in tt for k in ["party", "club", "date", "prom", "wedding", "reception", "di tiec", "du tiec", "dam cuoi", "hen ho"]):
+    if any(k in tt for k in ["party", "club", "date", "prom", "wedding", "reception"]):
         wanted.add("Party")
 
     # Formal / office / interview
@@ -640,10 +586,6 @@ def _desired_usages_from_query(text: str) -> Optional[set[str]]:
             "work",
             "interview",
             "meeting",
-            "cong so",
-            "di lam",
-            "phong van",
-            "hop",
         ]
     )
     if office_like:
@@ -658,9 +600,6 @@ def _desired_usages_from_query(text: str) -> Optional[set[str]]:
             "daily",
             "street",
             "hangout",
-            "di choi",
-            "dao pho",
-            "doi thuong",
         ]
     )
 
@@ -777,14 +716,6 @@ def _looks_like_outfit_request(text: str) -> bool:
     t = (text or "").strip().lower()
     if not t:
         return False
-    # Remove diacritics for Vietnamese.
-    try:
-        import unicodedata
-
-        t = "".join(c for c in unicodedata.normalize("NFKD", t) if not unicodedata.combining(c))
-    except Exception:
-        pass
-
     keywords = [
         # English
         "outfit",
@@ -794,10 +725,6 @@ def _looks_like_outfit_request(text: str) -> bool:
         "set",
         "combo",
         "mix and match",
-        # Vietnamese
-        "phoi do",
-        "bo do",
-        "set do",
     ]
     return any(k in t for k in keywords)
 
@@ -806,13 +733,6 @@ def _wants_innerwear(text: str) -> bool:
     t = (text or "").strip().lower()
     if not t:
         return False
-    try:
-        import unicodedata
-
-        t = "".join(c for c in unicodedata.normalize("NFKD", t) if not unicodedata.combining(c))
-    except Exception:
-        pass
-
     keywords = [
         # English
         "innerwear",
@@ -822,10 +742,6 @@ def _wants_innerwear(text: str) -> bool:
         "boxer",
         "boxers",
         "trunk brief",
-        # Vietnamese
-        "do lot",
-        "quan lot",
-        "ao lot",
     ]
     return any(k in t for k in keywords)
 
@@ -977,12 +893,12 @@ def _desired_article_types_from_query(text: str) -> Optional[set[str]]:
     t = (text or "").lower()
 
     # T-shirt intent (must be checked before generic "shirt")
-    if re.search(r"\b(t\s*-?\s*shirt|tshirt|tee)\b", t) or any(k in t for k in ["ao thun", "áo thun", "ao phong", "áo phông"]):
+    if re.search(r"\b(t\s*-?\s*shirt|tshirt|tee)\b", t):
         # Dataset uses "Tshirts" for t-shirts.
         return {"tshirts"}
 
     # Shirt intent (only if not asking for t-shirt)
-    if re.search(r"\bshirt\b", t) or any(k in t for k in ["ao so mi", "áo sơ mi", "so mi", "sơ mi"]):
+    if re.search(r"\bshirt\b", t):
         return {"shirts"}
 
     return None
@@ -1046,7 +962,7 @@ def query_items(req: QueryRequest):
             results = _merge_docs_keep_best(results, *per_usage)
     relaxed_dist = None
     if desired_usages is not None:
-        # Occasion/usage is a hard constraint; allow a looser distance threshold (helps VN queries).
+        # Occasion/usage is a hard constraint; allow a looser distance threshold.
         relaxed_dist = max(RAG_MAX_DISTANCE, 3.0)
     results = _relevance_filter_docs(relevance_query, results, max_distance=relaxed_dist)
     # Outfit intent: avoid returning innerwear unless explicitly requested.
@@ -1144,8 +1060,8 @@ def chat(req: ChatRequest):
 
     def _has_budget(text: str) -> bool:
         t = text.lower()
-        # Budget intent words (VN + EN)
-        if any(k in t for k in ["ngân sách", "budget", "under", "below", "max", "maximum", "up to", "tối đa", "khoảng", "tầm", "dưới", "<"]):
+        # Budget intent words
+        if any(k in t for k in ["budget", "under", "below", "max", "maximum", "up to", "<"]):
             if re.search(r"\d", t):
                 return True
         # USD-style patterns: $40, 40$, 40 usd
@@ -1155,8 +1071,7 @@ def chat(req: ChatRequest):
             return True
         if re.search(r"\b\d+(?:\.\d{1,2})?\s*(usd|dollars?)\b", t):
             return True
-        # VN currency-ish markers
-        return bool(re.search(r"\b\d{2,}\s*(k|nghìn|tr|triệu|đ|vnd)\b", t))
+        return False
 
     def _has_occasion(text: str) -> bool:
         t = text.lower()
@@ -1179,26 +1094,12 @@ def chat(req: ChatRequest):
             "sport",
             "sports",
             "school",
-            # Vietnamese
-            "đi làm",
-            "công sở",
-            "đi tiệc",
-            "dự tiệc",
-            "đi chơi",
-            "dạo phố",
-            "đi học",
-            "du lịch",
-            "tập gym",
-            "thể thao",
-            "đám cưới",
-            "phỏng vấn",
-            "ở nhà",
         ]
         return any(k in t for k in keywords)
 
     def _has_size_or_fit(text: str) -> bool:
         t = text.lower()
-        if any(k in t for k in ["size", "form", "fit", "oversize", "regular", "slim", "vừa", "rộng", "ôm"]):
+        if any(k in t for k in ["size", "form", "fit", "oversize", "regular", "slim"]):
             return True
         # sizes like S/M/L/XL, numeric waist sizes 26-40
         if re.search(r"\b(xs|s|m|l|xl|xxl|xxxl)\b", t):
@@ -1212,7 +1113,7 @@ def chat(req: ChatRequest):
         if not _has_occasion(text):
             qs.append("What’s the occasion (work, casual, party, travel, etc.)?")
         if not _has_budget(text):
-            qs.append("What’s your max budget? (USD/VND is fine)")
+            qs.append("What’s your max budget? (USD)")
         if not _has_size_or_fit(text):
             qs.append("What size do you wear and what fit do you prefer (slim/regular/oversized)?")
         # Keep it light: ask at most 2 questions per turn.
@@ -1287,7 +1188,7 @@ def chat(req: ChatRequest):
     # Strict relevance gate: do not return weak matches.
     relaxed_dist = None
     if desired_usages is not None:
-        # Occasion/usage is a hard constraint; allow a looser distance threshold (helps VN queries).
+        # Occasion/usage is a hard constraint; allow a looser distance threshold.
         relaxed_dist = max(RAG_MAX_DISTANCE, 3.0)
     docs = _relevance_filter_docs(relevance_query, docs, max_distance=relaxed_dist)
 
