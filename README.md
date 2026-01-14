@@ -1,312 +1,519 @@
-# Fashion RAG (Text + Image) – Hướng dẫn sử dụng
+﻿# Fashion RAG (Text + Image) — Tài liệu kỹ thuật
 
-Dự án này là một **Fashion Chatbot** dùng **RAG (Retrieval-Augmented Generation)** để tìm kiếm sản phẩm thời trang theo:
+Hệ thống **Fashion Search/Chatbot** theo mô hình **RAG (Retrieval‑Augmented Generation)** cho **truy vấn văn bản** và **tìm kiếm bằng hình ảnh**, triển khai bằng **FastAPI** và **ChromaDB**.
 
-- **Văn bản** (mô tả/nhu cầu)
-- **Hình ảnh** (tìm sản phẩm tương tự từ ảnh)
-
-Backend viết bằng **FastAPI**, lưu vector trong **ChromaDB**, embed văn bản bằng **Sentence-Transformers** và embed ảnh bằng **OpenCLIP**. Có sẵn UI demo trong `index.html`.
+Tài liệu này được viết theo phong cách “tài liệu kỹ thuật”: mô tả kiến trúc, cấu hình, hợp đồng API, luồng ingest, và cách vận hành/đánh giá.
 
 ---
 
-## Kiến trúc nhanh
+## Mục lục
 
-Khi chạy bằng **Docker Compose** (khuyến nghị):
-
-- API (FastAPI): `http://127.0.0.1:8081`
-- ChromaDB (vector database): `http://127.0.0.1:8001`
-
-> Ghi chú: nếu máy bạn đã có service khác dùng cổng 8080/8000, bạn có thể đổi host port trong `docker-compose.yml` (ví dụ 8081/8001). Hãy dùng đúng URL theo port mapping hiện tại.
-
-- 2 collections:
-  - `products` (text)
-  - `products_image` (image)
-
----
-
-## Yêu cầu
-
-### Cách 1 (khuyến nghị): Docker Compose
-
-- Docker Desktop (Windows)
-
-### Cách 2: Chạy local bằng Python
-
-- Python 3.11+
-- Cài dependencies trong `requirements.txt`
+- [1. Tổng quan](#1-tổng-quan)
+- [2. Kiến trúc & thành phần](#2-kiến-trúc--thành-phần)
+- [3. Dữ liệu, collections & embedding](#3-dữ-liệu-collections--embedding)
+- [4. Cấu hình (Environment Variables)](#4-cấu-hình-environment-variables)
+- [5. Chạy hệ thống](#5-chạy-hệ-thống)
+- [6. Ingest dữ liệu](#6-ingest-dữ-liệu)
+- [7. Hợp đồng API (HTTP)](#7-hợp-đồng-api-http)
+- [8. Logic RAG & các cơ chế lọc](#8-logic-rag--các-cơ-chế-lọc)
+- [9. Tích hợp LLM & chính sách trả lời](#9-tích-hợp-llm--chính-sách-trả-lời)
+- [10. A/B testing](#10-ab-testing)
+- [11. Đánh giá & kết quả](#11-đánh-giá--kết-quả)
+- [12. Troubleshooting / vận hành](#12-troubleshooting--vận-hành)
+- [13. Cấu trúc repo](#13-cấu-trúc-repo)
 
 ---
 
-## Cấu hình môi trường (.env)
+## 1. Tổng quan
 
-Repo chỉ commit file mẫu `.env.example`. Bạn tạo `.env` local (không commit) bằng cách copy từ mẫu.
+### 1.1 Mục tiêu
 
-- Nếu bạn chưa có `.env` đúng, hãy copy từ mẫu:
-  - Copy `.env.example` → `.env` và chỉnh lại các biến.
+- **Text RAG**: người dùng nhập nhu cầu (tiếng Anh) → hệ thống truy xuất (retrieve) sản phẩm liên quan → trả về danh sách sản phẩm + câu trả lời.
+- **Image RAG**: người dùng upload ảnh → hệ thống truy xuất sản phẩm tương tự theo embedding hình ảnh → trả về danh sách kết quả.
 
-Các biến quan trọng:
+### 1.2 Ràng buộc quan trọng
 
-- **Chroma** (dùng khi chạy qua docker-compose):
+1. **English-only**: API có kiểm tra “looks like English”. Nếu không đạt, endpoint `/chat` trả:
 
-  - `CHROMA_HOST` (ví dụ: `chroma` trong docker-compose)
-  - `CHROMA_PORT` (mặc định `8000`)
+   - `answer: "I don't understand your question. Please rewrite it."`
+   - `products: []`
 
-- **Embedding text / image**:
+   Endpoint `/query` hiện trả `error: "English only: please rephrase your request in English."`.
 
-  - `EMBED_MODEL` (mặc định: `sentence-transformers/all-MiniLM-L6-v2`)
-  - `IMAGE_MODEL` (mặc định: `ViT-B-32`)
-  - `IMAGE_MODEL_PRETRAINED` (mặc định: `openai`)
+2. **Giảm hallucination**: mặc định `answer` được sinh **deterministic** từ chính danh sách `products` (để đồng bộ với UI cards). Có thể “ép” dùng LLM bằng `USE_LLM_ANSWER=1`.
 
-- **LLM (tùy chọn)**: dùng để tạo câu trả lời dựa trên ngữ cảnh RAG.
+---
 
-  - `LLM_BASE_URL`
-  - `LLM_API_KEY`
-  - `LLM_MODEL`
+## 2. Kiến trúc & thành phần
 
-- **Ngôn ngữ (English-only)**:
-  - API **chỉ chấp nhận câu hỏi tiếng Anh**.
-  - Không hỗ trợ/toggle cho tiếng Việt trong phiên bản này.
+### 2.1 Sơ đồ kiến trúc (logical)
+
+```text
+Browser (index.html)
+   |
+   | HTTP (JSON / multipart)
+   v
+FastAPI (app/main.py)
+   |
+   | retrieve/query
+   v
+ChromaDB (collections)
+   |  - products        (text embeddings)
+   |  - products_image  (image embeddings)
+   v
+Answer generation
+   - default: deterministic from products
+   - optional: LLM via OpenAI-compatible API (HF Router)
+```
+
+### 2.2 Thành phần runtime
+
+- **API**: FastAPI + Uvicorn.
+- **Vector store**: ChromaDB.
+- **Text embedding**: `sentence-transformers` (mặc định `sentence-transformers/all-MiniLM-L6-v2`).
+- **Image embedding**: `open-clip-torch` (mặc định `ViT-B-32`, pretrained `openai`).
+- **LLM** (tuỳ chọn): OpenAI-compatible API, khuyến nghị dùng **Hugging Face Router** (`https://router.huggingface.co/v1`).
+
+### 2.3 Ports (Docker Compose mặc định)
+
+- API: `8081 -> 8080` trong container
+- Chroma: `8001 -> 8000` trong container
+
+---
+
+## 3. Dữ liệu, collections & embedding
+
+### 3.1 Dataset
+
+- CSV metadata: `datasets/archive/fashion-dataset/styles.csv`
+- Ảnh: `datasets/archive/fashion-dataset/images/<id>.jpg`
+
+### 3.2 Collections
+
+- `products` (text): lưu `documents=text`, `metadatas=metadata`, `embeddings=text_embedding`.
+- `products_image` (image): lưu `embeddings=image_embedding`, `metadatas=metadata`, `documents` thường rỗng (để ổn định phản hồi giữa các phiên bản Chroma).
+
+### 3.3 Tính nhất quán embedding
+
+Nếu bạn thay đổi `EMBED_MODEL` hoặc `IMAGE_MODEL*`, bạn **nên re-ingest** vào Chroma (hoặc tách storage/collection) để tránh “mismatch” giữa embedding cũ và mới.
+
+---
+
+## 4. Cấu hình (Environment Variables)
+
+File mẫu: `.env.example` → copy thành `.env` (không commit `.env`).
+
+### 4.1 Kết nối Chroma
+
+| Biến          | Mặc định | Ý nghĩa                                                                |
+| ------------- | -------: | ---------------------------------------------------------------------- |
+| `CHROMA_HOST` | `chroma` | Host của Chroma HTTP (trong Docker Compose dùng service name `chroma`) |
+| `CHROMA_PORT` |   `8000` | Port Chroma trong network Docker                                       |
+
+Nếu **không** set `CHROMA_HOST/CHROMA_PORT`, code sẽ fallback Chroma **in-memory** (mất dữ liệu khi restart).
+
+### 4.2 Models
+
+| Biến                     |                                 Mặc định | Ý nghĩa                 |
+| ------------------------ | ---------------------------------------: | ----------------------- |
+| `EMBED_MODEL`            | `sentence-transformers/all-MiniLM-L6-v2` | Model embedding văn bản |
+| `IMAGE_MODEL`            |                               `ViT-B-32` | Tên model OpenCLIP      |
+| `IMAGE_MODEL_PRETRAINED` |                                 `openai` | Weights của OpenCLIP    |
+
+### 4.3 LLM (tuỳ chọn)
+
+| Biến             | Mặc định | Ý nghĩa                                                                      |
+| ---------------- | -------: | ---------------------------------------------------------------------------- |
+| `LLM_BASE_URL`   | _(rỗng)_ | Base URL OpenAI-compatible (khuyến nghị: `https://router.huggingface.co/v1`) |
+| `LLM_API_KEY`    | _(rỗng)_ | API key (HF token nếu dùng HF Router)                                        |
+| `LLM_MODEL`      | _(rỗng)_ | Tên model (ví dụ: `meta-llama/Llama-3.1-8B-Instruct`)                        |
+| `LLM_DEBUG`      |      `0` | Log chi tiết lỗi gọi LLM                                                     |
+| `USE_LLM_ANSWER` |      `0` | `1` = ép dùng LLM tạo `answer` ngay cả khi đã có `products`                  |
 
 Ghi chú:
 
-- `app/llm_client.py` hỗ trợ **2 chế độ**:
-  1. **Hugging Face (legacy)** nếu `LLM_BASE_URL` chứa `api-inference.huggingface.co` (endpoint này hiện đã bị HF deprecate)
-  2. **OpenAI-compatible Chat Completions** (khuyến nghị): dùng OpenAI / Ollama / LM Studio / hoặc Hugging Face Router `https://router.huggingface.co/v1`
-- Nếu LLM bị lỗi/không cấu hình, hệ thống sẽ **fallback** sang trả lời dựa trên retrieval.
+- Nếu `USE_LLM_ANSWER=1` nhưng thiếu `LLM_API_KEY` hoặc `LLM_MODEL`, hệ sẽ **fallback** về deterministic để đảm bảo UI nhất quán.
 
-Lưu ý quan trọng khi dùng Docker:
+### 4.4 Chat/RAG behavior toggles
 
-- `env_file: .env` chỉ được đọc khi container được **tạo**. Nếu bạn thay đổi `.env`, hãy **recreate** container `api` (ví dụ: `docker compose down` rồi `docker compose up -d --build`).
+| Biến                          | Mặc định | Ý nghĩa                                                                             |
+| ----------------------------- | -------: | ----------------------------------------------------------------------------------- |
+| `ASK_FOLLOWUPS`               |      `0` | `1` = hỏi thêm 1–2 câu để làm rõ budget/occasion/size                               |
+| `STRICT_EXACT_LOOKUP`         |      `0` | `1` = với câu hỏi “tìm đúng mẫu”, nếu match yếu thì nói rõ “không có exact product” |
+| `RAG_MAX_DISTANCE`            |    `1.0` | Ngưỡng distance của Chroma (nhỏ hơn = tốt hơn)                                      |
+| `RAG_MIN_TOKEN_OVERLAP`       |   `0.12` | Ngưỡng overlap token (lọc bổ sung)                                                  |
+| `RAG_MIN_DISTINCTIVE_MATCHES` |      `1` | Số lượng token “đặc trưng” trùng tối thiểu                                          |
 
 ---
 
-## Chạy dự án
+## 5. Chạy hệ thống
 
-### Cách 1: Docker Compose (API + ChromaDB)
+### 5.1 Chạy bằng Docker Compose (khuyến nghị)
 
-1. Khởi động dịch vụ:
+1. Tạo `.env`:
+
+- Copy `.env.example` → `.env`
+
+2. Chạy dịch vụ:
 
 ```bash
 docker compose up --build
 ```
 
-- ChromaDB sẽ chạy ở cổng `8001`
-- API sẽ chạy ở cổng `8081`
-
-2. Mở tài liệu API (Swagger):
+3. Swagger UI:
 
 - `http://127.0.0.1:8081/docs`
 
-> Lưu ý: `docker-compose.yml` dùng `env_file: .env` cho service `api`. Hãy đảm bảo `.env` tồn tại và hợp lệ.
-
-3. Dừng dịch vụ:
-
-```bash
-docker compose down
-```
-
-### Cách 2: Chạy local (nhanh để dev)
-
-1. Tạo môi trường và cài thư viện:
-
-```bash
-python -m venv .venv
-```
-
-PowerShell:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-CMD:
-
-```bat
-.\.venv\Scripts\activate.bat
-```
+### 5.2 Chạy local (không Docker)
 
 ```bash
 pip install -r requirements.txt
-```
-
-2. Chạy API bằng uvicorn:
-
-```bash
 python -m uvicorn app.main:app --host 0.0.0.0 --port 8080
 ```
 
-Ghi chú:
-
-- Nếu bạn **không set `CHROMA_HOST/CHROMA_PORT`**, code sẽ dùng Chroma **in-memory** (không lưu persist) theo `app/deps.py`.
+Nếu muốn dùng Chroma persistent khi chạy local: chạy Chroma bằng Docker và set `CHROMA_HOST=127.0.0.1`, `CHROMA_PORT=8001` (port host).
 
 ---
 
-## Nạp dữ liệu (Ingest)
+## 6. Ingest dữ liệu
 
-Dataset mặc định hiện tại:
+### 6.1 Ingest text (bắt buộc trước khi chat/query)
 
-- `datasets/archive/fashion-dataset/styles.csv`
+Script: `ingest_csv.py` → gọi `POST /ingest` theo batch.
 
-Ghi chú:
-
-- Nếu bạn có dataset khác, chỉ cần trỏ tham số `--csv` tới file CSV của bạn.
-
-### 1) Ingest văn bản (text)
-
-Script: `ingest_csv.py`
-
-- Script sẽ đọc CSV và gọi API endpoint `POST /ingest` theo batch.
-- Mặc định API ingest: `http://localhost:8080/ingest` (có thể đổi qua biến môi trường `INGEST_API`).
-
-Ví dụ chạy:
+Ví dụ:
 
 ```bash
 python ingest_csv.py --csv datasets/archive/fashion-dataset/styles.csv --api http://127.0.0.1:8081/ingest --batch 64
 ```
 
-Nếu bạn chạy **local** (API ở port 8080), đổi `--api` thành `http://127.0.0.1:8080/ingest`.
+### 6.2 Ingest image (tuỳ chọn, để dùng image search)
 
-### 2) Ingest hình ảnh (image)
-
-Script: `ingest_images.py`
-
-- Script sẽ đọc cột ảnh (mặc định: `image_url`) và gọi API endpoint `POST /ingest_image`.
-- Mặc định API ingest ảnh: `http://localhost:8080/ingest_image` (có thể đổi qua biến môi trường `INGEST_IMAGE_API`).
-
-Ví dụ chạy:
+Script: `ingest_images.py` → đọc ảnh theo `<id>.jpg` → gọi `POST /ingest_image`.
 
 ```bash
 python ingest_images.py --csv datasets/archive/fashion-dataset/styles.csv --api http://127.0.0.1:8081/ingest_image --batch 128
 ```
 
-Nếu bạn chạy **local** (API ở port 8080), đổi `--api` thành `http://127.0.0.1:8080/ingest_image`.
+Ghi chú vận hành:
 
-Gợi ý:
-
-- Nếu mạng chậm hoặc ảnh lỗi, script sẽ bỏ qua ảnh lỗi và tiếp tục.
+- Batch quá lớn có thể gây peak RAM/VRAM (đặc biệt khi encode ảnh). Nếu gặp lỗi, giảm `--batch`.
 
 ---
 
-## UI Demo
+## 7. Hợp đồng API (HTTP)
 
-File UI: `index.html`
+Tài liệu OpenAPI đầy đủ có tại `/docs`. Dưới đây là hợp đồng tối thiểu theo code hiện tại.
 
-- Mở trực tiếp file bằng trình duyệt (hoặc dùng Live Server trong VS Code).
-- Demo mặc định gọi API:
-  - `const API_BASE = 'http://127.0.0.1:8081';`
+### 7.1 `GET /health`
 
-Tính năng demo:
+Response:
 
-- Chat text: gọi `POST /chat`
-- Search ảnh:
-  - Upload ảnh: `POST /search/image/upload`
+```json
+{ "status": "ok" }
+```
+
+### 7.2 `POST /ingest`
+
+Request body (theo `app/models.py`):
+
+```json
+{
+  "items": [{ "id": "123", "text": "...", "metadata": { "color": "Black" } }]
+}
+```
+
+Response:
+
+```json
+{ "ingested": 64 }
+```
+
+### 7.3 `POST /query` (retrieval-only)
+
+Request body:
+
+```json
+{
+  "query": "men black sneakers under $80",
+  "top_k": 3,
+  "filters": { "gender": "Men" }
+}
+```
+
+Response:
+
+```json
+{
+  "results": [
+    {
+      "id": "...",
+      "text": "...",
+      "score": 0.78,
+      "metadata": { "color": "Black" }
+    }
+  ]
+}
+```
+
+Behavior notes:
+
+- Nếu query fail English-only → trả `{ "results": [], "error": "English only: ..." }`.
+- `filters` là **object**. Nếu client gửi `null` thay vì `{}`, FastAPI/Pydantic có thể trả `422` (schema mismatch).
+
+### 7.4 `POST /chat` (RAG + answer)
+
+Request body (hỗ trợ chat 1-turn hoặc multi-turn):
+
+```json
+{
+  "query": "women black dress for party under $120",
+  "messages": [{ "role": "user", "content": "..." }],
+  "top_k": 3,
+  "filters": {},
+  "max_tokens": 512,
+  "temperature": 0.2
+}
+```
+
+Response (khung chính):
+
+```json
+{
+  "answer": "...",
+  "products": [
+    {
+      "id": "...",
+      "name": "...",
+      "image_url": "...",
+      "price": "...",
+      "color": "...",
+      "gender": "...",
+      "category": "...",
+      "subcategory": "...",
+      "usage": "...",
+      "snippet": "..."
+    }
+  ],
+  "sources": [
+    { "id": "...", "text": "...", "score": 0.81, "metadata": { "...": "..." } }
+  ],
+  "outfit": {
+    "topwear": { "...": "..." },
+    "bottomwear": { "...": "..." },
+    "footwear": { "...": "..." },
+    "accessories": [],
+    "estimated_total_price": 123.0
+  }
+}
+```
+
+Behavior notes:
+
+- Empty query → trả câu hướng dẫn và `products: []`.
+- Fail English-only → trả `answer: "I don't understand your question. Please rewrite it."` và `products: []`.
+
+### 7.5 `POST /ingest_image`
+
+Request body:
+
+```json
+{
+  "items": [
+    {
+      "id": "123",
+      "image_url": "datasets/.../images/123.jpg",
+      "metadata": { "image_url": "..." }
+    }
+  ]
+}
+```
+
+Response:
+
+```json
+{ "ingested": 128 }
+```
+
+### 7.6 `POST /search/image/upload`
+
+Request: `multipart/form-data` upload file (field name `file`) + query param `top_k`.
+
+Response:
+
+```json
+{
+  "results": [
+    {
+      "id": "...",
+      "text": "",
+      "score": 0.42,
+      "metadata": { "name": "...", "image_url": "..." }
+    }
+  ]
+}
+```
+
+Ghi chú:
+
+- Endpoint image search sẽ “enrich” metadata bằng cách lookup `products` để bổ sung `name`/`image_url` nếu thiếu.
 
 ---
 
-## API endpoints (tóm tắt)
+## 8. Logic RAG & các cơ chế lọc
 
-- `GET /health` – healthcheck
-- `POST /ingest` – ingest text items vào collection `products`
-- `POST /query` – search text (semantic) trong `products`
-- `POST /ingest_image` – ingest image URLs vào collection `products_image`
-- `POST /search/image/upload` – search theo ảnh upload
-- `POST /chat` – chat nhiều lượt + RAG (trả về `answer`, `products`, `sources`)
+Các cơ chế chính nằm trong `app/main.py`:
 
-Bạn xem schema chi tiết tại Swagger: `http://127.0.0.1:8081/docs`.
+1. **Relevance gating** (giảm trả kết quả “rác”):
 
-Ví dụ gọi nhanh `POST /chat`:
+- Gate theo `distance` (Chroma: **lower is better**) với `RAG_MAX_DISTANCE`.
+- Gate theo lexical overlap (`RAG_MIN_TOKEN_OVERLAP`).
+- Gate theo token “đặc trưng” (`RAG_MIN_DISTINCTIVE_MATCHES`).
 
-macOS/Linux (bash):
+2. **Hard filters** (khi user biểu đạt rõ ràng):
+
+- Budget: parse `under/below/...` và lọc theo `price` (chưa chắc dataset có price đầy đủ).
+- Color: nếu phát hiện màu, lọc cứng chỉ giữ items matching color.
+- Usage/occasion: nếu phát hiện (formal/party/sports/...), có thêm retrieval pass + lọc cứng theo `metadata.usage`.
+- Subcategory: có thể lọc theo `Topwear/Bottomwear/Bags`.
+
+3. **Outfit mode**:
+
+- Nếu query “outfit/complete look/...”, hệ cố gắng assemble mix (Topwear + Bottomwear + Footwear) và tránh innerwear trừ khi user yêu cầu.
+
+---
+
+## 9. Tích hợp LLM & chính sách trả lời
+
+File: `app/llm_client.py`.
+
+### 9.1 Chính sách mặc định (an toàn)
+
+- Nếu đã có `products` và `USE_LLM_ANSWER=0` → `answer` được render deterministic từ `products`.
+- Mục tiêu: **không mâu thuẫn** với UI product cards và hạn chế hallucination.
+
+### 9.2 Bật LLM (phục vụ A/B testing / trải nghiệm)
+
+- Set `USE_LLM_ANSWER=1` và cấu hình `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`.
+- Prompt đã có “HARD RULES” để buộc LLM chỉ dựa trên `PRODUCT LIST`/`PRODUCT CONTEXT`.
+
+### 9.3 Fallback
+
+- Nếu LLM lỗi/misconfigured/unreachable → fallback `_fallback_answer(...)` (retrieval-only) để API không bị “down”.
+
+---
+
+## 10. A/B testing
+
+Mục tiêu: chạy 2 API instances A và B, dùng chung Chroma, khác cấu hình LLM/flag.
+
+### 10.1 Docker Compose A/B
+
+File: `docker-compose.ab.yml`.
+
+- API A: `http://127.0.0.1:8081` (env `.env`)
+- API B: `http://127.0.0.1:8082` (env `.env.b`)
+
+Chạy:
 
 ```bash
-curl -X POST http://127.0.0.1:8081/chat \
-  -H "Content-Type: application/json" \
-  -d "{\"query\":\"I need a white men's dress shirt for work, budget under $40\",\"top_k\":5}"
+docker compose -f docker-compose.ab.yml up --build
 ```
 
-Windows (PowerShell):
+Khuyến nghị:
 
-```powershell
-$body = @{ query = "I need a white men's dress shirt for work, budget under `$40"; top_k = 3 } | ConvertTo-Json
-Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8081/chat" -ContentType "application/json" -Body $body
-```
-
-> Nếu bạn chạy local (API ở port 8080), đổi URL từ `8081` → `8080`.
+- Đặt `.env.b` trong máy local (đã được `.gitignore`) để tránh lộ keys.
+- Dùng B để thử model khác và/hoặc `USE_LLM_ANSWER=1`.
 
 ---
 
-## Troubleshooting
+## 11. Đánh giá & kết quả
 
-### Tăng tốc hệ thống (Performance)
+### 11.1 Công cụ
 
-Nếu bạn thấy hệ thống phản hồi chậm, thường là do 3 nguyên nhân chính:
+- `evaluate.ipynb`: đánh giá end-to-end (text + image), có thể xuất artifacts vào `artifacts/` và `outputs/`.
+- `load_test.py`: load test nhẹ cho `/chat` và `/search/image/upload`.
 
-1. **Gọi LLM qua mạng** (chậm nhất)
-2. **Embedding chạy CPU** (nhất là trên máy yếu / Docker bị giới hạn CPU)
-3. **Search ảnh phải tải ảnh từ URL** (mạng chậm)
+### 11.2 Metrics
 
-Các gợi ý nhanh:
+- Reliability: error rate.
+- Performance: p50/p90/p95 latency, throughput (RPS).
+- Behavioral correctness: English-only handling, empty query handling.
 
-- **LLM qua mạng thường là chậm nhất**: nếu không cần câu trả lời “tự nhiên”, bạn có thể để trống cấu hình LLM; hệ thống sẽ tự **fallback** sang retrieval-only.
-- **Embedding chạy CPU**: nếu máy yếu, lần ingest đầu tiên sẽ tốn thời gian; sau khi ingest xong, query thường nhanh hơn.
-- **Search ảnh**: sẽ tốn thời gian encode ảnh; tránh ingest ảnh nếu bạn chỉ cần search text.
-- Nếu dùng Docker Desktop trên Windows, hãy đảm bảo Docker có đủ CPU/RAM trong Docker Desktop Settings.
+### 11.3 Kết quả đo thực tế (2026-01-14)
 
-Mẹo hữu ích (PyTorch):
+Các số dưới đây được đo bằng `load_test.py` trên máy Windows của bạn, sau warm-up.
 
-- Bạn có thể set `TORCH_NUM_THREADS` để giới hạn số luồng CPU (tuỳ máy). Ví dụ: `TORCH_NUM_THREADS=4`.
+**Text `/chat`** (200 requests, concurrency=10):
 
-Gợi ý thêm:
+- error_rate: **0.0** (0/200)
+- latency (ms): p50 **257.93**, p90 **303.99**, p95 **334.01**
+- throughput: ~**37.39 rps**
 
-- Nếu bạn không cần search ảnh, hãy tạm thời không ingest ảnh để tiết kiệm thời gian/CPU.
+**Image `/search/image/upload`** (50 requests, concurrency=5, ảnh `10000.jpg`):
 
-- **Fatal error in launcher / uvicorn.exe trỏ sai đường dẫn .venv (Windows)**:
-
-  Lỗi dạng:
-  `Fatal error in launcher: Unable to create process using ... DoAn\\.venv\\Scripts\\python.exe ... CS311\\.venv\\Scripts\\uvicorn.exe ...`
-
-  Nguyên nhân thường gặp: bạn đã **copy/đổi tên/move thư mục `.venv`** từ project khác.
-
-  Cách xử lý nhanh:
-
-  - Chạy bằng module để bỏ qua launcher `.exe`:
-    `python -m uvicorn app.main:app --host 0.0.0.0 --port 8080`
-
-  Cách xử lý dứt điểm (khuyến nghị):
-
-  - Xoá `.venv` và tạo lại đúng trong repo hiện tại, rồi `pip install -r requirements.txt`.
-
-- **Demo không gọi được API**:
-
-  - Đảm bảo API chạy ở `127.0.0.1:8081` (hoặc đúng host port bạn đang map trong `docker-compose.yml`).
-  - Trên Windows, dùng `127.0.0.1` giúp tránh lỗi IPv6 `localhost -> ::1`.
-
-- **Kết quả rỗng**:
-
-  - Bạn chưa ingest dữ liệu (hãy chạy `ingest_csv.py`, và nếu dùng search ảnh thì chạy thêm `ingest_images.py`).
-  - Nếu chạy local không có Chroma server, bạn đang dùng Chroma in-memory (mất dữ liệu khi restart).
-
-- **LLM không trả lời đúng / fallback**:
-  - Nếu bạn thấy dòng `(Fallback mode: answering from retrieved results without the LLM.)` trong câu trả lời, nghĩa là hệ thống **không gọi được LLM** và đang trả lời bằng retrieval-only.
-  - Kiểm tra `LLM_BASE_URL`, `LLM_MODEL` và `LLM_API_KEY` trong `.env`.
-  - Bật log chẩn đoán để biết chính xác lỗi gì:
-    - Set `LLM_DEBUG=1` trong `.env`
-    - Recreate container `api` (ví dụ: `docker compose up --build -d`)
-    - Xem log: `docker compose logs --tail 200 api`
-  - Nếu không muốn dùng LLM, vẫn có thể dùng retrieval-only (hệ thống tự fallback).
+- error_rate: **0.0** (0/50)
+- latency (ms): p50 **485.30**, p90 **527.27**, p95 **579.00**
+- throughput: ~**10.15 rps**
 
 ---
 
-## Thư mục quan trọng
+## 12. Troubleshooting / vận hành
 
-- `app/main.py` – FastAPI endpoints
-- `app/rag.py` – RAG text (ingest/retrieve)
-- `app/image_rag.py` – RAG image (OpenCLIP + Chroma)
-- `app/llm_client.py` – gọi LLM (HF Inference / OpenAI-compatible)
-- `ingest_csv.py` – ingest dữ liệu text từ CSV
-- `ingest_images.py` – ingest dữ liệu ảnh từ CSV
-- `index.html` – UI demo
+### 12.1 Cold start chậm
+
+Lần đầu gọi `/chat` hoặc `/search/image/upload` sau restart/rebuild có thể chậm do load model (SentenceTransformer/OpenCLIP). Khuyến nghị warm-up vài request trước khi đo.
+
+### 12.2 Không có kết quả / kết quả rỗng
+
+Kiểm tra theo thứ tự:
+
+1. Đã ingest text vào `products` chưa?
+2. Query có bị reject English-only không?
+3. Các ngưỡng `RAG_*` có quá chặt không? (thử tăng `RAG_MAX_DISTANCE` hoặc giảm overlap)
+
+### 12.3 Lỗi 422 (Unprocessable Entity)
+
+Nguyên nhân phổ biến: gửi sai schema.
+
+- `filters` trong `POST /query` và `POST /chat` nên là `{}` thay vì `null`.
+
+### 12.4 LLM không chạy / không khác biệt
+
+- Nếu `USE_LLM_ANSWER=0`, câu trả lời là deterministic từ `products` → thay model không làm thay đổi `answer`.
+- Bật `USE_LLM_ANSWER=1` và đảm bảo `LLM_API_KEY` + `LLM_MODEL` hợp lệ.
 
 ---
 
-## License / Ghi chú
+## 13. Cấu trúc repo
+
+### Backend (`app/`)
+
+- `app/main.py`: endpoints + logic filter/relevance/English-only.
+- `app/deps.py`: khởi tạo embedding models và Chroma collections.
+- `app/rag.py`: ingest/retrieve text (`products`).
+- `app/image_rag.py`: ingest/retrieve image (`products_image`).
+- `app/llm_client.py`: LLM client + policy deterministic/LLM + fallback.
+- `app/models.py`: Pydantic request/response models.
+
+### Scripts
+
+- `ingest_csv.py`: ingest text từ CSV.
+- `ingest_images.py`: ingest ảnh.
+- `load_test.py`: load test.
+
+### UI
+
+- `index.html`: UI demo.
+
+### Hạ tầng
+
+- `docker-compose.yml`: chạy 1 API + Chroma.
+- `docker-compose.ab.yml`: chạy A/B.
+
+---
+
+## Ghi chú bảo mật
+
+- Không commit `.env` / `.env.b`.
+- Không paste `LLM_API_KEY` vào issue/public log.

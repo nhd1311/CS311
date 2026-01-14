@@ -1076,7 +1076,7 @@ def chat(req: ChatRequest):
 
     if ENGLISH_ONLY and not _looks_like_english_query(query):
         return {
-            "answer": "English only: please rephrase your request in English.",
+            "answer": "I don't understand your question. Please rewrite it.",
             "products": [],
             "sources": [],
         }

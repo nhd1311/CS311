@@ -1,0 +1,23 @@
+{
+  "n_rows": 20,
+  "n_cases": 20,
+  "error_rate": 0.1,
+  "empty_results_rate": 0.1,
+  "latency_p50_ms": 150.89359999910812,
+  "latency_p90_ms": 4037.3598800012087,
+  "latency_p95_ms": 30004.85338500148,
+  "latency_mean_ms": 3186.539654999433,
+  "hit@1": 0.9,
+  "hit@3": 0.9,
+  "hit@5": 0.9,
+  "mrr": 0.9,
+  "per_variant": [
+    {
+      "variant": "orig",
+      "mrr": 0.9,
+      "hit@1": 0.9,
+      "hit@3": 0.9,
+      "hit@5": 0.9
+    }
+  ]
+}

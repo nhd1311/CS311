@@ -1,0 +1,12 @@
+{
+  "n_cases": 5,
+  "error_rate": 0.0,
+  "empty_products_rate": 0.2,
+  "latency_p50_ms": 43.099200000142446,
+  "latency_p90_ms": 838.4009399997012,
+  "latency_p95_ms": 940.5876199998601,
+  "latency_mean_ms": 332.11217999923974,
+  "english_only_reject_accuracy": 1.0,
+  "constraint_pass_rate": 0.8,
+  "faithfulness_pass_rate": 0.8
+}

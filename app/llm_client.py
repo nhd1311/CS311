@@ -13,6 +13,13 @@ LLM_API_KEY = os.getenv("LLM_API_KEY", "")
 LLM_MODEL = os.getenv("LLM_MODEL", "")
 LLM_DEBUG = (os.getenv("LLM_DEBUG", "0") or "0").strip().lower() in {"1", "true", "yes", "y", "on"}
 
+# If enabled, the API will ask the configured LLM to generate the `answer` even when
+# `products` are provided.
+#
+# Default behavior (disabled) is deterministic: `answer` is rendered from `products`
+# to guarantee consistency with UI product cards and prevent hallucinations.
+USE_LLM_ANSWER = (os.getenv("USE_LLM_ANSWER", "0") or "0").strip().lower() in {"1", "true", "yes", "y", "on"}
+
 logger = logging.getLogger(__name__)
 
 _openai_client = None
@@ -129,8 +136,14 @@ def generate_answer(
 
     # IMPORTANT: the UI renders product cards from `products` returned by the API.
     # To prevent any mismatch between the assistant text and the displayed cards,
-    # we generate the answer deterministically from `products` whenever it is provided.
-    if products:
+    # we generate the answer deterministically from `products` whenever it is provided,
+    # unless USE_LLM_ANSWER is enabled.
+    if products and not USE_LLM_ANSWER:
+        return _answer_from_products(question, products)
+
+    # If the user explicitly enabled LLM answers but didn't configure an LLM,
+    # fall back to deterministic output to keep the UI consistent.
+    if products and USE_LLM_ANSWER and not (LLM_API_KEY and LLM_MODEL):
         return _answer_from_products(question, products)
 
     prompt = _build_prompt(question, contexts, messages=messages, products=products)
