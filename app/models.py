@@ -26,7 +26,7 @@ class QueryResult(BaseModel):
     metadata: Dict[str, Any]
 
 
-# Image ingest & query
+# Nạp (ingest) và truy vấn ảnh
 class IngestImageItem(BaseModel):
     id: str
     image_url: str
@@ -42,8 +42,8 @@ class ChatMessage(BaseModel):
 
 
 class ChatRequest(BaseModel):
-    # Backwards compatible: older clients send only `query`.
-    # Newer clients can send `messages` for a multi-turn chat.
+    # Tương thích ngược: client cũ chỉ gửi `query`.
+    # Client mới có thể gửi `messages` cho hội thoại nhiều lượt.
     query: str = ""
     messages: List[ChatMessage] = Field(default_factory=list)
     top_k: int = 3

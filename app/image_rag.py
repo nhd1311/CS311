@@ -18,7 +18,7 @@ _img_collection = None
 
 
 def _normalize_where(filters: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-    """Normalize Chroma 'where' filter shapes (see app.rag._normalize_where)."""
+    """Chuẩn hoá dạng bộ lọc 'where' của Chroma (xem app.rag._normalize_where)."""
     if not filters:
         return None
     cleaned: Dict[str, Any] = {
@@ -45,7 +45,7 @@ def _get_resources():
 def _load_image_from_url(url: str) -> Image.Image:
     # Hỗ trợ data URLs (base64), đường dẫn HTTP, và file local
     if url.startswith('data:image/'):
-        # Data URL with base64 encoding
+        # Data URL với mã hoá base64
         header, data = url.split(',', 1)
         img_bytes = base64.b64decode(data)
         return Image.open(io.BytesIO(img_bytes)).convert("RGB")
@@ -83,20 +83,20 @@ def ingest_images(items: List[IngestImageItem]) -> int:
             ids.append(it.id)
             embeddings.append(emb)
             metadatas.append(it.metadata)
-        except Exception as e:  # skip bad images but continue
+        except Exception as e:  # bỏ qua ảnh lỗi nhưng vẫn tiếp tục
             print(f"[WARN] Skip {it.id}: {e}")
             traceback.print_exc()
     if not ids:
         raise RuntimeError("No valid images ingested")
-    # Chroma expects documents to be a list of strings. Using empty strings keeps query responses consistent.
+    # Chroma yêu cầu documents là một list chuỗi. Dùng chuỗi rỗng giúp phản hồi truy vấn nhất quán.
     img_collection.add(ids=ids, embeddings=embeddings, metadatas=metadatas, documents=[""] * len(ids))
     return len(ids)
 
 
 def _safe_doc_text(res: dict, idx: int) -> str:
-    """Return a safe string for the retrieved document.
+    """Trả về chuỗi an toàn cho document được truy xuất.
 
-    For image collections we often store empty documents; some Chroma versions may return None.
+    Với collection ảnh, ta thường lưu document rỗng; một số phiên bản Chroma có thể trả về None.
     """
     docs = res.get("documents")
     if not docs:

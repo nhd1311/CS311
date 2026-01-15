@@ -28,7 +28,7 @@ def _worker_chat(base_url: str, query: str, top_k: int, timeout_s: float) -> Tup
         r = requests.post(url, json=payload, timeout=timeout_s)
         dt = (time.perf_counter() - t0) * 1000
         ok = r.status_code == 200
-        # Try to detect server-side error message quickly
+        # Cố gắng bắt nhanh thông báo lỗi phía server
         err = None
         if not ok:
             err = r.text[:500]
@@ -69,7 +69,7 @@ def run_load_test(
 ) -> Dict[str, Any]:
     ps = [50, 90, 95]
 
-    # Preflight health
+    # Kiểm tra health trước khi chạy
     health_url = base_url.rstrip("/") + "/health"
     try:
         h = requests.get(health_url, timeout=5)
@@ -124,7 +124,7 @@ def run_load_test(
         },
     }
 
-    # Include a small sample of errors (don’t spam)
+    # Chỉ kèm một mẫu nhỏ lỗi (tránh spam)
     if errors:
         out["errors_sample"] = errors[: min(10, len(errors))]
 

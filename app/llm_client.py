@@ -13,11 +13,10 @@ LLM_API_KEY = os.getenv("LLM_API_KEY", "")
 LLM_MODEL = os.getenv("LLM_MODEL", "")
 LLM_DEBUG = (os.getenv("LLM_DEBUG", "0") or "0").strip().lower() in {"1", "true", "yes", "y", "on"}
 
-# If enabled, the API will ask the configured LLM to generate the `answer` even when
-# `products` are provided.
+# Nếu bật, API sẽ gọi LLM (đã cấu hình) để sinh `answer` ngay cả khi đã có `products`.
 #
-# Default behavior (disabled) is deterministic: `answer` is rendered from `products`
-# to guarantee consistency with UI product cards and prevent hallucinations.
+# Hành vi mặc định (tắt) là xác định: `answer` được dựng từ `products` để đảm bảo
+# nhất quán với thẻ sản phẩm trong UI và tránh bịa/hallucination.
 USE_LLM_ANSWER = (os.getenv("USE_LLM_ANSWER", "0") or "0").strip().lower() in {"1", "true", "yes", "y", "on"}
 
 logger = logging.getLogger(__name__)
@@ -41,7 +40,7 @@ def _format_price_short(val: Any) -> Optional[str]:
 
 
 def _answer_from_products(question: str, products: List[Dict[str, Any]]) -> str:
-    # Ensure stable, de-duplicated ordering.
+    # Đảm bảo thứ tự ổn định và không trùng lặp.
     seen = set()
     picks: List[Dict[str, Any]] = []
     for p in products or []:
@@ -113,7 +112,7 @@ def _get_openai_client() -> OpenAI:
     global _openai_client
     if _openai_client is None:
         base_url = LLM_BASE_URL.strip() or "https://api.openai.com/v1"
-        # NOTE: This expects an OpenAI-compatible endpoint.
+        # LƯU Ý: Đầu cuối (endpoint) cần tương thích chuẩn OpenAI.
         _openai_client = OpenAI(base_url=base_url, api_key=LLM_API_KEY)
     return _openai_client
 
@@ -126,23 +125,23 @@ def generate_answer(
     messages: Optional[List[Dict[str, str]]] = None,
     products: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
-    """Generate an answer using either:
+    """Sinh câu trả lời theo một trong hai cách:
 
-    - Hugging Face Inference API (if LLM_BASE_URL points to api-inference.huggingface.co)
-    - OpenAI-compatible Chat Completions API (otherwise)
+    - Hugging Face Inference API (nếu LLM_BASE_URL trỏ tới api-inference.huggingface.co)
+    - OpenAI-compatible Chat Completions API (nếu không)
 
-    Falls back to a retrieval-only answer if the LLM is unreachable/misconfigured.
+    Nếu LLM không truy cập được/cấu hình sai, sẽ fallback sang trả lời chỉ dựa trên retrieval.
     """
 
-    # IMPORTANT: the UI renders product cards from `products` returned by the API.
-    # To prevent any mismatch between the assistant text and the displayed cards,
-    # we generate the answer deterministically from `products` whenever it is provided,
-    # unless USE_LLM_ANSWER is enabled.
+    # QUAN TRỌNG: UI dựng thẻ sản phẩm từ `products` mà API trả về.
+    # Để tránh lệch giữa nội dung assistant và các thẻ đang hiển thị,
+    # ta sinh câu trả lời một cách xác định từ `products` bất cứ khi nào có thể,
+    # trừ khi bật USE_LLM_ANSWER.
     if products and not USE_LLM_ANSWER:
         return _answer_from_products(question, products)
 
-    # If the user explicitly enabled LLM answers but didn't configure an LLM,
-    # fall back to deterministic output to keep the UI consistent.
+    # Nếu người dùng bật LLM answer nhưng chưa cấu hình LLM,
+    # fallback sang output xác định để UI vẫn nhất quán.
     if products and USE_LLM_ANSWER and not (LLM_API_KEY and LLM_MODEL):
         return _answer_from_products(question, products)
 
@@ -162,8 +161,8 @@ def generate_answer(
         )
         return resp.choices[0].message.content.strip()
     except Exception as e:
-        # Do not leak secrets. Provide a short diagnostic in logs to help
-        # users fix configuration issues (invalid key, wrong model, endpoint down, etc.).
+        # Không làm lộ bí mật. Chỉ ghi chẩn đoán ngắn trong log để người dùng
+        # sửa cấu hình (key sai, model sai, endpoint down, v.v.).
         try:
             base = (LLM_BASE_URL or "").strip().rstrip("/")
             model = (LLM_MODEL or "").strip()
@@ -173,7 +172,7 @@ def generate_answer(
             else:
                 logger.warning(msg)
         except Exception:
-            # Avoid breaking user flow due to logging errors.
+            # Tránh làm gián đoạn luồng người dùng vì lỗi logging.
             pass
         return _fallback_answer(question, contexts)
 
@@ -199,7 +198,7 @@ def _hf_inference_generate(prompt: str, max_tokens: int = 512, temperature: floa
     }
 
     resp = requests.post(url, headers=headers, json=payload, timeout=90)
-    # HF may return 503 while loading model
+    # HF có thể trả 503 trong lúc đang tải model
     if resp.status_code >= 400:
         try:
             err = resp.json()
@@ -208,12 +207,12 @@ def _hf_inference_generate(prompt: str, max_tokens: int = 512, temperature: floa
         raise RuntimeError(f"HF Inference API error: {err}")
 
     data = resp.json()
-    # Common format: [{"generated_text": "..."}]
+    # Định dạng phổ biến: [{"generated_text": "..."}]
     if isinstance(data, list) and data:
         first = data[0]
         if isinstance(first, dict) and "generated_text" in first:
             return str(first["generated_text"]).strip()
-    # Sometimes: {"generated_text": "..."}
+    # Đôi khi: {"generated_text": "..."}
     if isinstance(data, dict) and "generated_text" in data:
         return str(data["generated_text"]).strip()
     raise RuntimeError(f"Unexpected HF response: {data}")
@@ -248,12 +247,12 @@ def _build_prompt(
 
     ctx_block = "\n\n".join([f"[Doc {i+1}] {c}" for i, c in enumerate(contexts)])
 
-    # The UI renders product cards from `products` returned by the API.
-    # To keep the assistant answer consistent with those cards, we provide the
-    # same structured list here and make it authoritative.
+    # UI dựng thẻ sản phẩm từ `products` mà API trả về.
+    # Để câu trả lời của assistant nhất quán với các thẻ đó, ta cung cấp cùng
+    # một danh sách có cấu trúc ở đây và coi nó là nguồn chuẩn.
     products_block = ""
     if products:
-        # Keep only the fields we want the LLM to cite.
+        # Chỉ giữ các trường mà ta muốn LLM trích dẫn.
         safe_products = []
         for p in products:
             if not isinstance(p, dict):
@@ -305,7 +304,7 @@ def _build_prompt(
 
 
 def _fallback_answer(question: str, contexts: List[str]) -> str:
-    # Retrieval-only fallback that still behaves like a chat assistant.
+    # Fallback chỉ dựa trên retrieval nhưng vẫn trả lời theo kiểu trợ lý chat.
     if not contexts:
         return (
             "I couldn’t find a good match in the current dataset right now. "

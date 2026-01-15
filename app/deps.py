@@ -13,7 +13,7 @@ IMAGE_MODEL_PRETRAINED = os.getenv("IMAGE_MODEL_PRETRAINED", "openai")
 
 
 def get_model():
-    # simple singleton cache
+    # cache singleton đơn giản
     global _model
     try:
         return _model  # type: ignore[name-defined]
@@ -45,22 +45,22 @@ def get_chroma_collection():
         for _ in range(10):
             try:
                 client = chromadb.HttpClient(host=host, port=int(port))
-                # Trigger a lightweight request to validate connectivity.
+                # Gửi một request nhẹ để kiểm tra kết nối.
                 try:
                     client.heartbeat()
                 except Exception:
-                    # Older/newer client versions may not expose heartbeat; ignore.
+                    # Một số phiên bản client (cũ/mới) có thể không có heartbeat; bỏ qua.
                     pass
                 return client.get_or_create_collection("products")
             except Exception as e:
                 last_err = e
                 time.sleep(1)
-        # As a last resort, fall back to in-memory to keep the API running.
-        # (The UI will still work, but results may be empty until Chroma is reachable.)
+        # Phương án cuối cùng: dùng bộ nhớ (in-memory) để API vẫn chạy.
+        # (UI vẫn hoạt động, nhưng kết quả có thể trống cho tới khi Chroma truy cập được.)
         client = chromadb.Client(Settings(anonymized_telemetry=False))
         return client.get_or_create_collection("products")
     else:
-        # fallback to in-memory for local/dev quickstart
+        # dùng in-memory cho local/dev để khởi chạy nhanh
         client = chromadb.Client(Settings(anonymized_telemetry=False))
 
     return client.get_or_create_collection("products")
@@ -84,7 +84,7 @@ def get_chroma_collection_image():
                 last_err = e
                 time.sleep(1)
 
-        # Fall back to in-memory if Chroma HTTP is not reachable.
+        # Nếu không truy cập được Chroma qua HTTP thì chuyển sang in-memory.
         client = chromadb.Client(Settings(anonymized_telemetry=False))
     else:
         client = chromadb.Client(Settings(anonymized_telemetry=False))
