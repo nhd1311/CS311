@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-# Pin the base image version to keep Docker layer caching stable over time.
+# Cố định phiên bản base image để cache layer của Docker ổn định theo thời gian.
 FROM python:3.11.8-slim
 
 ENV PYTHONUNBUFFERED=1 \
@@ -9,8 +9,8 @@ WORKDIR /app
 
 COPY requirements.txt .
 
-# Use BuildKit cache for pip downloads/wheels to speed up rebuilds.
-# The cache is not baked into the final image.
+# Dùng cache của BuildKit cho tải xuống/wheel của pip để tăng tốc rebuild.
+# Cache này không được đóng gói vào image cuối cùng.
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -r requirements.txt
 

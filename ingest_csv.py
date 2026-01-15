@@ -20,7 +20,7 @@ import requests
 DEFAULT_CSV = "datasets/archive/fashion-dataset/styles.csv"
 DEFAULT_API = os.getenv("INGEST_API", "http://localhost:8080/ingest")
 
-# Resolve paths relative to the repo root (this file lives at repo root).
+# Chuẩn hoá đường dẫn tương đối so với repo root (file này nằm ở repo root).
 _REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -67,7 +67,7 @@ def to_str_safe(val: Any, fallback: str) -> str:
 
 
 def clean_val(val: Any):
-    """Convert NaN/None to None to make JSON-compliant."""
+    """Chuyển NaN/None về None để dữ liệu JSON hợp lệ."""
     if val is None:
         return None
     if isinstance(val, float) and math.isnan(val):
@@ -90,20 +90,20 @@ def build_metadata(r: Dict[str, Any], csv_path: str) -> Dict[str, Any]:
         "season": clean_val(r.get("season")),
         "usage": clean_val(r.get("usage")),
         "image_url": image_url,
-        # Optional pricing fields if present in the CSV
+        # Các trường giá (tuỳ chọn) nếu có trong CSV
         "price_range_usd": clean_val(r.get("price_range_usd")),
         "price": clean_val(r.get("price")),
     }
-    # Remove None values because Chroma metadata does not accept None
+    # Loại bỏ giá trị None vì metadata của Chroma không chấp nhận None
     meta = {k: v for k, v in meta.items() if v is not None}
     return meta
 
 
 def ingest_batch(api: str, batch, *, timeout_s: int = 600, retries: int = 3):
-    """Post one ingest batch to the API.
+    """Gửi một batch ingest lên API.
 
-    Embedding can be slow (CPU/first model load), so we allow a long timeout and
-    a few retries to avoid client-side ReadTimeout aborting a valid long request.
+    Embedding có thể chậm (CPU/lần đầu load model), nên ta đặt timeout dài và
+    retry vài lần để tránh ReadTimeout phía client làm hỏng một request hợp lệ.
     """
 
     payload = {"items": batch}
@@ -115,7 +115,7 @@ def ingest_batch(api: str, batch, *, timeout_s: int = 600, retries: int = 3):
             return resp.json()
         except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectTimeout) as e:
             last_err = e
-            # Exponential-ish backoff.
+            # Backoff kiểu lũy thừa.
             sleep_s = min(30, 2 ** attempt)
             print(f"[WARN] Timeout when calling {api} (attempt {attempt + 1}/{retries}). Sleeping {sleep_s}s then retry...")
             time.sleep(sleep_s)
@@ -126,7 +126,7 @@ def ingest_batch(api: str, batch, *, timeout_s: int = 600, retries: int = 3):
 
 def main():
     parser = argparse.ArgumentParser()
-    # New default dataset location.
+    # Vị trí dataset mặc định mới.
     parser.add_argument("--csv", default=os.getenv("DATASET_CSV", "datasets/archive/fashion-dataset/styles.csv"))
     parser.add_argument("--api", default=DEFAULT_API)
     parser.add_argument("--batch", type=int, default=64)

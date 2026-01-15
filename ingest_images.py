@@ -36,7 +36,7 @@ def _guess_image_dir(csv_path: str) -> str:
     for d in candidates:
         if os.path.isdir(d):
             return d
-    # Default to csv_dir/images even if missing (keeps behavior predictable).
+    # Mặc định dùng csv_dir/images kể cả khi chưa tồn tại (giữ hành vi dễ đoán).
     return candidates[0]
 
 
@@ -97,7 +97,7 @@ def ingest_batch(api: str, batch, *, timeout_s: int = 900, retries: int = 3):
 
 def main():
     parser = argparse.ArgumentParser()
-    # New default dataset location.
+    # Vị trí dataset mặc định mới.
     parser.add_argument("--csv", default=os.getenv("DATASET_CSV", "datasets/archive/fashion-dataset/styles.csv"))
     parser.add_argument("--api", default=DEFAULT_API)
     parser.add_argument("--batch", type=int, default=128)
@@ -181,7 +181,7 @@ def main():
                 {
                     "id": item_id,
                     "image_url": f"data:image/jpeg;base64,{img_base64}",
-                    # Store a repo-relative path for display/debugging.
+                    # Lưu đường dẫn tương đối theo repo để hiển thị/debug.
                     "metadata": build_metadata(r, _to_posix_relpath(img_path)),
                 }
             )

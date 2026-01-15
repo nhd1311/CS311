@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fashion Chatbot Demo</title>
+  <title>Demo Chatbot Thời trang</title>
   <style>
     :root {
       --bg: #0b1220;
@@ -148,9 +148,9 @@
 
     .bubble {
       /*
-        Keep user/assistant bubbles the same width.
-        Reserve a bit of horizontal space so assistant rows (with avatar + gap)
-        never overflow on narrow screens.
+        Giữ bong bóng chat của user/assistant cùng độ rộng.
+        Chừa một chút khoảng ngang để dòng của assistant (có avatar + khoảng cách)
+        không bị tràn trên màn hình hẹp.
       */
       width: min(720px, calc(100% - 54px));
       max-width: min(720px, calc(100% - 54px));
@@ -158,7 +158,7 @@
       border-radius: 16px;
       line-height: 1.5;
       overflow-wrap: break-word;
-      /* Keep layout whitespace collapsed; preserve newlines only inside .content */
+      /* Gộp khoảng trắng trong layout; chỉ giữ xuống dòng bên trong .content */
       white-space: normal;
       box-shadow: var(--shadow-soft);
       height: auto;
@@ -308,7 +308,7 @@
 <body>
   <header>
     <div class="brand">
-      <h2>Fashion Chatbot Demo</h2>
+      <h2>Demo Chatbot Thời trang</h2>
       <div class="pill"><span class="dot"></span> API: <span id="apiBaseLabel">http://127.0.0.1:8080</span></div>
     </div>
   </header>
@@ -318,45 +318,45 @@
         <div class="chat-title">
           <div class="avatar assistant">F</div>
           <div class="title-wrap">
-            <p class="name">Fashion Assistant</p>
-            <p class="sub">Ask for outfits, budget, color, occasion — or attach an image to search</p>
+            <p class="name">Trợ lý Thời trang</p>
+            <p class="sub">Hỏi về outfit, ngân sách, màu sắc, dịp sử dụng — hoặc đính kèm ảnh để tìm kiếm</p>
           </div>
         </div>
         <div class="header-actions">
-          <button id="clearBtn" type="button" class="btn-secondary">New chat</button>
+          <button id="clearBtn" type="button" class="btn-secondary">Chat mới</button>
         </div>
       </div>
 
-      <div id="chatWindow" class="chat-body" aria-label="Chat messages"></div>
+      <div id="chatWindow" class="chat-body" aria-label="Tin nhắn chat"></div>
 
-      <div class="composer" aria-label="Message composer">
+      <div class="composer" aria-label="Soạn tin nhắn">
         <div class="composer-grid">
           <div>
-            <textarea id="chatInput" rows="2" placeholder="Type a message… (Enter to send, Shift+Enter for new line)"></textarea>
+            <textarea id="chatInput" rows="2" placeholder="Nhập tin nhắn… (Enter để gửi, Shift+Enter để xuống dòng)"></textarea>
 
             <div class="img-preview-wrap" id="chatImagePreviewWrap">
               <div class="img-preview-head">
-                <div class="muted" style="font-size:12px;">Attached image</div>
-                <button id="removeImageBtn" type="button" class="btn-ghost" style="padding:6px 10px; font-size:12px;">Remove</button>
+                <div class="muted" style="font-size:12px;">Ảnh đính kèm</div>
+                <button id="removeImageBtn" type="button" class="btn-ghost" style="padding:6px 10px; font-size:12px;">Gỡ</button>
               </div>
               <div class="img-preview">
-                <img id="chatImagePreview" alt="Attached preview" />
+                <img id="chatImagePreview" alt="Xem trước ảnh đính kèm" />
               </div>
             </div>
 
             <div class="composer-sub">
               <div class="attach-row">
                 <input id="chatImageFile" type="file" accept="image/*" style="display:none;" />
-                <button id="attachBtn" type="button" class="btn-ghost">Attach image</button>
-                <span id="attachHint" class="muted" style="font-size:12px;">(or paste with Ctrl+V)</span>
+                <button id="attachBtn" type="button" class="btn-ghost">Đính kèm ảnh</button>
+                <span id="attachHint" class="muted" style="font-size:12px;">(hoặc dán bằng Ctrl+V)</span>
               </div>
               <div id="chatStatus" class="status"></div>
             </div>
           </div>
 
           <div class="composer-actions">
-            <button id="stopBtn" type="button" class="btn-danger" style="display:none;">Stop</button>
-            <button id="sendBtn" type="button">Send</button>
+            <button id="stopBtn" type="button" class="btn-danger" style="display:none;">Dừng</button>
+            <button id="sendBtn" type="button">Gửi</button>
           </div>
         </div>
       </div>
@@ -377,20 +377,20 @@
     const chatImagePreviewWrap = document.getElementById('chatImagePreviewWrap');
     const chatImagePreview = document.getElementById('chatImagePreview');
 
-    // Holds a pasted clipboard image (when user Ctrl+V a copied image).
+    // Lưu ảnh được dán từ clipboard (khi người dùng Ctrl+V ảnh đã copy).
     let pastedImageFile = null;
     let pastedObjectUrl = null;
 
-    // Settings removed: keep the demo dead-simple.
-    // If you change backend port, update this constant.
-    // Use 127.0.0.1 instead of localhost to avoid IPv6 (::1) resolution issues on Windows
-    // when the API is bound to IPv4 only.
+    // Đã lược bỏ phần settings: giữ demo đơn giản nhất.
+    // Nếu bạn đổi port backend, hãy cập nhật hằng số này.
+    // Dùng 127.0.0.1 thay vì localhost để tránh lỗi phân giải IPv6 (::1) trên Windows
+    // khi API chỉ bind IPv4.
     const API_BASE = 'http://127.0.0.1:8081';
 
     const messages = []; // {role: 'user'|'assistant', content: string, ts: number, isTyping?: boolean}
     let typingMsgIndex = -1;
 
-    // Allow canceling in-flight requests so the user can edit their question.
+    // Cho phép huỷ request đang chạy để người dùng có thể sửa câu hỏi.
     let inFlightController = null;
     let lastDraftBeforeSend = '';
     let lastInFlightKind = ''; // 'chat' | 'image'
@@ -398,11 +398,11 @@
     function setInFlight(isInFlight, kind) {
       lastInFlightKind = isInFlight ? (kind || '') : '';
       sendBtn.disabled = Boolean(isInFlight);
-      // Disable attach controls while working to avoid confusing state.
+      // Vô hiệu hoá nút đính kèm trong lúc xử lý để tránh trạng thái “rối”.
       attachBtn.disabled = Boolean(isInFlight);
       removeImageBtn.disabled = Boolean(isInFlight);
       clearBtn.disabled = Boolean(isInFlight);
-      // Show stop only when there is a request we can cancel.
+      // Chỉ hiện nút dừng khi có request có thể huỷ.
       stopBtn.style.display = isInFlight ? 'inline-block' : 'none';
       stopBtn.disabled = !isInFlight;
     }
@@ -412,7 +412,7 @@
       try { inFlightController.abort(); } catch (_) {}
     }
 
-    // Track object URLs we create for chat bubbles, so we can revoke them on reset.
+    // Theo dõi object URL tạo cho bong bóng chat để có thể revoke khi reset.
     const chatObjectUrls = [];
 
     function escapeHtml(s) {
@@ -469,13 +469,13 @@
     }
 
     function renderTypingHtml() {
-      return `<span class="typing" aria-label="Assistant is typing"><i></i><i></i><i></i></span>`;
+      return `<span class="typing" aria-label="Trợ lý đang nhập"><i></i><i></i><i></i></span>`;
     }
 
     function renderChat() {
       chatWindow.innerHTML = messages.map((m, idx) => {
         const cls = m.role === 'user' ? 'user' : 'assistant';
-        const who = m.role === 'user' ? 'You' : 'Assistant';
+        const who = m.role === 'user' ? 'Bạn' : 'Trợ lý';
         const safe = escapeHtml(m.content || '');
         const imgSrc = (m && m.imageSrc) ? String(m.imageSrc) : '';
         const time = m.ts ? formatTime(m.ts) : '';
@@ -486,7 +486,7 @@
           : `<div class="content">${safe}</div>`;
 
         const imageHtml = (!isTyping && imgSrc)
-          ? `<img class="msg-image" src="${escapeHtml(imgSrc)}" alt="Uploaded image" />`
+          ? `<img class="msg-image" src="${escapeHtml(imgSrc)}" alt="Ảnh đã tải lên" />`
           : '';
 
         return `
@@ -520,9 +520,9 @@
         const price = (s.metadata && s.metadata.price) ? `, price: ${s.metadata.price}` : '';
         const color = (s.metadata && s.metadata.color) ? `, color: ${s.metadata.color}` : '';
         const text = escapeHtml(s.text || '');
-        return `<div class="source-item"><strong>Source ${idx+1}</strong>: ${id}${price}${color}<br>${text}</div>`;
+        return `<div class="source-item"><strong>Nguồn ${idx+1}</strong>: ${id}${price}${color}<br>${text}</div>`;
       }).join('');
-      return `<details><summary>View sources</summary>${items}</details>`;
+      return `<details><summary>Xem nguồn</summary>${items}</details>`;
     }
 
     function formatUsd(val) {
@@ -535,14 +535,14 @@
     function normalizeImageSrc(url) {
       const s = String(url || '').trim();
       if (!s) return '';
-      // Keep absolute URLs/data/file URLs unchanged.
+      // Giữ nguyên URL tuyệt đối / data URL / file URL.
       if (/^(https?:|data:image\/|file:)/i.test(s)) return s;
-      // Windows absolute path (e.g., C:\path\to\img.jpg)
+      // Đường dẫn tuyệt đối trên Windows (vd: C:\path\to\img.jpg)
       if (/^[a-zA-Z]:[\\/]/.test(s)) {
         return 'file:///' + s.replace(/\\/g, '/');
       }
-      // The demo lives in /demo, but most paths are repo-root relative.
-      // Prefix "../" so paths like "datasets/..." or "archive/..." resolve correctly.
+      // Demo nằm ở /demo, nhưng đa số path là tương đối theo repo root.
+      // Thêm tiền tố "../" để path như "datasets/..." hoặc "archive/..." resolve đúng.
       if (!s.startsWith('../') && !s.startsWith('./')) {
         return '../' + s.replace(/^\/+/, '');
       }
@@ -570,10 +570,10 @@
 
         const imgHtml = img
           ? `<div class="product-img-wrap"><img class="product-img" src="${escapeHtml(img)}" alt="${name}" loading="lazy" /></div>`
-          : `<div class="product-img-wrap"><span class="muted" style="font-size:12px;">No image</span></div>`;
+          : `<div class="product-img-wrap"><span class="muted" style="font-size:12px;">Không có ảnh</span></div>`;
 
         const actions = img
-          ? `<div class="product-actions"><a class="link-btn" href="${escapeHtml(img)}" target="_blank" rel="noreferrer">Open image</a></div>`
+          ? `<div class="product-actions"><a class="link-btn" href="${escapeHtml(img)}" target="_blank" rel="noreferrer">Mở ảnh</a></div>`
           : '';
 
         return `
@@ -616,15 +616,15 @@
       });
     }
 
-    // For Chroma distances: lower is more similar. This threshold is heuristic.
-    // If the best distance is higher than this, we treat it as "no close match".
+    // Với distance của Chroma: càng thấp càng giống. Ngưỡng này là heuristic.
+    // Nếu distance tốt nhất lớn hơn ngưỡng, coi như "không có match gần".
     const IMAGE_MATCH_DISTANCE_THRESHOLD = 0.08;
 
     async function searchByImageAndPostToChat(file, captionText) {
       const caption = (captionText || '').trim();
-      const userMsg = caption ? `📷 Image search: ${caption}` : '📷 Image search';
-      // Snapshot the uploaded image into the chat bubble.
-      // (We use an object URL so the UI can still show the image even after clearing the attach state.)
+      const userMsg = caption ? `📷 Tìm bằng ảnh: ${caption}` : '📷 Tìm bằng ảnh';
+      // “Chụp” ảnh vừa upload vào bong bóng chat.
+      // (Dùng object URL để UI vẫn hiển thị được ảnh kể cả sau khi xoá trạng thái đính kèm.)
       const msgUrl = URL.createObjectURL(file);
       chatObjectUrls.push(msgUrl);
       messages.push({ role: 'user', content: userMsg, ts: Date.now(), imageSrc: msgUrl });
@@ -632,7 +632,7 @@
       renderChat();
 
       const fd = new FormData();
-      // If this is a pasted blob, provide a filename.
+      // Nếu đây là blob dán từ clipboard, cung cấp một tên file.
       fd.append('file', file, file.name || 'pasted-image.png');
 
       const resp = await fetch(apiUrl('/search/image/upload?top_k=3'), {
@@ -651,9 +651,9 @@
 
       const assistantContent = products.length
         ? (hasCloseMatch
-            ? 'I searched using your image. Here are the closest matches I found:'
-            : "I can't find that exact product in my data. However, here are the most similar items I do have:")
-        : "I couldn't find close matches for that image. Try a clearer product photo (front view, good lighting).";
+            ? 'Tôi đã tìm bằng ảnh của bạn. Đây là các kết quả gần nhất tôi tìm được:'
+            : 'Tôi không tìm thấy đúng chính xác sản phẩm đó trong dữ liệu. Tuy nhiên, đây là các món tương tự nhất mà tôi có:')
+        : 'Tôi không tìm được kết quả đủ gần cho ảnh này. Hãy thử ảnh rõ hơn (chụp chính diện, ánh sáng tốt).';
 
       const assistantMsg = {
         role: 'assistant',
@@ -680,21 +680,21 @@
 
       if (!content && !attached) return;
 
-      // If an image is attached, treat this as an image-search turn.
-      // (Text becomes an optional caption.)
+      // Nếu có ảnh đính kèm, coi đây là một lượt tìm theo ảnh.
+      // (Text chỉ đóng vai trò caption tuỳ chọn.)
       if (attached) {
-        // Create a cancel token for this request.
+        // Tạo cancel token cho request này.
         inFlightController = new AbortController();
         lastDraftBeforeSend = content;
         setInFlight(true, 'image');
-        setChatStatus('Uploading image and searching...');
+        setChatStatus('Đang tải ảnh lên và tìm kiếm...');
         try {
           await searchByImageAndPostToChat(attached, content);
           setChatStatus('OK');
         } catch (err) {
           if (err && err.name === 'AbortError') {
-            // User canceled.
-            const cancelMsg = { role: 'assistant', content: 'Stopped. You can edit your message and send again.', ts: Date.now() };
+            // Người dùng đã huỷ.
+            const cancelMsg = { role: 'assistant', content: 'Đã dừng. Bạn có thể sửa tin nhắn và gửi lại.', ts: Date.now() };
             if (typingMsgIndex >= 0 && messages[typingMsgIndex]) {
               messages[typingMsgIndex] = cancelMsg;
             } else {
@@ -702,12 +702,12 @@
             }
             typingMsgIndex = -1;
             renderChat();
-            setChatStatus('Canceled');
+            setChatStatus('Đã huỷ');
             chatInput.value = lastDraftBeforeSend || '';
             chatInput.focus();
             return;
           }
-          const failMsg = { role: 'assistant', content: 'Sorry — image search failed.\nDetails: ' + (err.message || err), ts: Date.now() };
+          const failMsg = { role: 'assistant', content: 'Xin lỗi — tìm kiếm bằng ảnh thất bại.\nChi tiết: ' + (err.message || err), ts: Date.now() };
           if (typingMsgIndex >= 0 && messages[typingMsgIndex]) {
             messages[typingMsgIndex] = failMsg;
           } else {
@@ -715,7 +715,7 @@
           }
           typingMsgIndex = -1;
           renderChat();
-          setChatStatus('Error');
+          setChatStatus('Lỗi');
         } finally {
           setInFlight(false);
           inFlightController = null;
@@ -725,8 +725,8 @@
         return;
       }
 
-      // Otherwise: normal text chat.
-      // Create a cancel token for this request.
+      // Ngược lại: chat văn bản bình thường.
+      // Tạo cancel token cho request này.
       inFlightController = new AbortController();
       lastDraftBeforeSend = content;
       messages.push({ role: 'user', content, ts: Date.now() });
@@ -735,7 +735,7 @@
       chatInput.value = '';
 
       setInFlight(true, 'chat');
-      setChatStatus('Calling /chat ...');
+      setChatStatus('Đang gọi /chat ...');
 
       const payload = {
         query: content,
@@ -775,7 +775,7 @@
         setChatStatus('OK');
       } catch (err) {
         if (err && err.name === 'AbortError') {
-          const cancelMsg = { role: 'assistant', content: 'Stopped. You can edit your question and send again.', ts: Date.now() };
+          const cancelMsg = { role: 'assistant', content: 'Đã dừng. Bạn có thể sửa câu hỏi và gửi lại.', ts: Date.now() };
           if (typingMsgIndex >= 0 && messages[typingMsgIndex]) {
             messages[typingMsgIndex] = cancelMsg;
           } else {
@@ -783,12 +783,12 @@
           }
           typingMsgIndex = -1;
           renderChat();
-          setChatStatus('Canceled');
+          setChatStatus('Đã huỷ');
           chatInput.value = lastDraftBeforeSend || '';
           chatInput.focus();
           return;
         }
-        const failMsg = { role: 'assistant', content: 'Sorry — I can’t reach the server or the server returned an error.\nDetails: ' + (err.message || err), ts: Date.now() };
+        const failMsg = { role: 'assistant', content: 'Xin lỗi — không thể kết nối tới server hoặc server trả về lỗi.\nChi tiết: ' + (err.message || err), ts: Date.now() };
         if (typingMsgIndex >= 0 && messages[typingMsgIndex]) {
           messages[typingMsgIndex] = failMsg;
         } else {
@@ -796,7 +796,7 @@
         }
         typingMsgIndex = -1;
         renderChat();
-        setChatStatus('Error');
+        setChatStatus('Lỗi');
       } finally {
         setInFlight(false);
         inFlightController = null;
@@ -807,7 +807,7 @@
       messages.length = 0;
       typingMsgIndex = -1;
 
-      // Revoke any object URLs created for chat image bubbles.
+      // Revoke các object URL đã tạo cho ảnh trong bong bóng chat.
       while (chatObjectUrls.length) {
         const u = chatObjectUrls.pop();
         try { URL.revokeObjectURL(u); } catch (_) {}
@@ -815,7 +815,7 @@
 
       clearAttachedImage();
       renderChat();
-      setChatStatus('Started a new chat.');
+      setChatStatus('Đã bắt đầu chat mới.');
       chatInput.focus();
     }
 
@@ -828,7 +828,7 @@
     chatImageFile.addEventListener('change', () => {
       const f = (chatImageFile.files && chatImageFile.files[0]) ? chatImageFile.files[0] : null;
       if (!f) {
-        // Only clear the file selection; keep any pasted image if present.
+        // Chỉ xoá lựa chọn file; vẫn giữ ảnh dán nếu đang có.
         chatImageFile.value = '';
         if (!pastedImageFile) {
           chatImagePreview.src = '';
@@ -836,7 +836,7 @@
         }
         return;
       }
-      // If a local file is selected, clear any pasted image.
+      // Nếu chọn file local, xoá ảnh dán để tránh nhầm lẫn.
       pastedImageFile = null;
       if (pastedObjectUrl) {
         try { URL.revokeObjectURL(pastedObjectUrl); } catch (_) {}
@@ -845,28 +845,28 @@
       const url = URL.createObjectURL(f);
       chatImagePreview.src = url;
       chatImagePreviewWrap.style.display = 'block';
-      setChatStatus('Image attached. Click “Send” to search.');
+      setChatStatus('Đã đính kèm ảnh. Bấm “Gửi” để tìm kiếm.');
     });
 
-    // Paste handling: allow Ctrl+V of an image copied from the internet.
-    // Note: some websites only copy a URL/HTML; this demo supports image bytes only.
+    // Xử lý dán: cho phép Ctrl+V ảnh copy từ internet.
+    // Lưu ý: một số website chỉ copy URL/HTML; demo này chỉ hỗ trợ byte ảnh.
     chatInput.addEventListener('paste', (e) => {
       const cd = e.clipboardData;
       if (!cd) return;
 
-      // 1) Try to read an actual image from the clipboard.
+      // 1) Thử đọc ảnh thật từ clipboard.
       const items = cd.items ? Array.from(cd.items) : [];
       const imgItem = items.find(it => it && typeof it.type === 'string' && it.type.startsWith('image/'));
       if (imgItem && imgItem.getAsFile) {
         const f = imgItem.getAsFile();
         if (f) {
-          // Use pasted image as the attached image for search.
+          // Dùng ảnh dán như ảnh đính kèm để tìm kiếm.
           pastedImageFile = new File([f], 'pasted-image.png', { type: f.type || 'image/png' });
-          // Clear file input to avoid confusion.
+          // Xoá file input để tránh nhầm lẫn.
           chatImageFile.value = '';
           showPreviewFromBlob(pastedImageFile);
-          setChatStatus('Image pasted from clipboard. Click “Send” to search.');
-          // Prevent the image from being pasted into the textarea as text.
+          setChatStatus('Đã dán ảnh từ clipboard. Bấm “Gửi” để tìm kiếm.');
+          // Tránh để ảnh bị dán vào textarea như text.
           e.preventDefault();
           return;
         }
@@ -879,11 +879,11 @@
       }
     });
 
-    // Init
+    // Khởi tạo
     const apiBaseLabel = document.getElementById('apiBaseLabel');
     if (apiBaseLabel) apiBaseLabel.textContent = API_BASE;
 
-    messages.push({ role: 'assistant', content: "Hi! What are you shopping for today? Tell me the occasion, your budget, and your size/fit preference (if you have them).", ts: Date.now() });
+    messages.push({ role: 'assistant', content: "Chào bạn! Hôm nay bạn muốn mua gì? Hãy cho tôi biết dịp sử dụng, ngân sách và size/fit (nếu có).", ts: Date.now() });
     renderChat();
   </script>
 </body>

@@ -9,32 +9,32 @@ _collection = None
 
 
 def _normalize_where(filters: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-    """Normalize Chroma 'where' filter shapes.
+    """Chuẩn hoá dạng bộ lọc 'where' của Chroma.
 
-    Some Chroma versions require the top-level `where` to contain exactly one
-    operator (e.g. "$and") OR a single field constraint. When the caller passes
-    multiple field constraints like {"gender": "Women", "price": {"$lte": 70}},
-    wrap them into an explicit $and.
+    Một số phiên bản Chroma yêu cầu `where` ở mức top-level chỉ được chứa đúng
+    một toán tử (ví dụ: "$and") HOẶC một ràng buộc của một trường. Khi caller truyền
+    nhiều ràng buộc như {"gender": "Women", "price": {"$lte": 70}},
+    hãy bọc chúng vào một biểu thức $and tường minh.
     """
     if not filters:
         return None
 
-    # Drop empty values to avoid invalid where clauses.
+    # Loại bỏ các giá trị rỗng để tránh tạo where clause không hợp lệ.
     cleaned: Dict[str, Any] = {
         k: v for k, v in (filters or {}).items() if v is not None and v != {} and v != ""
     }
     if not cleaned:
         return None
 
-    # If the user already provided an operator-based where clause, keep it.
+    # Nếu người dùng đã cung cấp where clause dạng toán tử, giữ nguyên.
     if any(str(k).startswith("$") for k in cleaned.keys()):
         return cleaned
 
-    # Single field constraint: ok.
+    # Chỉ một ràng buộc trường: hợp lệ.
     if len(cleaned) == 1:
         return cleaned
 
-    # Multiple field constraints: wrap with $and.
+    # Nhiều ràng buộc trường: bọc bằng $and.
     return {"$and": [{k: v} for k, v in cleaned.items()]}
 
 
@@ -82,9 +82,9 @@ def retrieve(query: str, top_k: int = 5, filters: Optional[Dict[str, Any]] = Non
 
 
 def get_items_by_ids(ids: List[str]):
-    """Fetch items by ids from the text collection.
+    """Lấy item theo id từ text collection.
 
-    Returns a dict: id -> {"text": str, "metadata": dict}
+    Trả về dict: id -> {"text": str, "metadata": dict}
     """
     if not ids:
         return {}

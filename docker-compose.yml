@@ -16,7 +16,7 @@ services:
     env_file:
       - .env
     environment:
-      # Inside docker-compose, Chroma is reachable via the service name.
+      # Trong docker-compose, Chroma truy cập được thông qua tên service.
       - CHROMA_HOST=chroma
       - CHROMA_PORT=8000
     depends_on:
