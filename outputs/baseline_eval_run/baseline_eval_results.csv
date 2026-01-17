@@ -1,0 +1,38 @@
+name,query,should_reject,expected_constraints,status,latency_ms,error,cached,answer,n_products,rejected_english_only,c_has_products,c_color_all_match,c_usage_all_match,c_gender_all_match,c_type_all_match,c_budget_all_match,c_constraint_pass,faith_mentioned_ids,faith_extra_ids_not_in_products,faith_money_mentions,faith_money_matches_products,faith_faithful,pii_email_found,pii_phone_found,pii_cc_like_found,pii_pii_violation,rubric_faithfulness,rubric_format,rubric_completeness,rubric_constraint,rubric_conciseness,rubric_total,rubric_pick_count,rubric_answer_chars
+basic_men_shoes_budget,men black sneakers under $80,False,"{'gender': 'Men', 'color': 'Black', 'max_price': 80}",200,1019.0468000073452,,False,"Quick summary: Here are the closest matches for: men black sneakers under $80.
+
+Top picks:
+1) Converse Men Black Roll Down Shoes (24626) - $45 - Black - Men - Footwear / Shoes - Good for casual.
+2) Converse Men's All Star Canvas Ox Black Shoe (3585) - $25 - Black - Men - Footwear / Shoes - Good for casual.
+3) Converse Men Black CT Lace Color Hi Canvas Shoes (6344) - $80 - Black - Men - Footwear / Shoes - Good for casual.
+4) Nike Men's Air 180 Black Grey Shoe (6652) - $61 - Black - Men - Footwear / Shoes - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,True,True,,True,,True,True,"['24626', '3585', '6344', '6652']",[],"[80.0, 45.0, 25.0, 80.0, 61.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,594
+formal_office,women formal office outfit under $100,False,"{'usage': 'Formal', 'max_price': 100}",200,1110.7136999780778,,False,"Quick summary: Here are the closest matches for: women formal office outfit under $100.
+
+Top picks:
+1) Elle Women White Semiformal Top (57116) - $16 - White - Women - Apparel / Topwear - Good for formal.
+2) Arrow Woman Grey Trousers (32407) - $5 - Grey - Women - Apparel / Bottomwear - Good for formal.
+3) Red Tape Men Formal Brown Formal Shoes (12514) - $16 - Brown - Men - Footwear / Shoes - Good for formal.
+4) Catwalk Women Leather Formal Grey Heels (2880) - $87 - Grey - Women - Footwear / Shoes - Good for formal.
+
+Next step: Open a product image card to verify style and details.",4,False,True,,True,,,True,True,"['12514', '2880', '32407', '57116']",[],"[100.0, 16.0, 5.0, 16.0, 87.0]",False,False,False,False,False,False,0,2,2,2,2,8,4,586
+color_strict,women red dress,False,{'color': 'Red'},200,36.59579998929985,,False,"Quick summary: Here are the closest matches for: women red dress.
+
+Top picks:
+1) Remanika Women Red Dress (45777) - $110 - Red - Women - Apparel / Dress - Good for casual.
+2) Sepia Women Printed Red Dress (33199) - $150 - Red - Women - Apparel / Dress - Good for casual.
+3) French Connection Women Printed Red Dress (43680) - $38 - Red - Women - Apparel / Dress - Good for casual.
+4) Elle Women Red A-Line Dress (57057) - $27 - Red - Women - Apparel / Dress - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,True,True,,,,,True,"['33199', '43680', '45777', '57057']",[],"[110.0, 150.0, 38.0, 27.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,543
+type_tshirts,men white t-shirt,False,"{'articleType': 'Tshirts', 'color': 'White', 'gender': 'Men'}",200,40.8719000115525,,False,"Quick summary: Here are the closest matches for: men white t-shirt.
+
+Top picks:
+1) Mr.Men Printed White T-shirt (2853) - $140 - White - Men - Apparel / Topwear - Good for casual.
+2) Mr.Men Men's White Round Neck T-shirt (8271) - $111 - White - Men - Apparel / Topwear - Good for casual.
+3) Mr.Men Men's White Blue T-shirt (8274) - $103 - White - Men - Apparel / Topwear - Good for casual.
+4) Provogue Men Printed White T-shirt (23945) - $188 - White - Men - Apparel / Topwear - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,True,True,,True,False,,False,"['23945', '2853', '8271', '8274']",[],"[140.0, 111.0, 103.0, 188.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,561
+reject_vietnamese,Tôi muốn mua áo sơ mi trắng đi làm dưới 40 đô,True,,200,2.736000024015084,,False,I don't understand your question. Please rewrite it.,0,True,False,,,,,,True,[],[],[],True,True,False,False,False,False,2,0,0,2,2,6,0,52

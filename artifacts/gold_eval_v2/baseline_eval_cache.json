@@ -1,0 +1,282 @@
+{
+  "68c9e5b03fd0cf0654a2d381888ac754521ebbe8e19edb346a9448440c14edfa": {
+    "status": 0,
+    "latency_ms": 2033.0326999828685,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "019a0516a325e8a3351f196995540e237db269a0a7ade62b78231998ddc2bc20": {
+    "status": 0,
+    "latency_ms": 2020.015499991132,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "0fff4d3ea6eee1c0bd6422b5936ca5b261f1493e2618cf14f1a17fdf0b992f0d": {
+    "status": 0,
+    "latency_ms": 2029.0747999970336,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "3ea33bc6e14504f080fb990d8c319b98f60acba78466590a4bd68fdb2318be66": {
+    "status": 0,
+    "latency_ms": 2017.9059999936726,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "cda85474d6990d8ffd37291a7b7aa4bb98fbd0b32613390127233a31816b7ad1": {
+    "status": 0,
+    "latency_ms": 2026.5841000073124,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "105f193f75cdc9c8f0f1ba248d844bf401a0eb2f82f3c0a4aebea8ad141ac9df": {
+    "status": 0,
+    "latency_ms": 2020.1468999730423,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "b784f808230f4f87a3ed092f8e8098b82c440f09b50425e9b08f123fe70f9daa": {
+    "status": 0,
+    "latency_ms": 2033.9486000011675,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "155cf30a773c779031f8bed6bbb8c58d9eb1babe0dbd4f072f1f308540ce9246": {
+    "status": 0,
+    "latency_ms": 2023.8791000156198,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "b5bc7ed74f160c321c98a2a5003855424fc80d62c526e19f86f1f482c03c7474": {
+    "status": 0,
+    "latency_ms": 2024.2394999950193,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "05409bf840b8feca9b8176c21ddbf59dd804d57fc5b6f1f788027c51ea87acaa": {
+    "status": 0,
+    "latency_ms": 2030.8746000227984,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "943859ccf07c36567761f8085201bf2e42238a2bac330991ed5b15bff9dd8940": {
+    "status": 0,
+    "latency_ms": 2027.0704999857116,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "cea62bf3c156611da7014df6b909c13f73f807f052e9296289036087eaaf2719": {
+    "status": 0,
+    "latency_ms": 2021.4849000039976,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "bcbe19970ddace106d382d52f54e21a66556728816b1102d175a0019f23dbf0a": {
+    "status": 0,
+    "latency_ms": 2030.5436000053305,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "415cac7fc603a16123c4d16103899921db7b5b98116af74eed7dba5c80f605ed": {
+    "status": 0,
+    "latency_ms": 2021.3752999843564,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "8d974c7e39de9ff57ac1130acbf95b970dc6df72bfbbb13824b0937f3109fc10": {
+    "status": 0,
+    "latency_ms": 2040.6724999775179,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "fbb42a21427e8d04289e8a537ce24708be344741edb51316d071e888ca882679": {
+    "status": 0,
+    "latency_ms": 2019.666700012749,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "e8a3a4235bea621dbd37b5fe333554903d45646baa4625060ae3f3db88d1eead": {
+    "status": 0,
+    "latency_ms": 2029.4521999894641,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "26fff046458cb080f40d6f709b36061505febd92514b4dcb4ef9d20b79ee0ee8": {
+    "status": 0,
+    "latency_ms": 2014.4764999859035,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "89e5eafbd3fcf6da0e8a1e06cb296458fe8a9299be65ad761a8c75649684d900": {
+    "status": 0,
+    "latency_ms": 2029.0326999966055,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "178779f6c315466e86574139b8c82f0ba119392fed18629a3fc9547b131e2d67": {
+    "status": 0,
+    "latency_ms": 2024.123100010911,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "0de3f7d06f20e5d68eeaac02a6e1e2778f0d52c957560951ebbc6ee54e961057": {
+    "status": 0,
+    "latency_ms": 2041.8998000095598,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "6cbc7a052f7fd4b2c8b6df3c3a89a2b9ded6f0d0a7a6bd6c317a3f5f5f2c04a0": {
+    "status": 0,
+    "latency_ms": 2047.6303999894299,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "a51288b9a35a864d115135f82e27402a449d96a91f2b0db0bca46dc37cd0b68a": {
+    "status": 0,
+    "latency_ms": 2015.6449000060093,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "ffe959827cbc477fa1b6e2a558a78789b5ddf3caf2d136a174b18527c18e5186": {
+    "status": 0,
+    "latency_ms": 2040.9928000008222,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "7c5c683345ca1999d6a33618194f81df12b99d6503158ce3a45826247811635e": {
+    "status": 0,
+    "latency_ms": 2029.9211000092328,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "16280ecb086022903fbd33e48affe512b55538f7c8ca2b30a09fac9cd29de508": {
+    "status": 0,
+    "latency_ms": 2034.4904999947175,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "8a1edfe3528c63e4f2a9b332ffc79460a059800c9bd3ddac2aeba54b0ca5c9c3": {
+    "status": 0,
+    "latency_ms": 2020.0212000054307,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "3e69595e46bc5883e355df645504c905a72e06a3e9a44d5b6b8eac156573c39e": {
+    "status": 0,
+    "latency_ms": 2024.2660000221804,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "7345c7c31b900ad936b4682fe210e8edd923b99574a1675c2f1ab87c1bfb5a77": {
+    "status": 0,
+    "latency_ms": 2041.4586000260897,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "06d776b3edab98db8b8a1d2cca91a27fcf6cc82789859b168bcfedf3164de358": {
+    "status": 0,
+    "latency_ms": 2014.3794000032358,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "7bac5ab7051198588c066f64b4a0151a6d8ab01422555f5f076b3cc13bfc4da4": {
+    "status": 0,
+    "latency_ms": 2017.8392000088934,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "5a8d15654645f81b5f2bad4dbbed9b0c627970b033986d4837e764fb1b2a0652": {
+    "status": 0,
+    "latency_ms": 2031.2870999914594,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "40e4f48b6f6d3cec757a17bea2199204ce60a9a233014a8558580adc7cac75f9": {
+    "status": 0,
+    "latency_ms": 2013.757800013991,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "bf61d1ee5bead8acde1b6663e3bd36f73c6e664b6793b9a265cd6068a694f514": {
+    "status": 0,
+    "latency_ms": 2033.831700013252,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "ef672936abb631a03d3d41a29c1b11776dd25000178c24b45a00d3d7b6a0621a": {
+    "status": 0,
+    "latency_ms": 2023.439899989171,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "53a753fab10649ee7e541933ac0630f47d6b15e633dcd1fd57df8cab5e3bd37a": {
+    "status": 0,
+    "latency_ms": 2050.850300001912,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "d299d13387c657472687b44d9d3fa25ebe5442fadf2f2be003d04c8a904f2a40": {
+    "status": 0,
+    "latency_ms": 2013.4685999946669,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "06d441e96605b26db14c36939f4b8f5b1e5953bb1cf20c43e13aa96f93d4e068": {
+    "status": 0,
+    "latency_ms": 2063.998500001617,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "bf2bf02e9231b83003c3fc9feae0efb077cc10f2d52d4bcd8121347cf8c700bf": {
+    "status": 0,
+    "latency_ms": 2034.5043999841437,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  },
+  "653590ddbd973b828cd60c0d77853617b7e94844297ae77c2674d2d466ab1cc1": {
+    "status": 0,
+    "latency_ms": 2027.0775000099093,
+    "error": "ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8081): Max retries exceeded with url: /chat (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8081): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+    "response": {},
+    "_cached": false
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-01-17 06:37:34",
+  "api_base": "http://127.0.0.1:8081",
+  "n_cases": 5,
+  "health_ok": true,
+  "error_rate": 1.0,
+  "latency_p50_ms": 2052.412299992284,
+  "latency_p90_ms": 2062.720240012277,
+  "latency_p95_ms": 2064.73602001206,
+  "latency_mean_ms": 2052.772879996337,
+  "empty_products_rate_all": 1.0,
+  "empty_products_rate_non_reject": 1.0,
+  "english_only_reject_accuracy": 0.0,
+  "english_only_false_reject_rate": 0.0,
+  "pii_violation_rate": 0.0,
+  "constraint_pass_rate": 0.0,
+  "faithfulness_pass_rate": 1.0,
+  "rubric_total_mean": 2.4
+}
