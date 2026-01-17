@@ -1,4 +1,4 @@
-﻿# Fashion RAG (Text + Image) — Tài liệu kỹ thuật
+﻿# Fashion RAG (Text + Image)
 
 Hệ thống **Fashion Search/Chatbot** theo mô hình **RAG (Retrieval‑Augmented Generation)** cho **truy vấn văn bản** và **tìm kiếm bằng hình ảnh**, triển khai bằng **FastAPI** và **ChromaDB**.
 
@@ -580,3 +580,4 @@ Nguyên nhân phổ biến: gửi sai schema.
 
 - Không commit `.env` / `.env.b`.
 - Không paste `LLM_API_KEY` vào issue/public log.
+
