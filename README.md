@@ -17,10 +17,9 @@ Tài liệu này được viết theo phong cách “tài liệu kỹ thuật”
 - [7. Hợp đồng API (HTTP)](#7-hợp-đồng-api-http)
 - [8. Logic RAG & các cơ chế lọc](#8-logic-rag--các-cơ-chế-lọc)
 - [9. Tích hợp LLM & chính sách trả lời](#9-tích-hợp-llm--chính-sách-trả-lời)
-- [10. A/B testing](#10-ab-testing)
-- [11. Đánh giá & kết quả](#11-đánh-giá--kết-quả)
-- [12. Troubleshooting / vận hành](#12-troubleshooting--vận-hành)
-- [13. Cấu trúc repo](#13-cấu-trúc-repo)
+- [10. Đánh giá & kết quả](#10-đánh-giá--kết-quả)
+- [11. Troubleshooting / vận hành](#11-troubleshooting--vận-hành)
+- [12. Cấu trúc repo](#12-cấu-trúc-repo)
 
 ---
 
@@ -34,8 +33,7 @@ Tài liệu này được viết theo phong cách “tài liệu kỹ thuật”
 ### 1.2 Ràng buộc quan trọng
 
 1. **English-only**: API có kiểm tra “looks like English”. Nếu không đạt, endpoint `/chat` trả:
-
-   - `answer: "I don't understand your question. Please rewrite it."`
+   - `answer: "I can't understand your question. Please rewrite it."`
    - `products: []`
 
    Endpoint `/query` hiện trả `error: "English only: please rephrase your request in English."`.
@@ -150,9 +148,15 @@ Ghi chú:
 
 ### 5.1 Chạy bằng Docker Compose (khuyến nghị)
 
+Yêu cầu:
+
+- Cài **Docker Desktop** và đảm bảo Docker Engine đang chạy.
+- Lần chạy đầu có thể mất thời gian vì image cài `torch`, `sentence-transformers`, `open-clip`.
+
 1. Tạo `.env`:
 
-- Copy `.env.example` → `.env`
+- Copy `.env.example` → `.env`.
+- Nếu bạn **chưa có API key LLM**: để `USE_LLM_ANSWER=0` (mặc định). Khi đó hệ vẫn chạy bình thường và `answer` sẽ được tạo deterministic từ `products`.
 
 2. Chạy dịch vụ:
 
@@ -160,9 +164,18 @@ Ghi chú:
 docker compose up --build
 ```
 
-3. Swagger UI:
+3. Kiểm tra healthcheck:
+
+- `http://127.0.0.1:8081/health` → mong đợi `{ "status": "ok" }`
+
+4. Swagger UI:
 
 - `http://127.0.0.1:8081/docs`
+
+5. UI demo:
+
+- Mở `index.html` (khuyến nghị mở qua VS Code Live Server để tránh một số hạn chế của trình duyệt khi mở file trực tiếp).
+- UI gọi API theo mặc định tại `http://127.0.0.1:8081`.
 
 ### 5.2 Chạy local (không Docker)
 
@@ -203,7 +216,7 @@ Ghi chú vận hành:
 
 ## 7. Hợp đồng API (HTTP)
 
-Tài liệu OpenAPI đầy đủ có tại `/docs`. Dưới đây là hợp đồng tối thiểu theo code hiện tại.
+Tài liệu OpenAPI đầy đủ có tại `/docs`.
 
 ### 7.1 `GET /health`
 
@@ -392,7 +405,7 @@ File: `app/llm_client.py`.
 - Nếu đã có `products` và `USE_LLM_ANSWER=0` → `answer` được render deterministic từ `products`.
 - Mục tiêu: **không mâu thuẫn** với UI product cards và hạn chế hallucination.
 
-### 9.2 Bật LLM (phục vụ A/B testing / trải nghiệm)
+### 9.2 Bật LLM (tuỳ chọn)
 
 - Set `USE_LLM_ANSWER=1` và cấu hình `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`.
 - Prompt đã có “HARD RULES” để buộc LLM chỉ dựa trên `PRODUCT LIST`/`PRODUCT CONTEXT`.
@@ -403,44 +416,76 @@ File: `app/llm_client.py`.
 
 ---
 
-## 10. A/B testing
+## 10. Đánh giá & kết quả
 
-Mục tiêu: chạy 2 API instances A và B, dùng chung Chroma, khác cấu hình LLM/flag.
+### 10.0 Baseline evaluation (khuyến nghị)
 
-### 10.1 Docker Compose A/B
+Mục tiêu trả lời 3 câu hỏi:
 
-File: `docker-compose.ab.yml`.
+1. **Hệ thống hiện tại có chạy ổn không?** (healthcheck, error rate)
+2. **Chất lượng trả lời / tuân thủ ràng buộc / latency đang ở mức nào?** (constraint pass rate, faithfulness heuristic, rubric 0–10, p50/p90/p95)
+3. **Có lỗi English-only / safety / empty products không?** (reject accuracy, false reject rate, PII heuristic, empty-products rate)
 
-- API A: `http://127.0.0.1:8081` (env `.env`)
-- API B: `http://127.0.0.1:8082` (env `.env.b`)
-
-Chạy:
+Chạy nhanh (single-system):
 
 ```bash
-docker compose -f docker-compose.ab.yml up --build
+python baseline_eval.py --base http://127.0.0.1:8081
 ```
 
-Khuyến nghị:
+Chạy với **gold testset** để tính **Hit@K / MRR / nDCG** (retrieval metrics):
 
-- Đặt `.env.b` trong máy local (đã được `.gitignore`) để tránh lộ keys.
-- Dùng B để thử model khác và/hoặc `USE_LLM_ANSWER=1`.
+```bash
+python baseline_eval.py --base http://127.0.0.1:8081 --testset eval/testset_gold.json
+```
 
----
+Khuyến nghị (để tránh bị “dính cache cũ” khi lần trước API down / lỗi mạng): chạy vào thư mục output/artifacts riêng:
 
-## 11. Đánh giá & kết quả
+```bash
+python baseline_eval.py --base http://127.0.0.1:8081 --testset eval/testset_gold.json --outputs outputs/gold_eval --artifacts artifacts/gold_eval
+```
 
-### 11.1 Công cụ
+File xuất ra:
+
+- `outputs/baseline_eval_results.csv`: kết quả theo từng test case (status, latency, n_products, constraint/faithfulness/safety, rubric)
+- `artifacts/baseline_eval_summary.json`: tổng hợp cấp hệ thống (error_rate, latency p50/p95, empty_products_rate, english-only, safety)
+- `artifacts/baseline_eval_config.json`: cấu hình chạy
+- `artifacts/baseline_eval_cache.json`: cache kết quả (giúp chạy lại nhanh và ổn định)
+
+Ghi chú:
+
+- Khi dùng `--testset ...`, file CSV sẽ có thêm các cột retrieval:
+  - `ret_hit@1`, `ret_hit@3`, `ret_hit@5`, `ret_mrr`, `ret_ndcg@3`, `ret_ndcg@5`
+- Summary JSON cũng sẽ có các key tương ứng, cùng `retrieval_labeled_cases`.
+- Các retrieval metrics chỉ được tính trên các case có `expected_ids` (gold) và `should_reject=false`.
+- Nếu API **không chạy**, kết quả thường ra `error_rate=1.0`, `empty_products_rate=1.0` và các retrieval metrics gần như 0 — đây là dấu hiệu “server down”, không phải chất lượng hệ thống.
+
+Bạn có thể chỉnh testset mặc định ngay trong `baseline_eval.py` (hàm `default_testset`).
+
+### 10.0.1 Sinh gold testset (khởi tạo nhanh)
+
+Repo có sẵn script sinh **testset có gold IDs** (dùng làm baseline, sau đó bạn chỉnh thủ công để “chốt”):
+
+```bash
+python eval/build_gold_testset.py --csv datasets/archive/fashion-dataset/styles.csv --out eval/testset_gold.json
+```
+
+Gold trong `eval/testset_gold.json` được **gợi ý tự động** dựa trên lọc metadata + token overlap đơn giản, vì vậy bạn nên rà soát lại `expected_ids` để phù hợp ý nghĩa truy vấn.
+
+Hiện tại `eval/testset_gold.json` đã được mở rộng để có **~40 testcases** (bao phủ nhiều nhóm sản phẩm + budget + 2 case tiếng Việt để test English-only). Bạn có thể tiếp tục tăng số case bằng cách chỉnh trong `eval/build_gold_testset.py` và chạy lại script.
+
+### 10.1 Công cụ
 
 - `evaluate.ipynb`: đánh giá end-to-end (text + image), có thể xuất artifacts vào `artifacts/` và `outputs/`.
 - `load_test.py`: load test nhẹ cho `/chat` và `/search/image/upload`.
+- `baseline_eval.py`: baseline evaluation cho `/chat` (không cần notebook).
 
-### 11.2 Metrics
+### 10.2 Metrics
 
 - Reliability: error rate.
 - Performance: p50/p90/p95 latency, throughput (RPS).
 - Behavioral correctness: English-only handling, empty query handling.
 
-### 11.3 Kết quả đo thực tế (2026-01-14)
+### 10.3 Kết quả đo thực tế (2026-01-14)
 
 Các số dưới đây được đo bằng `load_test.py` trên máy Windows của bạn, sau warm-up.
 
@@ -458,13 +503,26 @@ Các số dưới đây được đo bằng `load_test.py` trên máy Windows c�
 
 ---
 
-## 12. Troubleshooting / vận hành
+## 11. Troubleshooting / vận hành
 
-### 12.1 Cold start chậm
+### 11.1 Cold start chậm
 
 Lần đầu gọi `/chat` hoặc `/search/image/upload` sau restart/rebuild có thể chậm do load model (SentenceTransformer/OpenCLIP). Khuyến nghị warm-up vài request trước khi đo.
 
-### 12.2 Không có kết quả / kết quả rỗng
+### 11.2 Lỗi "Connection refused" khi chạy eval
+
+Dấu hiệu:
+
+- `GET http://127.0.0.1:8081/health` không vào được
+- `baseline_eval.py` báo `health_ok=false` hoặc `error_rate=1.0`
+
+Cách xử lý:
+
+1. Nếu bạn chạy bằng Docker Compose: đảm bảo stack đang chạy (`docker compose up --build`).
+2. Kiểm tra containers đang chạy: `docker ps` (phải thấy API và chroma).
+3. Sau khi API up, chạy lại eval và nên dùng thư mục `--artifacts` mới để tránh cache lỗi cũ.
+
+### 11.3 Không có kết quả / kết quả rỗng
 
 Kiểm tra theo thứ tự:
 
@@ -472,20 +530,20 @@ Kiểm tra theo thứ tự:
 2. Query có bị reject English-only không?
 3. Các ngưỡng `RAG_*` có quá chặt không? (thử tăng `RAG_MAX_DISTANCE` hoặc giảm overlap)
 
-### 12.3 Lỗi 422 (Unprocessable Entity)
+### 11.4 Lỗi 422 (Unprocessable Entity)
 
 Nguyên nhân phổ biến: gửi sai schema.
 
 - `filters` trong `POST /query` và `POST /chat` nên là `{}` thay vì `null`.
 
-### 12.4 LLM không chạy / không khác biệt
+### 11.5 LLM không chạy / không khác biệt
 
 - Nếu `USE_LLM_ANSWER=0`, câu trả lời là deterministic từ `products` → thay model không làm thay đổi `answer`.
 - Bật `USE_LLM_ANSWER=1` và đảm bảo `LLM_API_KEY` + `LLM_MODEL` hợp lệ.
 
 ---
 
-## 13. Cấu trúc repo
+## 12. Cấu trúc repo
 
 ### Backend (`app/`)
 
@@ -501,6 +559,12 @@ Nguyên nhân phổ biến: gửi sai schema.
 - `ingest_csv.py`: ingest text từ CSV.
 - `ingest_images.py`: ingest ảnh.
 - `load_test.py`: load test.
+- `baseline_eval.py`: baseline evaluation cho `/chat` (stability/constraints/latency + retrieval metrics nếu có gold).
+
+### Evaluation (`eval/`)
+
+- `eval/build_gold_testset.py`: sinh testset gold IDs từ `styles.csv` (để bạn chỉnh và chốt).
+- `eval/testset_gold.json`: testset mẫu (gold IDs gợi ý tự động).
 
 ### UI
 
@@ -509,7 +573,6 @@ Nguyên nhân phổ biến: gửi sai schema.
 ### Hạ tầng
 
 - `docker-compose.yml`: chạy 1 API + Chroma.
-- `docker-compose.ab.yml`: chạy A/B.
 
 ---
 

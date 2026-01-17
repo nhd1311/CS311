@@ -52,7 +52,7 @@ def ingest(items: List[IngestItem]) -> int:
     texts = [it.text for it in items]
     ids = [it.id for it in items]
     metadatas = [it.metadata for it in items]
-    # Keep this conservative to reduce peak memory usage during ingest.
+    # Giữ tham số bảo thủ để giảm đỉnh bộ nhớ trong lúc ingest.
     embs = model.encode(texts, batch_size=32, show_progress_bar=False)
     upsert = getattr(collection, "upsert", None)
     if callable(upsert):

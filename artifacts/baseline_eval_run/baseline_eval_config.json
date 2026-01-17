@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-01-17 06:38:48",
+  "api_base": "http://127.0.0.1:8081",
+  "timeout_s": 60.0,
+  "max_retries": 2,
+  "top_k": 5,
+  "n_cases": 5
+}

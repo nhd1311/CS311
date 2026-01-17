@@ -1,0 +1,634 @@
+{
+  "version": 1,
+  "generated_at": "2026-01-17T17:23:17.591547+00:00",
+  "csv": "D:/Study/CS311/CS311/datasets/archive/fashion-dataset/styles.csv",
+  "top_k": 5,
+  "gold_per_case": 3,
+  "n_cases": 40,
+  "cases": [
+    {
+      "name": "women_red_dress_basic",
+      "query": "women red dress",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Red",
+        "articleType": "Dresses"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "46277",
+        "48467",
+        "33199"
+      ]
+    },
+    {
+      "name": "women_black_dress_formal",
+      "query": "women black formal dress",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Black",
+        "articleType": "Dresses",
+        "usage": "Formal"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "59994"
+      ]
+    },
+    {
+      "name": "women_blue_dress_party",
+      "query": "women blue party dress",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Blue",
+        "articleType": "Dresses",
+        "usage": "Party"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "39716",
+        "46271",
+        "38836"
+      ]
+    },
+    {
+      "name": "women_green_dress",
+      "query": "women green dress",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Green",
+        "articleType": "Dresses"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "18897",
+        "43676",
+        "58002"
+      ]
+    },
+    {
+      "name": "women_pink_dress",
+      "query": "women pink dress",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Pink",
+        "articleType": "Dresses"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "6874",
+        "33225",
+        "38838"
+      ]
+    },
+    {
+      "name": "men_white_tshirt",
+      "query": "men white t-shirt",
+      "expected_constraints": {
+        "gender": "Men",
+        "color": "White",
+        "articleType": "Tshirts"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "19158",
+        "8392",
+        "4764"
+      ]
+    },
+    {
+      "name": "men_black_tshirt",
+      "query": "men black t-shirt",
+      "expected_constraints": {
+        "gender": "Men",
+        "color": "Black",
+        "articleType": "Tshirts"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "24214",
+        "5891",
+        "40107"
+      ]
+    },
+    {
+      "name": "women_black_tshirt",
+      "query": "women black t-shirt",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Black",
+        "articleType": "Tshirts"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "2288",
+        "3701",
+        "2244"
+      ]
+    },
+    {
+      "name": "women_white_topwear",
+      "query": "women white top",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "White",
+        "subcategory": "Topwear"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "41401",
+        "7194",
+        "22392"
+      ]
+    },
+    {
+      "name": "men_blue_topwear",
+      "query": "men blue top",
+      "expected_constraints": {
+        "gender": "Men",
+        "color": "Blue",
+        "subcategory": "Topwear"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "23876",
+        "19547",
+        "22395"
+      ]
+    },
+    {
+      "name": "men_blue_shirt_casual",
+      "query": "men blue casual shirt",
+      "expected_constraints": {
+        "gender": "Men",
+        "color": "Blue",
+        "articleType": "Shirts",
+        "usage": "Casual"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "43544",
+        "22395",
+        "12190"
+      ]
+    },
+    {
+      "name": "men_white_shirt_formal",
+      "query": "men white formal shirt",
+      "expected_constraints": {
+        "gender": "Men",
+        "color": "White",
+        "articleType": "Shirts",
+        "usage": "Formal"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "9463",
+        "12367",
+        "9464"
+      ]
+    },
+    {
+      "name": "women_white_shirt",
+      "query": "women white shirt",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "White",
+        "articleType": "Shirts"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "27870",
+        "54979",
+        "27871"
+      ]
+    },
+    {
+      "name": "women_black_shirt_formal",
+      "query": "women black formal shirt",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Black",
+        "articleType": "Shirts",
+        "usage": "Formal"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "18891",
+        "18885",
+        "32930"
+      ]
+    },
+    {
+      "name": "men_blue_jeans",
+      "query": "men blue jeans",
+      "expected_constraints": {
+        "gender": "Men",
+        "color": "Blue",
+        "articleType": "Jeans"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "39386",
+        "16508",
+        "11349"
+      ]
+    },
+    {
+      "name": "women_black_jeans",
+      "query": "women black jeans",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Black",
+        "articleType": "Jeans"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "26994",
+        "7193",
+        "7709"
+      ]
+    },
+    {
+      "name": "women_blue_jeans",
+      "query": "women blue jeans",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Blue",
+        "articleType": "Jeans"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "26993",
+        "51499",
+        "27018"
+      ]
+    },
+    {
+      "name": "men_grey_trousers_formal",
+      "query": "men grey formal trousers",
+      "expected_constraints": {
+        "gender": "Men",
+        "color": "Grey",
+        "usage": "Formal"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "26163",
+        "26164",
+        "26152"
+      ]
+    },
+    {
+      "name": "women_black_trousers_formal",
+      "query": "women black formal trousers",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Black",
+        "usage": "Formal"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "27920",
+        "27911",
+        "43224"
+      ]
+    },
+    {
+      "name": "men_black_shoes_budget",
+      "query": "men black shoes under $80",
+      "expected_constraints": {
+        "gender": "Men",
+        "color": "Black",
+        "max_price": 80,
+        "category": "Footwear"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "30248",
+        "44750",
+        "4135"
+      ]
+    },
+    {
+      "name": "men_white_shoes",
+      "query": "men white shoes",
+      "expected_constraints": {
+        "gender": "Men",
+        "color": "White",
+        "category": "Footwear"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "17036",
+        "39988",
+        "3168"
+      ]
+    },
+    {
+      "name": "women_white_shoes",
+      "query": "women white shoes",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "White",
+        "category": "Footwear"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "47574",
+        "14409",
+        "4147"
+      ]
+    },
+    {
+      "name": "women_black_heels",
+      "query": "women black heels",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Black",
+        "category": "Footwear"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "11516",
+        "50153",
+        "50783"
+      ]
+    },
+    {
+      "name": "women_pink_shoes",
+      "query": "women pink shoes",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Pink",
+        "category": "Footwear"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "36137",
+        "49577",
+        "39577"
+      ]
+    },
+    {
+      "name": "men_sports_tshirt",
+      "query": "men sports t-shirt",
+      "expected_constraints": {
+        "gender": "Men",
+        "usage": "Sports",
+        "articleType": "Tshirts"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "24214",
+        "7990",
+        "7964"
+      ]
+    },
+    {
+      "name": "women_sports_shoes",
+      "query": "women sports shoes",
+      "expected_constraints": {
+        "gender": "Women",
+        "usage": "Sports",
+        "category": "Footwear"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "41822",
+        "46086",
+        "36137"
+      ]
+    },
+    {
+      "name": "men_sports_shoes",
+      "query": "men sports shoes",
+      "expected_constraints": {
+        "gender": "Men",
+        "usage": "Sports",
+        "category": "Footwear"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "4336",
+        "3168",
+        "6628"
+      ]
+    },
+    {
+      "name": "women_black_handbag",
+      "query": "women black handbag",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Black",
+        "subcategory": "Bags"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "37431",
+        "35913",
+        "31924"
+      ]
+    },
+    {
+      "name": "men_wallet",
+      "query": "men wallet",
+      "expected_constraints": {
+        "gender": "Men",
+        "subcategory": "Wallets"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "39558",
+        "18827",
+        "52802"
+      ]
+    },
+    {
+      "name": "women_sunglasses",
+      "query": "women sunglasses",
+      "expected_constraints": {
+        "gender": "Women",
+        "subcategory": "Sunglasses"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "21308",
+        "38225",
+        "50235"
+      ]
+    },
+    {
+      "name": "men_watches",
+      "query": "men watch",
+      "expected_constraints": {
+        "gender": "Men",
+        "subcategory": "Watches"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "45011",
+        "45016",
+        "33895"
+      ]
+    },
+    {
+      "name": "women_watches",
+      "query": "women watch",
+      "expected_constraints": {
+        "gender": "Women",
+        "subcategory": "Watches"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "51623",
+        "59263",
+        "51658"
+      ]
+    },
+    {
+      "name": "women_jewellery",
+      "query": "women jewellery",
+      "expected_constraints": {
+        "gender": "Women",
+        "category": "Accessories"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "59471",
+        "52851",
+        "56214"
+      ]
+    },
+    {
+      "name": "men_jacket_black",
+      "query": "men black jacket",
+      "expected_constraints": {
+        "gender": "Men",
+        "color": "Black",
+        "subcategory": "Topwear"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "18509",
+        "16719",
+        "18523"
+      ]
+    },
+    {
+      "name": "women_jacket_black",
+      "query": "women black jacket",
+      "expected_constraints": {
+        "gender": "Women",
+        "color": "Black",
+        "subcategory": "Topwear"
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "18524",
+        "17911",
+        "19342"
+      ]
+    },
+    {
+      "name": "women_dress_under_50",
+      "query": "women dress under $50",
+      "expected_constraints": {
+        "gender": "Women",
+        "articleType": "Dresses",
+        "max_price": 50
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "4988",
+        "10406",
+        "6873"
+      ]
+    },
+    {
+      "name": "men_shoes_under_60",
+      "query": "men shoes under $60",
+      "expected_constraints": {
+        "gender": "Men",
+        "category": "Footwear",
+        "max_price": 60
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "4045",
+        "10303",
+        "15510"
+      ]
+    },
+    {
+      "name": "women_top_under_30",
+      "query": "women top under $30",
+      "expected_constraints": {
+        "gender": "Women",
+        "subcategory": "Topwear",
+        "max_price": 30
+      },
+      "should_reject": false,
+      "top_k": 5,
+      "expected_ids": [
+        "42234",
+        "50705",
+        "32382"
+      ]
+    },
+    {
+      "name": "reject_vietnamese_1",
+      "query": "Tôi muốn mua áo sơ mi trắng đi làm dưới 40 đô",
+      "expected_constraints": null,
+      "should_reject": true,
+      "top_k": 5,
+      "expected_ids": []
+    },
+    {
+      "name": "reject_vietnamese_2",
+      "query": "Gợi ý giày thể thao màu đen cho nam dưới 80 đô",
+      "expected_constraints": null,
+      "should_reject": true,
+      "top_k": 5,
+      "expected_ids": []
+    }
+  ],
+  "notes": "Gold IDs được gợi ý tự động; khuyến nghị rà soát thủ công để tăng độ chính xác."
+}

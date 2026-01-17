@@ -300,7 +300,7 @@ def _relevance_filter_docs(
 def _looks_like_specific_product_lookup(text: str) -> bool:
     t = (text or "").lower()
     keywords = [
-        # English
+        # Tiếng Anh
         "do you have",
         "do you sell",
         "looking for",
@@ -338,7 +338,7 @@ def _clean_text_snippet(text: str, max_len: int = 160) -> str:
 
 
 def _infer_name_from_text(text: str) -> str:
-    # Best-effort: lấy một tiền tố giống tiêu đề, ngắn gọn.
+    # Cố gắng lấy một tiền tố giống tiêu đề, ngắn gọn.
     s = _clean_text_snippet(text, max_len=120)
     # Nhiều dòng bắt đầu bằng tên sản phẩm; giữ ~10–14 từ đầu.
     words = s.split()
@@ -346,7 +346,7 @@ def _infer_name_from_text(text: str) -> str:
 
 
 def _parse_price_number(val: Any) -> Optional[float]:
-    """Parse “best-effort” giá (số) được lưu trong metadata."""
+    """Cố gắng phân tích giá (dạng số) được lưu trong metadata."""
     if val is None:
         return None
     if isinstance(val, (int, float)):
@@ -1076,7 +1076,7 @@ def chat(req: ChatRequest):
 
     if ENGLISH_ONLY and not _looks_like_english_query(query):
         return {
-            "answer": "I don't understand your question. Please rewrite it.",
+            "answer": "I can't understand your question. Please rewrite it.",
             "products": [],
             "sources": [],
         }

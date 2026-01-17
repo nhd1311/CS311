@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-01-18 00:23:35",
+  "api_base": "http://127.0.0.1:8081",
+  "timeout_s": 30.0,
+  "max_retries": 2,
+  "top_k": 5,
+  "n_cases": 40,
+  "testset": "D:\\Study\\CS311\\CS311\\eval\\testset_gold.json"
+}

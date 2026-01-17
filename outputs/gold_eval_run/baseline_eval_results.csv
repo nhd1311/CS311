@@ -1,0 +1,340 @@
+name,query,should_reject,expected_constraints,gold_ids,pred_ids,status,latency_ms,error,cached,answer,n_products,rejected_english_only,ret_hit@1,ret_hit@3,ret_hit@5,ret_mrr,ret_ndcg@3,ret_ndcg@5,c_has_products,c_color_all_match,c_usage_all_match,c_gender_all_match,c_type_all_match,c_budget_all_match,c_constraint_pass,faith_mentioned_ids,faith_extra_ids_not_in_products,faith_money_mentions,faith_money_matches_products,faith_faithful,pii_email_found,pii_phone_found,pii_cc_like_found,pii_pii_violation,rubric_faithfulness,rubric_format,rubric_completeness,rubric_constraint,rubric_conciseness,rubric_total,rubric_pick_count,rubric_answer_chars
+women_red_dress_basic,women red dress,False,"{'gender': 'Women', 'color': 'Red', 'articleType': 'Dresses'}","['46277', '48467', '33199']","['45777', '33199', '43680', '57057', '48482']",200,92.02660000300966,,False,"Quick summary: Here are the closest matches for: women red dress.
+
+Top picks:
+1) Remanika Women Red Dress (45777) - $110 - Red - Women - Apparel / Dress - Good for casual.
+2) Sepia Women Printed Red Dress (33199) - $150 - Red - Women - Apparel / Dress - Good for casual.
+3) French Connection Women Printed Red Dress (43680) - $38 - Red - Women - Apparel / Dress - Good for casual.
+4) Elle Women Red A-Line Dress (57057) - $27 - Red - Women - Apparel / Dress - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,1.0,1.0,0.5,0.2960819109658652,0.2960819109658652,True,True,,True,False,,False,"['33199', '43680', '45777', '57057']",[],"[110.0, 150.0, 38.0, 27.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,543
+women_black_dress_formal,women black formal dress,False,"{'gender': 'Women', 'color': 'Black', 'articleType': 'Dresses', 'usage': 'Formal'}",['59994'],"['59994', '43521', '42740', '13485', '34455']",200,1301.8228999862913,,False,"Quick summary: Here are the closest matches for: women black formal dress.
+
+Top picks:
+1) Avirate Black Formal Dress (59994) - $177 - Black - Women - Apparel / Dress - Good for formal.
+2) French Connection Women Black Trouser (43521) - $54 - Black - Women - Apparel / Bottomwear - Good for formal.
+3) Rocia Women Black Formal Shoes (42740) - $88 - Black - Women - Footwear / Shoes - Good for formal.
+4) Rocia Women Rocia Black Formal Shoe Black Formal Shoes (13485) - $28 - Black - Women - Footwear / Shoes - Good for formal.
+
+Next step: Open a product image card to verify style and details.",5,False,1.0,1.0,1.0,1.0,1.0,1.0,True,True,True,True,False,,False,"['13485', '42740', '43521', '59994']",[],"[177.0, 54.0, 88.0, 28.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,592
+women_blue_dress_party,women blue party dress,False,"{'gender': 'Women', 'color': 'Blue', 'articleType': 'Dresses', 'usage': 'Party'}","['39716', '46271', '38836']",['56855'],200,188.94349999027327,,False,"Quick summary: Here are the closest matches for: women blue party dress.
+
+Top picks:
+1) John Players Men Blue Shirt (56855) - $72 - Blue - Men - Apparel / Topwear - Good for party.
+
+Next step: Open a product image card to verify style and details.",1,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,True,False,False,,False,['56855'],[],[72.0],True,True,False,False,False,False,2,1,1,1,2,7,1,247
+women_green_dress,women green dress,False,"{'gender': 'Women', 'color': 'Green', 'articleType': 'Dresses'}","['18897', '43676', '58002']","['59985', '37938', '58002', '18897', '54972']",200,50.74610002338886,,False,"Quick summary: Here are the closest matches for: women green dress.
+
+Top picks:
+1) Avirate Women Green Dress (59985) - $39 - Green - Women - Apparel / Dress - Good for casual.
+2) Mineral Women Green Dress (37938) - $172 - Green - Women - Apparel / Dress - Good for casual.
+3) Latin Quarters Women Green Printed Dress (58002) - $93 - Green - Women - Apparel / Dress - Good for casual.
+4) Arrow Woman Solid Green Dress (18897) - $179 - Green - Women - Apparel / Dress - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,1.0,1.0,0.3333333333333333,0.23463936301137822,0.4367467095119258,True,True,,True,False,,False,"['18897', '37938', '58002', '59985']",[],"[39.0, 172.0, 93.0, 179.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,551
+women_pink_dress,women pink dress,False,"{'gender': 'Women', 'color': 'Pink', 'articleType': 'Dresses'}","['6874', '33225', '38838']","['6870', '37929', '43652', '43659', '59990']",200,51.90469999797642,,False,"Quick summary: Here are the closest matches for: women pink dress.
+
+Top picks:
+1) Forever New Women's Pink Dress (6870) - $187 - Pink - Women - Apparel / Dress - Good for casual.
+2) Mineral Women Pink Dress (37929) - $189 - Pink - Women - Apparel / Dress - Good for casual.
+3) ONLY Women Pink Dress (43652) - $162 - Pink - Women - Apparel / Dress - Good for casual.
+4) ONLY Women Pink Dress (43659) - $120 - Pink - Women - Apparel / Dress - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,False,,False,"['37929', '43652', '43659', '6870']",[],"[187.0, 189.0, 162.0, 120.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,524
+men_white_tshirt,men white t-shirt,False,"{'gender': 'Men', 'color': 'White', 'articleType': 'Tshirts'}","['19158', '8392', '4764']","['2853', '8271', '8274', '23945', '12203']",200,45.668400009162724,,False,"Quick summary: Here are the closest matches for: men white t-shirt.
+
+Top picks:
+1) Mr.Men Printed White T-shirt (2853) - $140 - White - Men - Apparel / Topwear - Good for casual.
+2) Mr.Men Men's White Round Neck T-shirt (8271) - $111 - White - Men - Apparel / Topwear - Good for casual.
+3) Mr.Men Men's White Blue T-shirt (8274) - $103 - White - Men - Apparel / Topwear - Good for casual.
+4) Provogue Men Printed White T-shirt (23945) - $188 - White - Men - Apparel / Topwear - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,False,,False,"['23945', '2853', '8271', '8274']",[],"[140.0, 111.0, 103.0, 188.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,561
+men_black_tshirt,men black t-shirt,False,"{'gender': 'Men', 'color': 'Black', 'articleType': 'Tshirts'}","['24214', '5891', '40107']","['16629', '23868', '7857', '34241', '51478']",200,61.580699984915555,,False,"Quick summary: Here are the closest matches for: men black t-shirt.
+
+Top picks:
+1) Facit Men Black Printed T-shirt (16629) - $52 - Black - Men - Apparel / Topwear - Good for casual.
+2) ADIDAS Men Black Printed T-shirt (23868) - $109 - Black - Men - Apparel / Topwear - Good for casual.
+3) Proline Men Black T-shirt (7857) - $83 - Black - Men - Apparel / Topwear - Good for casual.
+4) Proline Men Black T-shirt with Printed Detail (34241) - $35 - Black - Men - Apparel / Topwear - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,False,,False,"['16629', '23868', '34241', '7857']",[],"[52.0, 109.0, 83.0, 35.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,563
+women_black_tshirt,women black t-shirt,False,"{'gender': 'Women', 'color': 'Black', 'articleType': 'Tshirts'}","['2288', '3701', '2244']","['2244', '32450', '3502', '2078', '12577']",200,37.18049998860806,,False,"Quick summary: Here are the closest matches for: women black t-shirt.
+
+Top picks:
+1) ADIDAS Women's Black T-shirt (2244) - $181 - Black - Women - Apparel / Topwear - Good for casual.
+2) ADIDAS Women Printed Black T-shirt (32450) - $196 - Black - Women - Apparel / Topwear - Good for casual.
+3) ADIDAS Women's Black T-shirt (3502) - $84 - Black - Women - Apparel / Topwear - Good for sports.
+4) ADIDAS Women Fitted Black T-shirt (2078) - $99 - Black - Women - Apparel / Topwear - Good for sports.
+
+Next step: Open a product image card to verify style and details.",5,False,1.0,1.0,1.0,1.0,0.46927872602275644,0.46927872602275644,True,True,,True,False,,False,"['2078', '2244', '32450', '3502']",[],"[181.0, 196.0, 84.0, 99.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,562
+women_white_topwear,women white top,False,"{'gender': 'Women', 'color': 'White', 'subcategory': 'Topwear'}","['41401', '7194', '22392']","['40580', '31316', '28740', '43651', '22485']",200,79.66610000585206,,False,"Quick summary: Here are the closest matches for: women white top.
+
+Top picks:
+1) W Women White Top (40580) - $84 - White - Women - Apparel / Topwear - Good for casual.
+2) W Women White Top (31316) - $18 - White - Women - Apparel / Topwear - Good for casual.
+3) W Women Printed White Top (28740) - $88 - White - Women - Apparel / Topwear - Good for ethnic.
+4) ONLY Women White Top (43651) - $86 - White - Women - Apparel / Topwear - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,,,True,"['28740', '31316', '40580', '43651']",[],"[84.0, 18.0, 88.0, 86.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,515
+men_blue_topwear,men blue top,False,"{'gender': 'Men', 'color': 'Blue', 'subcategory': 'Topwear'}","['23876', '19547', '22395']","['46380', '46386', '46404', '40057', '46382']",200,40.06110000773333,,False,"Quick summary: Here are the closest matches for: men blue top.
+
+Top picks:
+1) ADIDAS Men Blue Shirt (46380) - $107 - Blue - Men - Apparel / Topwear - Good for casual.
+2) ADIDAS Men Blue  Printed T-shirt (46386) - $17 - Blue - Men - Apparel / Topwear - Good for casual.
+3) ADIDAS Men Blue Printed T-shirt (46404) - $54 - Blue - Men - Apparel / Topwear - Good for casual.
+4) ADIDAS Men Blue Printed T-shirt (40057) - $142 - Blue - Men - Apparel / Topwear - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,,,True,"['40057', '46380', '46386', '46404']",[],"[107.0, 17.0, 54.0, 142.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,538
+men_blue_shirt_casual,men blue casual shirt,False,"{'gender': 'Men', 'color': 'Blue', 'articleType': 'Shirts', 'usage': 'Casual'}","['43544', '22395', '12190']","['23957', '23959', '41588', '41589', '41608']",200,1416.994600003818,,False,"Quick summary: Here are the closest matches for: men blue casual shirt.
+
+Top picks:
+1) Provogue Men Blue Shirt (23957) - $108 - Blue - Men - Apparel / Topwear - Good for casual.
+2) Provogue Men Blue Shirt (23959) - $133 - Blue - Men - Apparel / Topwear - Good for casual.
+3) Basics Men Blue Shirt (41588) - $131 - Blue - Men - Apparel / Topwear - Good for casual.
+4) Basics Men Blue Shirt (41589) - $81 - Blue - Men - Apparel / Topwear - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,True,True,False,,False,"['23957', '23959', '41588', '41589']",[],"[108.0, 133.0, 131.0, 81.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,521
+men_white_shirt_formal,men white formal shirt,False,"{'gender': 'Men', 'color': 'White', 'articleType': 'Shirts', 'usage': 'Formal'}","['9463', '12367', '9464']","['14715', '14716', '11119', '11118', '9589']",200,131.8023999920115,,False,"Quick summary: Here are the closest matches for: men white formal shirt.
+
+Top picks:
+1) Indigo Nation Men Formal Shirt White Shirts (14715) - $165 - White - Men - Apparel / Topwear - Good for formal.
+2) Indigo Nation Men Formal Shirt White Shirts (14716) - $18 - White - Men - Apparel / Topwear - Good for formal.
+3) Indigo Nation Men Solid White Shirts (11119) - $65 - White - Men - Apparel / Topwear - Good for formal.
+4) Indigo Nation Men Solid White Shirts (11118) - $180 - White - Men - Apparel / Topwear - Good for formal.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,True,True,False,,False,"['11118', '11119', '14715', '14716']",[],"[165.0, 18.0, 65.0, 180.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,595
+women_white_shirt,women white shirt,False,"{'gender': 'Women', 'color': 'White', 'articleType': 'Shirts'}","['27870', '54979', '27871']","['23049', '18898', '2125', '26365']",200,28.727700002491474,,False,"Quick summary: Here are the closest matches for: women white shirt.
+
+Top picks:
+1) Arrow Woman White Shirt (23049) - $153 - White - Women - Apparel / Topwear - Good for casual.
+2) Arrow Woman Solid White Shirt (18898) - $104 - White - Women - Apparel / Topwear - Good for casual.
+3) Lee Women White Shirt (2125) - $30 - White - Women - Apparel / Topwear - Good for casual.
+4) Arrow Woman White Shirt (26365) - $76 - White - Women - Apparel / Topwear - Matches topwear.
+
+Next step: Open a product image card to verify style and details.",4,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,False,,False,"['18898', '2125', '23049', '26365']",[],"[153.0, 104.0, 30.0, 76.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,535
+women_black_shirt_formal,women black formal shirt,False,"{'gender': 'Women', 'color': 'Black', 'articleType': 'Shirts', 'usage': 'Formal'}","['18891', '18885', '32930']","['18891', '18885']",200,93.0015999765601,,False,"Quick summary: Here are the closest matches for: women black formal shirt.
+
+Top picks:
+1) Arrow Woman Tyra Black & White Striped Shirt (18891) - $17 - Black - Women - Apparel / Topwear - Good for formal.
+2) Arrow Woman Simona Black Shirt (18885) - $137 - Black - Women - Apparel / Topwear - Good for formal.
+
+Next step: Open a product image card to verify style and details.",2,False,1.0,1.0,1.0,1.0,0.7653606369886217,0.7653606369886217,True,True,True,True,False,,False,"['18885', '18891']",[],"[17.0, 137.0]",True,True,False,False,False,False,2,2,2,1,2,9,2,374
+men_blue_jeans,men blue jeans,False,"{'gender': 'Men', 'color': 'Blue', 'articleType': 'Jeans'}","['39386', '16508', '11349']","['52548', '43246', '28794', '28795', '51482']",200,29.50480001163669,,False,"Quick summary: Here are the closest matches for: men blue jeans.
+
+Top picks:
+1) Pepe Jeans Men Blue Jeans (52548) - $106 - Blue - Men - Apparel / Bottomwear - Good for casual.
+2) Denizen Men Blue Jeans (43246) - $182 - Blue - Men - Apparel / Bottomwear - Good for casual.
+3) Denizen Men Blue Jeans (28794) - $200 - Blue - Men - Apparel / Bottomwear - Good for casual.
+4) Denizen Men Blue Jeans (28795) - $149 - Blue - Men - Apparel / Bottomwear - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,False,,False,"['28794', '28795', '43246', '52548']",[],"[106.0, 182.0, 200.0, 149.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,530
+women_black_jeans,women black jeans,False,"{'gender': 'Women', 'color': 'Black', 'articleType': 'Jeans'}","['26994', '7193', '7709']","['51500', '32559', '48494', '11234', '50948']",200,50.917400018079206,,False,"Quick summary: Here are the closest matches for: women black jeans.
+
+Top picks:
+1) Denizen Women Black Jeans (51500) - $50 - Black - Women - Apparel / Bottomwear - Good for casual.
+2) ONLY Women Black Jeans (32559) - $165 - Black - Women - Apparel / Bottomwear - Good for casual.
+3) French Connection Women Black Jeans (48494) - $163 - Black - Women - Apparel / Bottomwear - Good for casual.
+4) Flying Machine Women Lowrise Black Jeans (11234) - $165 - Black - Women - Apparel / Bottomwear - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,False,,False,"['11234', '32559', '48494', '51500']",[],"[50.0, 165.0, 163.0, 165.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,575
+women_blue_jeans,women blue jeans,False,"{'gender': 'Women', 'color': 'Blue', 'articleType': 'Jeans'}","['26993', '51499', '27018']","['51502', '51499', '51498', '51505', '51503']",200,27.50909997848794,,False,"Quick summary: Here are the closest matches for: women blue jeans.
+
+Top picks:
+1) Denizen Women Greenish Blue Jeans (51502) - $20 - Blue - Women - Apparel / Bottomwear - Good for casual.
+2) Denizen Women Blue Jeans (51499) - $200 - Blue - Women - Apparel / Bottomwear - Good for casual.
+3) Denizen Women Blue Jeans (51498) - $71 - Blue - Women - Apparel / Bottomwear - Good for casual.
+4) Denizen Women Blue Jeans (51505) - $136 - Blue - Women - Apparel / Bottomwear - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,1.0,1.0,0.5,0.2960819109658652,0.2960819109658652,True,True,,True,False,,False,"['51498', '51499', '51502', '51505']",[],"[20.0, 200.0, 71.0, 136.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,552
+men_grey_trousers_formal,men grey formal trousers,False,"{'gender': 'Men', 'color': 'Grey', 'usage': 'Formal'}","['26163', '26164', '26152']","['12221', '12223', '15117', '15123', '23073']",200,92.57199999410659,,False,"Quick summary: Here are the closest matches for: men grey formal trousers.
+
+Top picks:
+1) Basics Men Grey Trousers (12221) - $83 - Grey - Men - Apparel / Bottomwear - Good for formal.
+2) Basics Men Solid Grey Trousers (12223) - $27 - Grey - Men - Apparel / Bottomwear - Good for formal.
+3) Arrow Men Solid Grey Trousers (15117) - $41 - Grey - Men - Apparel / Bottomwear - Good for formal.
+4) Arrow Men Solid Grey Trousers (15123) - $18 - Grey - Men - Apparel / Bottomwear - Good for formal.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,True,True,,,True,"['12221', '12223', '15117', '15123']",[],"[83.0, 27.0, 41.0, 18.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,557
+women_black_trousers_formal,women black formal trousers,False,"{'gender': 'Women', 'color': 'Black', 'usage': 'Formal'}","['27920', '27911', '43224']","['43521', '32404', '18712', '27920', '27911']",200,106.49959999136627,,False,"Quick summary: Here are the closest matches for: women black formal trousers.
+
+Top picks:
+1) French Connection Women Black Trouser (43521) - $54 - Black - Women - Apparel / Bottomwear - Good for formal.
+2) Arrow Woman Black Trousers (32404) - $26 - Black - Women - Apparel / Bottomwear - Good for formal.
+3) Arrow Women Solid Black Skirt (18712) - $23 - Black - Women - Apparel / Bottomwear - Good for formal.
+4) Scullers For Her Black Trousers (27920) - $63 - Black - Women - Apparel / Bottomwear - Good for formal.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,1.0,0.25,0.0,0.38364913903790027,True,True,True,True,,,True,"['18712', '27920', '32404', '43521']",[],"[54.0, 26.0, 23.0, 63.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,583
+men_black_shoes_budget,men black shoes under $80,False,"{'gender': 'Men', 'color': 'Black', 'max_price': 80, 'category': 'Footwear'}","['30248', '44750', '4135']","['34628', '50376', '42043', '38648', '6652']",200,179.82729998766445,,False,"Quick summary: Here are the closest matches for: men black shoes under $80.
+
+Top picks:
+1) Nike Men Ruckus Low Black Shoes (34628) - $35 - Black - Men - Footwear / Shoes - Good for casual.
+2) Woodland Men Black Shoes (50376) - $74 - Black - Men - Footwear / Shoes - Good for casual.
+3) Nike Men Black Shoes (42043) - $55 - Black - Men - Footwear / Shoes - Good for casual.
+4) Nike Men Black Shoes (38648) - $34 - Black - Men - Footwear / Shoes - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,,True,True,"['34628', '38648', '42043', '50376']",[],"[80.0, 35.0, 74.0, 55.0, 34.0]",False,False,False,False,False,False,0,2,2,2,2,8,4,529
+men_white_shoes,men white shoes,False,"{'gender': 'Men', 'color': 'White', 'category': 'Footwear'}","['17036', '39988', '3168']","['26536', '44759', '26540', '40325', '13136']",200,53.64769999869168,,False,"Quick summary: Here are the closest matches for: men white shoes.
+
+Top picks:
+1) ID Men White Shoes (26536) - $32 - White - Men - Footwear / Shoes - Good for casual.
+2) Globalite Men White Torque Sports Shoes (44759) - $120 - White - Men - Footwear / Shoes - Good for sports.
+3) ID Men White & Blue Shoes (26540) - $70 - White - Men - Footwear / Shoes - Good for casual.
+4) ADIDAS Men White Sport Shoes (40325) - $50 - White - Men - Footwear / Shoes - Good for sports.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,,,True,"['26536', '26540', '40325', '44759']",[],"[32.0, 120.0, 70.0, 50.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,535
+women_white_shoes,women white shoes,False,"{'gender': 'Women', 'color': 'White', 'category': 'Footwear'}","['47574', '14409', '4147']","['56977', '57004', '56929', '56998', '57000']",200,49.7789999935776,,False,"Quick summary: Here are the closest matches for: women white shoes.
+
+Top picks:
+1) HM Women White Sandals (56977) - $101 - White - Women - Footwear / Shoes - Good for casual.
+2) HM Women White Sandals (57004) - $73 - White - Women - Footwear / Shoes - Good for casual.
+3) HM Women White Sandals (56929) - $135 - White - Women - Footwear / Shoes - Good for casual.
+4) HM Women White Sandals (56998) - $54 - White - Women - Footwear / Shoes - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,,,True,"['56929', '56977', '56998', '57004']",[],"[101.0, 73.0, 135.0, 54.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,524
+women_black_heels,women black heels,False,"{'gender': 'Women', 'color': 'Black', 'category': 'Footwear'}","['11516', '50153', '50783']","['56884', '56879', '56902', '56951', '56972']",200,78.99569999426603,,False,"Quick summary: Here are the closest matches for: women black heels.
+
+Top picks:
+1) HM Women Black Heels (56884) - $27 - Black - Women - Footwear / Shoes - Good for casual.
+2) HM Women Black Heels (56879) - $119 - Black - Women - Footwear / Shoes - Good for casual.
+3) HM Women Black Heels (56902) - $38 - Black - Women - Footwear / Shoes - Good for casual.
+4) HM Women Black Heels (56951) - $40 - Black - Women - Footwear / Shoes - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,,,True,"['56879', '56884', '56902', '56951']",[],"[27.0, 119.0, 38.0, 40.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,515
+women_pink_shoes,women pink shoes,False,"{'gender': 'Women', 'color': 'Pink', 'category': 'Footwear'}","['36137', '49577', '39577']","['56922', '56984', '49577', '56890', '46595']",200,65.84230001317337,,False,"Quick summary: Here are the closest matches for: women pink shoes.
+
+Top picks:
+1) HM Women Pink Sandals (56922) - $18 - Pink - Women - Footwear / Shoes - Good for casual.
+2) HM Women Pink Sandals (56984) - $20 - Pink - Women - Footwear / Shoes - Good for casual.
+3) Catwalk Women Pink Shoes (49577) - $120 - Pink - Women - Footwear / Shoes - Good for casual.
+4) HM Women Pink Flats (56890) - $56 - Pink - Women - Footwear / Shoes - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,1.0,1.0,0.3333333333333333,0.23463936301137822,0.23463936301137822,True,True,,True,,,True,"['49577', '56890', '56922', '56984']",[],"[18.0, 20.0, 120.0, 56.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,515
+men_sports_tshirt,men sports t-shirt,False,"{'gender': 'Men', 'usage': 'Sports', 'articleType': 'Tshirts'}","['24214', '7990', '7964']","['1910', '1998', '1909', '3479', '22621']",200,150.06499999435619,,False,"Quick summary: Here are the closest matches for: men sports t-shirt.
+
+Top picks:
+1) Nike Men's Classic Patterned T-shirt (1910) - $76 - Black - Men - Apparel / Topwear - Good for sports.
+2) ADIDAS Mens Fitted T-shirt (1998) - $41 - Black - Men - Apparel / Topwear - Good for sports.
+3) Nike Mens Classic Sportswear T-shirt (1909) - $197 - Blue - Men - Apparel / Topwear - Good for sports.
+4) ADIDAS Men's Black Graphic T-shirt (3479) - $34 - Black - Men - Apparel / Topwear - Good for sports.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,,True,True,False,,False,"['1909', '1910', '1998', '3479']",[],"[76.0, 41.0, 197.0, 34.0]",True,True,False,False,False,False,2,2,2,1,2,9,4,559
+women_sports_shoes,women sports shoes,False,"{'gender': 'Women', 'usage': 'Sports', 'category': 'Footwear'}","['41822', '46086', '36137']","['9403', '22717', '22728', '10110', '31957']",200,104.73689998616464,,False,"Quick summary: Here are the closest matches for: women sports shoes.
+
+Top picks:
+1) Nike Women Steady VIII White Sports Shoes (9403) - $133 - White - Women - Footwear / Shoes - Good for sports.
+2) Nike Women White Dart 9 MSL Sports Shoes (22717) - $15 - White - Women - Footwear / Shoes - Good for sports.
+3) Nike Women White Court Majestic Sports Shoes (22728) - $21 - White - Women - Footwear / Shoes - Good for sports.
+4) Reebok Women Instant White Sports Shoes (10110) - $116 - White - Women - Footwear / Shoes - Good for sports.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,,True,True,,,True,"['10110', '22717', '22728', '9403']",[],"[133.0, 15.0, 21.0, 116.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,600
+men_sports_shoes,men sports shoes,False,"{'gender': 'Men', 'usage': 'Sports', 'category': 'Footwear'}","['4336', '3168', '6628']","['12705', '13919', '13916', '26704', '39623']",200,111.22510000132024,,False,"Quick summary: Here are the closest matches for: men sports shoes.
+
+Top picks:
+1) Nike Men Air Courtballistic White Sports Shoes (12705) - $33 - White - Men - Footwear / Shoes - Good for sports.
+2) Nike Men T-Lite 9 SL White Sports Shoes (13919) - $136 - White - Men - Footwear / Shoes - Good for sports.
+3) Nike Men Air Visi Pro White Sports Shoes (13916) - $147 - White - Men - Footwear / Shoes - Good for sports.
+4) Nike Men White T-Lite 9 SL Shoes (26704) - $15 - White - Men - Footwear / Shoes - Good for sports.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,,True,True,,,True,"['12705', '13916', '13919', '26704']",[],"[33.0, 136.0, 147.0, 15.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,584
+women_black_handbag,women black handbag,False,"{'gender': 'Women', 'color': 'Black', 'subcategory': 'Bags'}","['37431', '35913', '31924']","['35913', '35918', '47419', '47376', '20450']",200,40.842499991413206,,False,"Quick summary: Here are the closest matches for: women black handbag.
+
+Top picks:
+1) Peperone Women Black & White Handbag (35913) - $208 - Black - Women - Accessories / Bags - Good for casual.
+2) Peperone Women Black Handbag (35918) - $30 - Black - Women - Accessories / Bags - Good for casual.
+3) Baggit Women Black Handbag (47419) - $99 - Black - Women - Accessories / Bags - Good for casual.
+4) Baggit Women Black Handbag (47376) - $124 - Black - Women - Accessories / Bags - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,1.0,1.0,1.0,1.0,0.46927872602275644,0.46927872602275644,True,True,,True,,,True,"['35913', '35918', '47376', '47419']",[],"[208.0, 30.0, 99.0, 124.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,562
+men_wallet,men wallet,False,"{'gender': 'Men', 'subcategory': 'Wallets'}","['39558', '18827', '52802']","['36110', '40219', '40220', '51771', '42069']",200,20.97050001611933,,False,"Quick summary: Here are the closest matches for: men wallet.
+
+Top picks:
+1) OTLS Men Black Wallet (36110) - $74 - Black - Men - Accessories / Wallets - Good for casual.
+2) Provogue Men Black Leather Wallet (40219) - $90 - Black - Men - Accessories / Wallets - Good for casual.
+3) Provogue Men Black Leather Wallet (40220) - $86 - Black - Men - Accessories / Wallets - Good for casual.
+4) Hidedge Men Black Wallet (51771) - $72 - Black - Men - Accessories / Wallets - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,,,True,,,True,"['36110', '40219', '40220', '51771']",[],"[74.0, 90.0, 86.0, 72.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,550
+women_sunglasses,women sunglasses,False,"{'gender': 'Women', 'subcategory': 'Sunglasses'}","['21308', '38225', '50235']","['16939', '23787', '23774', '23788', '50206']",200,31.73610000521876,,False,"Quick summary: Here are the closest matches for: women sunglasses.
+
+Top picks:
+1) Image Women Sunglasses (16939) - $58 - Brown - Women - Accessories / Eyewear - Good for casual.
+2) Oakley Women Beckon Purple Sunglasses (23787) - $22 - Purple - Women - Accessories / Eyewear - Good for casual.
+3) Oakley Women White Correspondent Sunglasses (23774) - $100 - White - Women - Accessories / Eyewear - Good for casual.
+4) Oakley Women White Beckon Sunglasses (23788) - $28 - White - Women - Accessories / Eyewear - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,,,True,,,True,"['16939', '23774', '23787', '23788']",[],"[58.0, 22.0, 100.0, 28.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,593
+men_watches,men watch,False,"{'gender': 'Men', 'subcategory': 'Watches'}","['45011', '45016', '33895']","['29935', '33903', '29936', '33911', '33899']",200,60.49949998850934,,False,"Quick summary: Here are the closest matches for: men watch.
+
+Top picks:
+1) Police Men White Digital Watch PL12898JS-02A (29935) - $212 - White - Men - Accessories / Watches - Good for casual.
+2) Citizen Men White Dial Watch (33903) - $172 - White - Men - Accessories / Watches - Good for casual.
+3) Police Men Black Digital Watch PL12898JSB-02D (29936) - $120 - Black - Men - Accessories / Watches - Good for casual.
+4) Citizen Men White Dial Watch (33911) - $95 - White - Men - Accessories / Watches - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,,,True,,,True,"['29935', '29936', '33903', '33911']",[],"[212.0, 172.0, 120.0, 95.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,586
+women_watches,women watch,False,"{'gender': 'Women', 'subcategory': 'Watches'}","['51623', '59263', '51658']","['29947', '33932', '33920', '33916']",200,25.541900016833097,,False,"Quick summary: Here are the closest matches for: women watch.
+
+Top picks:
+1) Police Women White Dial Watch (29947) - $105 - White - Women - Accessories / Watches - Good for casual.
+2) Citizen Women White Dial Watch (33932) - $263 - Steel - Women - Accessories / Watches - Good for casual.
+3) Citizen Women White Dial Watch (33920) - $246 - Steel - Women - Accessories / Watches - Good for casual.
+4) Citizen Women White Dial Watch (33916) - $62 - Steel - Women - Accessories / Watches - Good for casual.
+
+Next step: Open a product image card to verify style and details.",4,False,0.0,0.0,0.0,0.0,0.0,0.0,True,,,True,,,True,"['29947', '33916', '33920', '33932']",[],"[105.0, 263.0, 246.0, 62.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,570
+women_jewellery,women jewellery,False,"{'gender': 'Women', 'category': 'Accessories'}","['59471', '52851', '56214']","['54861', '58058', '58035', '58041', '58137']",200,19.744499993976206,,False,"Quick summary: Here are the closest matches for: women jewellery.
+
+Top picks:
+1) Ivory Tag Women Glinting Pearls Cream Necklace (54861) - $13 - Gold - Women - Accessories / Jewellery - Good for casual.
+2) Rreverie Women Silver Earrings (58058) - $221 - Gold - Women - Accessories / Jewellery - Good for casual.
+3) Rreverie Women Silver Earrings (58035) - $66 - Silver - Women - Accessories / Jewellery - Good for casual.
+4) Rreverie Gold Colour Earrings (58041) - $194 - Gold - Women - Accessories / Jewellery - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,,,True,,,True,"['54861', '58035', '58041', '58058']",[],"[13.0, 221.0, 66.0, 194.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,595
+men_jacket_black,men black jacket,False,"{'gender': 'Men', 'color': 'Black', 'subcategory': 'Topwear'}","['18509', '16719', '18523']","['14702', '59117', '15965', '24135', '14308']",200,29.50450000935234,,False,"Quick summary: Here are the closest matches for: men black jacket.
+
+Top picks:
+1) Basics Men Black Jackets (14702) - $93 - Black - Men - Apparel / Topwear - Good for casual.
+2) Just Natural Men Black & Grey Reversible Jacket (59117) - $148 - Black - Men - Apparel / Topwear - Good for casual.
+3) Turtle Solid Men Black Jacket (15965) - $32 - Black - Men - Apparel / Topwear - Good for casual.
+4) ADIDAS Men Black Jacket (24135) - $148 - Black - Men - Apparel / Topwear - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,,,True,"['14702', '15965', '24135', '59117']",[],"[93.0, 148.0, 32.0, 148.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,554
+women_jacket_black,women black jacket,False,"{'gender': 'Women', 'color': 'Black', 'subcategory': 'Topwear'}","['18524', '17911', '19342']","['57064', '13996', '12532', '6880', '6891']",200,26.84679999947548,,False,"Quick summary: Here are the closest matches for: women black jacket.
+
+Top picks:
+1) Elle Women Black Jacket (57064) - $114 - Black - Women - Apparel / Topwear - Good for casual.
+2) Nike Women Solid Black Jackets (13996) - $124 - Black - Women - Apparel / Topwear - Good for sports.
+3) Puma Women Solid Black Jackets (12532) - $190 - Black - Women - Apparel / Topwear - Good for casual.
+4) Forever New Women Long Black Jacket (6880) - $160 - Black - Women - Apparel / Topwear - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,True,,True,,,True,"['12532', '13996', '57064', '6880']",[],"[114.0, 124.0, 190.0, 160.0]",True,True,False,False,False,False,2,2,2,2,2,10,4,560
+women_dress_under_50,women dress under $50,False,"{'gender': 'Women', 'articleType': 'Dresses', 'max_price': 50}","['4988', '10406', '6873']","['38840', '49634', '46269', '38845', '38832']",200,108.88320000958629,,False,"Quick summary: Here are the closest matches for: women dress under $50.
+
+Top picks:
+1) Latin Quarters Women Navy Blue & White Printed Dress (38840) - $23 - Black - Women - Apparel / Dress - Good for casual.
+2) Mineral Blue Dress (49634) - $17 - Blue - Women - Apparel / Dress - Good for casual.
+3) 109F Women Blue Top (46269) - $35 - Blue - Women - Apparel / Topwear - Good for casual.
+4) Latin Quarters Women Blue Printed Dress (38845) - $23 - Blue - Women - Apparel / Dress - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,,,True,False,True,False,"['38840', '38845', '46269', '49634']",[],"[50.0, 23.0, 17.0, 35.0, 23.0]",False,False,False,False,False,False,0,2,2,1,2,7,4,561
+men_shoes_under_60,men shoes under $60,False,"{'gender': 'Men', 'category': 'Footwear', 'max_price': 60}","['4045', '10303', '15510']","['49364', '34628', '54729', '42043', '38648']",200,135.62950000050478,,False,"Quick summary: Here are the closest matches for: men shoes under $60.
+
+Top picks:
+1) Vans Men Black Pritchard Shoes (49364) - $51 - Black - Men - Footwear / Shoes - Good for casual.
+2) Nike Men Ruckus Low Black Shoes (34628) - $35 - Black - Men - Footwear / Shoes - Good for casual.
+3) Vans Men Black Sk8-Hi Shoes (54729) - $40 - Black - Men - Footwear / Shoes - Good for casual.
+4) Nike Men Black Shoes (42043) - $55 - Black - Men - Footwear / Shoes - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,,,True,,True,True,"['34628', '42043', '49364', '54729']",[],"[60.0, 51.0, 35.0, 40.0, 55.0]",False,False,False,False,False,False,0,2,2,2,2,8,4,536
+women_top_under_30,women top under $30,False,"{'gender': 'Women', 'subcategory': 'Topwear', 'max_price': 30}","['42234', '50705', '32382']","['26912', '26916', '26909', '49629', '26975']",200,112.27539999526925,,False,"Quick summary: Here are the closest matches for: women top under $30.
+
+Top picks:
+1) Jealous 21 Women Magenta Printed Top (26912) - $5 - Magenta - Women - Apparel / Topwear - Good for casual.
+2) Jealous 21 Women black Printed Top (26916) - $16 - Black - Women - Apparel / Topwear - Good for casual.
+3) Jealous 21 Women Printed White Top (26909) - $17 - Grey - Women - Apparel / Topwear - Good for casual.
+4) Mineral Women White Top (49629) - $14 - White - Women - Apparel / Topwear - Good for casual.
+
+Next step: Open a product image card to verify style and details.",5,False,0.0,0.0,0.0,0.0,0.0,0.0,True,,,True,,True,True,"['26909', '26912', '26916', '49629']",[],"[30.0, 5.0, 16.0, 17.0, 14.0]",False,False,False,False,False,False,0,2,2,2,2,8,4,567
+reject_vietnamese_1,Tôi muốn mua áo sơ mi trắng đi làm dưới 40 đô,True,,[],[],200,4.561800014926121,,False,I can't understand your question. Please rewrite it.,0,True,,,,,,,False,,,,,,True,[],[],[],True,True,False,False,False,False,2,0,0,2,2,6,0,52
+reject_vietnamese_2,Gợi ý giày thể thao màu đen cho nam dưới 80 đô,True,,[],[],200,16.185999993467703,,False,I can't understand your question. Please rewrite it.,0,True,,,,,,,False,,,,,,True,[],[],[],True,True,False,False,False,False,2,0,0,2,2,6,0,52

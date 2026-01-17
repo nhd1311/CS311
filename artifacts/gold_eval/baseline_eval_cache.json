@@ -1,0 +1,2267 @@
+{
+  "68c9e5b03fd0cf0654a2d381888ac754521ebbe8e19edb346a9448440c14edfa": {
+    "status": 200,
+    "latency_ms": 45.649100007722154,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: women red dress.\n\nTop picks:\n1) Remanika Women Red Dress (45777) - $110 - Red - Women - Apparel / Dress - Good for casual.\n2) Sepia Women Printed Red Dress (33199) - $150 - Red - Women - Apparel / Dress - Good for casual.\n3) French Connection Women Printed Red Dress (43680) - $38 - Red - Women - Apparel / Dress - Good for casual.\n4) Elle Women Red A-Line Dress (57057) - $27 - Red - Women - Apparel / Dress - Good for casual.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "45777",
+          "name": "Remanika Women Red Dress",
+          "image_url": "datasets/archive/fashion-dataset/images/45777.jpg",
+          "price": 110,
+          "color": "Red",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Dress",
+          "usage": "Casual",
+          "snippet": "Remanika Women Red Dress Dresses Apparel Dress Red Summer Casual Women"
+        },
+        {
+          "id": "33199",
+          "name": "Sepia Women Printed Red Dress",
+          "image_url": "datasets/archive/fashion-dataset/images/33199.jpg",
+          "price": 150,
+          "color": "Red",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Dress",
+          "usage": "Casual",
+          "snippet": "Sepia Women Printed Red Dress Dresses Apparel Dress Red Summer Casual Women"
+        },
+        {
+          "id": "43680",
+          "name": "French Connection Women Printed Red Dress",
+          "image_url": "datasets/archive/fashion-dataset/images/43680.jpg",
+          "price": 38,
+          "color": "Red",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Dress",
+          "usage": "Casual",
+          "snippet": "French Connection Women Printed Red Dress Dresses Apparel Dress Red Summer Casual Women"
+        },
+        {
+          "id": "57057",
+          "name": "Elle Women Red A-Line Dress",
+          "image_url": "datasets/archive/fashion-dataset/images/57057.jpg",
+          "price": 27,
+          "color": "Red",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Dress",
+          "usage": "Casual",
+          "snippet": "Elle Women Red A-Line Dress Dresses Apparel Dress Red Summer Casual Women"
+        },
+        {
+          "id": "48482",
+          "name": "French Connection Women Red Dress",
+          "image_url": "datasets/archive/fashion-dataset/images/48482.jpg",
+          "price": 61,
+          "color": "Red",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Dress",
+          "usage": "Casual",
+          "snippet": "French Connection Women Red Dress Dresses Apparel Dress Red Winter Casual Women"
+        }
+      ],
+      "sources": [
+        {
+          "id": "45777",
+          "text": "Remanika Women Red Dress Dresses Apparel Dress Red Summer  Casual Women",
+          "score": 0.4694484,
+          "metadata": {
+            "image_url": "datasets/archive/fashion-dataset/images/45777.jpg",
+            "name": "Remanika Women Red Dress",
+            "season": "Summer",
+            "price": 110,
+            "subcategory": "Dress",
+            "usage": "Casual",
+            "articleType": "Dresses",
+            "color": "Red",
+            "category": "Apparel",
+            "gender": "Women"
+          }
+        },
+        {
+          "id": "33199",
+          "text": "Sepia Women Printed Red Dress Dresses Apparel Dress Red Summer  Casual Women",
+          "score": 0.4966486,
+          "metadata": {
+            "usage": "Casual",
+            "articleType": "Dresses",
+            "price": 150,
+            "gender": "Women",
+            "category": "Apparel",
+            "season": "Summer",
+            "image_url": "datasets/archive/fashion-dataset/images/33199.jpg",
+            "name": "Sepia Women Printed Red Dress",
+            "subcategory": "Dress",
+            "color": "Red"
+          }
+        },
+        {
+          "id": "43680",
+          "text": "French Connection Women Printed Red Dress Dresses Apparel Dress Red Summer  Casual Women",
+          "score": 0.5254936,
+          "metadata": {
+            "usage": "Casual",
+            "color": "Red",
+            "season": "Summer",
+            "price": 38,
+            "subcategory": "Dress",
+            "gender": "Women",
+            "name": "French Connection Women Printed Red Dress",
+            "articleType": "Dresses",
+            "category": "Apparel",
+            "image_url": "datasets/archive/fashion-dataset/images/43680.jpg"
+          }
+        },
+        {
+          "id": "57057",
+          "text": "Elle Women Red A-Line Dress Dresses Apparel Dress Red Summer  Casual Women",
+          "score": 0.5258879,
+          "metadata": {
+            "season": "Summer",
+            "subcategory": "Dress",
+            "color": "Red",
+            "category": "Apparel",
+            "name": "Elle Women Red A-Line Dress",
+            "gender": "Women",
+            "articleType": "Dresses",
+            "price": 27,
+            "image_url": "datasets/archive/fashion-dataset/images/57057.jpg",
+            "usage": "Casual"
+          }
+        },
+        {
+          "id": "48482",
+          "text": "French Connection Women Red Dress Dresses Apparel Dress Red Winter  Casual Women",
+          "score": 0.52703226,
+          "metadata": {
+            "image_url": "datasets/archive/fashion-dataset/images/48482.jpg",
+            "price": 61,
+            "color": "Red",
+            "season": "Winter",
+            "subcategory": "Dress",
+            "articleType": "Dresses",
+            "category": "Apparel",
+            "gender": "Women",
+            "usage": "Casual",
+            "name": "French Connection Women Red Dress"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "019a0516a325e8a3351f196995540e237db269a0a7ade62b78231998ddc2bc20": {
+    "status": 200,
+    "latency_ms": 747.8921999863815,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: women black formal dress.\n\nTop picks:\n1) Rocia Women Black Formal Shoes (42740) - $88 - Black - Women - Footwear / Shoes - Good for formal.\n2) Rocia Women Black Shoes (34455) - $101 - Black - Women - Footwear / Shoes - Good for formal.\n3) Rocia Women Rocia Black Formal Shoe Black Formal Shoes (13485) - $28 - Black - Women - Footwear / Shoes - Good for formal.\n4) Rocia Women Black Wedges (34458) - $150 - Black - Women - Footwear / Shoes - Good for formal.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "42740",
+          "name": "Rocia Women Black Formal Shoes",
+          "image_url": "datasets/archive/fashion-dataset/images/42740.jpg",
+          "price": 88,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Formal",
+          "snippet": "Rocia Women Black Formal Shoes Heels Footwear Shoes Black Winter Formal Women"
+        },
+        {
+          "id": "34455",
+          "name": "Rocia Women Black Shoes",
+          "image_url": "datasets/archive/fashion-dataset/images/34455.jpg",
+          "price": 101,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Formal",
+          "snippet": "Rocia Women Black Shoes Heels Footwear Shoes Black Spring Formal Women"
+        },
+        {
+          "id": "13485",
+          "name": "Rocia Women Rocia Black Formal Shoe Black Formal Shoes",
+          "image_url": "datasets/archive/fashion-dataset/images/13485.jpg",
+          "price": 28,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Formal",
+          "snippet": "Rocia Women Rocia Black Formal Shoe Black Formal Shoes Heels Footwear Shoes Black Fall Formal Women"
+        },
+        {
+          "id": "34458",
+          "name": "Rocia Women Black Wedges",
+          "image_url": "datasets/archive/fashion-dataset/images/34458.jpg",
+          "price": 150,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Formal",
+          "snippet": "Rocia Women Black Wedges Heels Footwear Shoes Black Winter Formal Women"
+        },
+        {
+          "id": "43521",
+          "name": "French Connection Women Black Trouser",
+          "image_url": "datasets/archive/fashion-dataset/images/43521.jpg",
+          "price": 54,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Formal",
+          "snippet": "French Connection Women Black Trouser Trousers Apparel Bottomwear Black Summer Formal Women"
+        }
+      ],
+      "sources": [
+        {
+          "id": "42740",
+          "text": "Rocia Women Black Formal Shoes Heels Footwear Shoes Black Winter  Formal Women",
+          "score": 0.7606675,
+          "metadata": {
+            "usage": "Formal",
+            "name": "Rocia Women Black Formal Shoes",
+            "articleType": "Heels",
+            "color": "Black",
+            "season": "Winter",
+            "category": "Footwear",
+            "subcategory": "Shoes",
+            "gender": "Women",
+            "image_url": "datasets/archive/fashion-dataset/images/42740.jpg",
+            "price": 88
+          }
+        },
+        {
+          "id": "34455",
+          "text": "Rocia Women Black Shoes Heels Footwear Shoes Black Spring  Formal Women",
+          "score": 0.7853575,
+          "metadata": {
+            "articleType": "Heels",
+            "subcategory": "Shoes",
+            "category": "Footwear",
+            "name": "Rocia Women Black Shoes",
+            "usage": "Formal",
+            "image_url": "datasets/archive/fashion-dataset/images/34455.jpg",
+            "season": "Spring",
+            "price": 101,
+            "color": "Black",
+            "gender": "Women"
+          }
+        },
+        {
+          "id": "13485",
+          "text": "Rocia Women Rocia Black Formal Shoe Black Formal Shoes Heels Footwear Shoes Black Fall  Formal Women",
+          "score": 0.7861991,
+          "metadata": {
+            "season": "Fall",
+            "name": "Rocia Women Rocia Black Formal Shoe Black Formal Shoes",
+            "category": "Footwear",
+            "image_url": "datasets/archive/fashion-dataset/images/13485.jpg",
+            "articleType": "Heels",
+            "subcategory": "Shoes",
+            "gender": "Women",
+            "price": 28,
+            "usage": "Formal",
+            "color": "Black"
+          }
+        },
+        {
+          "id": "34458",
+          "text": "Rocia Women Black Wedges Heels Footwear Shoes Black Winter  Formal Women",
+          "score": 0.8413713,
+          "metadata": {
+            "usage": "Formal",
+            "price": 150,
+            "gender": "Women",
+            "color": "Black",
+            "subcategory": "Shoes",
+            "season": "Winter",
+            "image_url": "datasets/archive/fashion-dataset/images/34458.jpg",
+            "category": "Footwear",
+            "name": "Rocia Women Black Wedges",
+            "articleType": "Heels"
+          }
+        },
+        {
+          "id": "43521",
+          "text": "French Connection Women Black Trouser Trousers Apparel Bottomwear Black Summer  Formal Women",
+          "score": 0.77631867,
+          "metadata": {
+            "name": "French Connection Women Black Trouser",
+            "articleType": "Trousers",
+            "image_url": "datasets/archive/fashion-dataset/images/43521.jpg",
+            "price": 54,
+            "category": "Apparel",
+            "season": "Summer",
+            "color": "Black",
+            "subcategory": "Bottomwear",
+            "gender": "Women",
+            "usage": "Formal"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "0fff4d3ea6eee1c0bd6422b5936ca5b261f1493e2618cf14f1a17fdf0b992f0d": {
+    "status": 200,
+    "latency_ms": 181.86229999992065,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: women blue party dress.\n\nTop picks:\n1) John Players Men Blue Shirt (56855) - $72 - Blue - Men - Apparel / Topwear - Good for party.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "56855",
+          "name": "John Players Men Blue Shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/56855.jpg",
+          "price": 72,
+          "color": "Blue",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Party",
+          "snippet": "John Players Men Blue Shirt Shirts Apparel Topwear Blue Summer Party Men"
+        }
+      ],
+      "sources": [
+        {
+          "id": "56855",
+          "text": "John Players Men Blue Shirt Shirts Apparel Topwear Blue Summer  Party Men",
+          "score": 1.484008,
+          "metadata": {
+            "price": 72,
+            "articleType": "Shirts",
+            "name": "John Players Men Blue Shirt",
+            "category": "Apparel",
+            "subcategory": "Topwear",
+            "image_url": "datasets/archive/fashion-dataset/images/56855.jpg",
+            "usage": "Party",
+            "gender": "Men",
+            "season": "Summer",
+            "color": "Blue"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "105f193f75cdc9c8f0f1ba248d844bf401a0eb2f82f3c0a4aebea8ad141ac9df": {
+    "status": 200,
+    "latency_ms": 43.22140000294894,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: men white t-shirt.\n\nTop picks:\n1) Mr.Men Printed White T-shirt (2853) - $140 - White - Men - Apparel / Topwear - Good for casual.\n2) Mr.Men Men's White Round Neck T-shirt (8271) - $111 - White - Men - Apparel / Topwear - Good for casual.\n3) Mr.Men Men's White Blue T-shirt (8274) - $103 - White - Men - Apparel / Topwear - Good for casual.\n4) Provogue Men Printed White T-shirt (23945) - $188 - White - Men - Apparel / Topwear - Good for casual.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "2853",
+          "name": "Mr.Men Printed White T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/2853.jpg",
+          "price": 140,
+          "color": "White",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Casual",
+          "snippet": "Mr.Men Printed White T-shirt Tshirts Apparel Topwear White Summer Casual Men"
+        },
+        {
+          "id": "8271",
+          "name": "Mr.Men Men's White Round Neck T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/8271.jpg",
+          "price": 111,
+          "color": "White",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Casual",
+          "snippet": "Mr.Men Men's White Round Neck T-shirt Tshirts Apparel Topwear White Fall Casual Men"
+        },
+        {
+          "id": "8274",
+          "name": "Mr.Men Men's White Blue T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/8274.jpg",
+          "price": 103,
+          "color": "White",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Casual",
+          "snippet": "Mr.Men Men's White Blue T-shirt Tshirts Apparel Topwear White Fall Casual Men"
+        },
+        {
+          "id": "23945",
+          "name": "Provogue Men Printed White T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/23945.jpg",
+          "price": 188,
+          "color": "White",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Casual",
+          "snippet": "Provogue Men Printed White T-shirt Tshirts Apparel Topwear White Fall Casual Men"
+        },
+        {
+          "id": "12203",
+          "name": "Basics Men White Striped T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/12203.jpg",
+          "price": 186,
+          "color": "White",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Casual",
+          "snippet": "Basics Men White Striped T-shirt Tshirts Apparel Topwear White Fall Casual Men"
+        }
+      ],
+      "sources": [
+        {
+          "id": "2853",
+          "text": "Mr.Men Printed White T-shirt Tshirts Apparel Topwear White Summer  Casual Men",
+          "score": 0.33960813,
+          "metadata": {
+            "category": "Apparel",
+            "subcategory": "Topwear",
+            "usage": "Casual",
+            "image_url": "datasets/archive/fashion-dataset/images/2853.jpg",
+            "season": "Summer",
+            "gender": "Men",
+            "name": "Mr.Men Printed White T-shirt",
+            "price": 140,
+            "articleType": "Tshirts",
+            "color": "White"
+          }
+        },
+        {
+          "id": "8271",
+          "text": "Mr.Men Men's White Round Neck T-shirt Tshirts Apparel Topwear White Fall  Casual Men",
+          "score": 0.34867996,
+          "metadata": {
+            "color": "White",
+            "image_url": "datasets/archive/fashion-dataset/images/8271.jpg",
+            "season": "Fall",
+            "category": "Apparel",
+            "articleType": "Tshirts",
+            "usage": "Casual",
+            "price": 111,
+            "subcategory": "Topwear",
+            "name": "Mr.Men Men's White Round Neck T-shirt",
+            "gender": "Men"
+          }
+        },
+        {
+          "id": "8274",
+          "text": "Mr.Men Men's White Blue T-shirt Tshirts Apparel Topwear White Fall  Casual Men",
+          "score": 0.3614922,
+          "metadata": {
+            "color": "White",
+            "season": "Fall",
+            "subcategory": "Topwear",
+            "usage": "Casual",
+            "articleType": "Tshirts",
+            "gender": "Men",
+            "image_url": "datasets/archive/fashion-dataset/images/8274.jpg",
+            "price": 103,
+            "name": "Mr.Men Men's White Blue T-shirt",
+            "category": "Apparel"
+          }
+        },
+        {
+          "id": "23945",
+          "text": "Provogue Men Printed White T-shirt Tshirts Apparel Topwear White Fall  Casual Men",
+          "score": 0.3717327,
+          "metadata": {
+            "subcategory": "Topwear",
+            "gender": "Men",
+            "articleType": "Tshirts",
+            "color": "White",
+            "price": 188,
+            "image_url": "datasets/archive/fashion-dataset/images/23945.jpg",
+            "category": "Apparel",
+            "usage": "Casual",
+            "name": "Provogue Men Printed White T-shirt",
+            "season": "Fall"
+          }
+        },
+        {
+          "id": "12203",
+          "text": "Basics Men White Striped T-shirt Tshirts Apparel Topwear White Fall  Casual Men",
+          "score": 0.38256383,
+          "metadata": {
+            "price": 186,
+            "season": "Fall",
+            "articleType": "Tshirts",
+            "usage": "Casual",
+            "subcategory": "Topwear",
+            "color": "White",
+            "category": "Apparel",
+            "gender": "Men",
+            "image_url": "datasets/archive/fashion-dataset/images/12203.jpg",
+            "name": "Basics Men White Striped T-shirt"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "155cf30a773c779031f8bed6bbb8c58d9eb1babe0dbd4f072f1f308540ce9246": {
+    "status": 200,
+    "latency_ms": 39.20160001143813,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: women black t-shirt.\n\nTop picks:\n1) ADIDAS Women's Black T-shirt (2244) - $181 - Black - Women - Apparel / Topwear - Good for casual.\n2) ADIDAS Women Printed Black T-shirt (32450) - $196 - Black - Women - Apparel / Topwear - Good for casual.\n3) ADIDAS Women's Black T-shirt (3502) - $84 - Black - Women - Apparel / Topwear - Good for sports.\n4) ADIDAS Women Fitted Black T-shirt (2078) - $99 - Black - Women - Apparel / Topwear - Good for sports.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "2244",
+          "name": "ADIDAS Women's Black T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/2244.jpg",
+          "price": 181,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Casual",
+          "snippet": "ADIDAS Women's Black T-shirt Tshirts Apparel Topwear Black Fall Casual Women"
+        },
+        {
+          "id": "32450",
+          "name": "ADIDAS Women Printed Black T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/32450.jpg",
+          "price": 196,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Casual",
+          "snippet": "ADIDAS Women Printed Black T-shirt Tshirts Apparel Topwear Black Summer Casual Women"
+        },
+        {
+          "id": "3502",
+          "name": "ADIDAS Women's Black T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/3502.jpg",
+          "price": 84,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Sports",
+          "snippet": "ADIDAS Women's Black T-shirt Tshirts Apparel Topwear Black Fall Sports Women"
+        },
+        {
+          "id": "2078",
+          "name": "ADIDAS Women Fitted Black T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/2078.jpg",
+          "price": 99,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Sports",
+          "snippet": "ADIDAS Women Fitted Black T-shirt Tshirts Apparel Topwear Black Fall Sports Women"
+        },
+        {
+          "id": "12577",
+          "name": "Tantra Women Black Printed T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/12577.jpg",
+          "price": 91,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Casual",
+          "snippet": "Tantra Women Black Printed T-shirt Tshirts Apparel Topwear Black Fall Casual Women"
+        }
+      ],
+      "sources": [
+        {
+          "id": "2244",
+          "text": "ADIDAS Women's Black T-shirt Tshirts Apparel Topwear Black Fall  Casual Women",
+          "score": 0.36326665,
+          "metadata": {
+            "season": "Fall",
+            "name": "ADIDAS Women's Black T-shirt",
+            "articleType": "Tshirts",
+            "usage": "Casual",
+            "subcategory": "Topwear",
+            "price": 181,
+            "gender": "Women",
+            "image_url": "datasets/archive/fashion-dataset/images/2244.jpg",
+            "category": "Apparel",
+            "color": "Black"
+          }
+        },
+        {
+          "id": "32450",
+          "text": "ADIDAS Women Printed Black T-shirt Tshirts Apparel Topwear Black Summer  Casual Women",
+          "score": 0.39205748,
+          "metadata": {
+            "articleType": "Tshirts",
+            "gender": "Women",
+            "price": 196,
+            "season": "Summer",
+            "usage": "Casual",
+            "subcategory": "Topwear",
+            "image_url": "datasets/archive/fashion-dataset/images/32450.jpg",
+            "category": "Apparel",
+            "color": "Black",
+            "name": "ADIDAS Women Printed Black T-shirt"
+          }
+        },
+        {
+          "id": "3502",
+          "text": "ADIDAS Women's Black T-shirt Tshirts Apparel Topwear Black Fall  Sports Women",
+          "score": 0.39842403,
+          "metadata": {
+            "season": "Fall",
+            "image_url": "datasets/archive/fashion-dataset/images/3502.jpg",
+            "name": "ADIDAS Women's Black T-shirt",
+            "price": 84,
+            "category": "Apparel",
+            "color": "Black",
+            "articleType": "Tshirts",
+            "subcategory": "Topwear",
+            "usage": "Sports",
+            "gender": "Women"
+          }
+        },
+        {
+          "id": "2078",
+          "text": "ADIDAS Women Fitted Black T-shirt Tshirts Apparel Topwear Black Fall  Sports Women",
+          "score": 0.41158032,
+          "metadata": {
+            "usage": "Sports",
+            "color": "Black",
+            "category": "Apparel",
+            "price": 99,
+            "articleType": "Tshirts",
+            "subcategory": "Topwear",
+            "name": "ADIDAS Women Fitted Black T-shirt",
+            "gender": "Women",
+            "season": "Fall",
+            "image_url": "datasets/archive/fashion-dataset/images/2078.jpg"
+          }
+        },
+        {
+          "id": "12577",
+          "text": "Tantra Women Black Printed T-shirt Tshirts Apparel Topwear Black Fall  Casual Women",
+          "score": 0.43569303,
+          "metadata": {
+            "category": "Apparel",
+            "subcategory": "Topwear",
+            "articleType": "Tshirts",
+            "usage": "Casual",
+            "gender": "Women",
+            "season": "Fall",
+            "price": 91,
+            "name": "Tantra Women Black Printed T-shirt",
+            "image_url": "datasets/archive/fashion-dataset/images/12577.jpg",
+            "color": "Black"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "943859ccf07c36567761f8085201bf2e42238a2bac330991ed5b15bff9dd8940": {
+    "status": 200,
+    "latency_ms": 874.8258999839891,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: men blue casual shirt.\n\nTop picks:\n1) Provogue Men Blue Shirt (23957) - $108 - Blue - Men - Apparel / Topwear - Good for casual.\n2) Provogue Men Blue Shirt (23959) - $133 - Blue - Men - Apparel / Topwear - Good for casual.\n3) Basics Men Blue Shirt (41588) - $131 - Blue - Men - Apparel / Topwear - Good for casual.\n4) Basics Men Blue Shirt (41589) - $81 - Blue - Men - Apparel / Topwear - Good for casual.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "23957",
+          "name": "Provogue Men Blue Shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/23957.jpg",
+          "price": 108,
+          "color": "Blue",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Casual",
+          "snippet": "Provogue Men Blue Shirt Shirts Apparel Topwear Blue Fall Casual Men"
+        },
+        {
+          "id": "23959",
+          "name": "Provogue Men Blue Shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/23959.jpg",
+          "price": 133,
+          "color": "Blue",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Casual",
+          "snippet": "Provogue Men Blue Shirt Shirts Apparel Topwear Blue Fall Casual Men"
+        },
+        {
+          "id": "41588",
+          "name": "Basics Men Blue Shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/41588.jpg",
+          "price": 131,
+          "color": "Blue",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Casual",
+          "snippet": "Basics Men Blue Shirt Shirts Apparel Topwear Blue Summer Casual Men"
+        },
+        {
+          "id": "41589",
+          "name": "Basics Men Blue Shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/41589.jpg",
+          "price": 81,
+          "color": "Blue",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Casual",
+          "snippet": "Basics Men Blue Shirt Shirts Apparel Topwear Blue Summer Casual Men"
+        },
+        {
+          "id": "41608",
+          "name": "Basics Men Blue Shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/41608.jpg",
+          "price": 106,
+          "color": "Blue",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Casual",
+          "snippet": "Basics Men Blue Shirt Shirts Apparel Topwear Blue Summer Casual Men"
+        }
+      ],
+      "sources": [
+        {
+          "id": "23957",
+          "text": "Provogue Men Blue Shirt Shirts Apparel Topwear Blue Fall  Casual Men",
+          "score": 0.33561155,
+          "metadata": {
+            "color": "Blue",
+            "price": 108,
+            "name": "Provogue Men Blue Shirt",
+            "image_url": "datasets/archive/fashion-dataset/images/23957.jpg",
+            "category": "Apparel",
+            "gender": "Men",
+            "subcategory": "Topwear",
+            "season": "Fall",
+            "articleType": "Shirts",
+            "usage": "Casual"
+          }
+        },
+        {
+          "id": "23959",
+          "text": "Provogue Men Blue Shirt Shirts Apparel Topwear Blue Fall  Casual Men",
+          "score": 0.33561155,
+          "metadata": {
+            "season": "Fall",
+            "gender": "Men",
+            "color": "Blue",
+            "subcategory": "Topwear",
+            "articleType": "Shirts",
+            "name": "Provogue Men Blue Shirt",
+            "category": "Apparel",
+            "image_url": "datasets/archive/fashion-dataset/images/23959.jpg",
+            "usage": "Casual",
+            "price": 133
+          }
+        },
+        {
+          "id": "41588",
+          "text": "Basics Men Blue Shirt Shirts Apparel Topwear Blue Summer  Casual Men",
+          "score": 0.36418766,
+          "metadata": {
+            "name": "Basics Men Blue Shirt",
+            "gender": "Men",
+            "image_url": "datasets/archive/fashion-dataset/images/41588.jpg",
+            "price": 131,
+            "season": "Summer",
+            "usage": "Casual",
+            "category": "Apparel",
+            "color": "Blue",
+            "subcategory": "Topwear",
+            "articleType": "Shirts"
+          }
+        },
+        {
+          "id": "41589",
+          "text": "Basics Men Blue Shirt Shirts Apparel Topwear Blue Summer  Casual Men",
+          "score": 0.36418766,
+          "metadata": {
+            "usage": "Casual",
+            "articleType": "Shirts",
+            "name": "Basics Men Blue Shirt",
+            "image_url": "datasets/archive/fashion-dataset/images/41589.jpg",
+            "color": "Blue",
+            "gender": "Men",
+            "season": "Summer",
+            "price": 81,
+            "category": "Apparel",
+            "subcategory": "Topwear"
+          }
+        },
+        {
+          "id": "41608",
+          "text": "Basics Men Blue Shirt Shirts Apparel Topwear Blue Summer  Casual Men",
+          "score": 0.36418766,
+          "metadata": {
+            "name": "Basics Men Blue Shirt",
+            "image_url": "datasets/archive/fashion-dataset/images/41608.jpg",
+            "price": 106,
+            "articleType": "Shirts",
+            "subcategory": "Topwear",
+            "color": "Blue",
+            "usage": "Casual",
+            "gender": "Men",
+            "category": "Apparel",
+            "season": "Summer"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "cea62bf3c156611da7014df6b909c13f73f807f052e9296289036087eaaf2719": {
+    "status": 200,
+    "latency_ms": 102.91389998747036,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: men white formal shirt.\n\nTop picks:\n1) Indigo Nation Men Formal Shirt White Shirts (14715) - $165 - White - Men - Apparel / Topwear - Good for formal.\n2) Indigo Nation Men Formal Shirt White Shirts (14716) - $18 - White - Men - Apparel / Topwear - Good for formal.\n3) Indigo Nation Men Solid White Shirts (11119) - $65 - White - Men - Apparel / Topwear - Good for formal.\n4) Indigo Nation Men Solid White Shirts (11118) - $180 - White - Men - Apparel / Topwear - Good for formal.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "14715",
+          "name": "Indigo Nation Men Formal Shirt White Shirts",
+          "image_url": "datasets/archive/fashion-dataset/images/14715.jpg",
+          "price": 165,
+          "color": "White",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Formal",
+          "snippet": "Indigo Nation Men Formal Shirt White Shirts Shirts Apparel Topwear White Fall Formal Men"
+        },
+        {
+          "id": "14716",
+          "name": "Indigo Nation Men Formal Shirt White Shirts",
+          "image_url": "datasets/archive/fashion-dataset/images/14716.jpg",
+          "price": 18,
+          "color": "White",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Formal",
+          "snippet": "Indigo Nation Men Formal Shirt White Shirts Shirts Apparel Topwear White Fall Formal Men"
+        },
+        {
+          "id": "11119",
+          "name": "Indigo Nation Men Solid White Shirts",
+          "image_url": "datasets/archive/fashion-dataset/images/11119.jpg",
+          "price": 65,
+          "color": "White",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Formal",
+          "snippet": "Indigo Nation Men Solid White Shirts Shirts Apparel Topwear White Fall Formal Men"
+        },
+        {
+          "id": "11118",
+          "name": "Indigo Nation Men Solid White Shirts",
+          "image_url": "datasets/archive/fashion-dataset/images/11118.jpg",
+          "price": 180,
+          "color": "White",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Formal",
+          "snippet": "Indigo Nation Men Solid White Shirts Shirts Apparel Topwear White Fall Formal Men"
+        },
+        {
+          "id": "9589",
+          "name": "Indigo Nation Men cotton White Shirts",
+          "image_url": "datasets/archive/fashion-dataset/images/9589.jpg",
+          "price": 95,
+          "color": "White",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Formal",
+          "snippet": "Indigo Nation Men cotton White Shirts Shirts Apparel Topwear White Fall Formal Men"
+        }
+      ],
+      "sources": [
+        {
+          "id": "14715",
+          "text": "Indigo Nation Men Formal Shirt White Shirts Shirts Apparel Topwear White Fall  Formal Men",
+          "score": 0.3696052,
+          "metadata": {
+            "subcategory": "Topwear",
+            "name": "Indigo Nation Men Formal Shirt White Shirts",
+            "image_url": "datasets/archive/fashion-dataset/images/14715.jpg",
+            "season": "Fall",
+            "usage": "Formal",
+            "articleType": "Shirts",
+            "color": "White",
+            "price": 165,
+            "category": "Apparel",
+            "gender": "Men"
+          }
+        },
+        {
+          "id": "14716",
+          "text": "Indigo Nation Men Formal Shirt White Shirts Shirts Apparel Topwear White Fall  Formal Men",
+          "score": 0.3696052,
+          "metadata": {
+            "price": 18,
+            "gender": "Men",
+            "name": "Indigo Nation Men Formal Shirt White Shirts",
+            "category": "Apparel",
+            "subcategory": "Topwear",
+            "articleType": "Shirts",
+            "image_url": "datasets/archive/fashion-dataset/images/14716.jpg",
+            "usage": "Formal",
+            "season": "Fall",
+            "color": "White"
+          }
+        },
+        {
+          "id": "11119",
+          "text": "Indigo Nation Men Solid White Shirts Shirts Apparel Topwear White Fall  Formal Men",
+          "score": 0.4811332,
+          "metadata": {
+            "subcategory": "Topwear",
+            "color": "White",
+            "name": "Indigo Nation Men Solid White Shirts",
+            "gender": "Men",
+            "price": 65,
+            "articleType": "Shirts",
+            "category": "Apparel",
+            "image_url": "datasets/archive/fashion-dataset/images/11119.jpg",
+            "usage": "Formal",
+            "season": "Fall"
+          }
+        },
+        {
+          "id": "11118",
+          "text": "Indigo Nation Men Solid White Shirts Shirts Apparel Topwear White Fall  Formal Men",
+          "score": 0.4811332,
+          "metadata": {
+            "category": "Apparel",
+            "image_url": "datasets/archive/fashion-dataset/images/11118.jpg",
+            "articleType": "Shirts",
+            "price": 180,
+            "gender": "Men",
+            "usage": "Formal",
+            "subcategory": "Topwear",
+            "name": "Indigo Nation Men Solid White Shirts",
+            "color": "White",
+            "season": "Fall"
+          }
+        },
+        {
+          "id": "9589",
+          "text": "Indigo Nation Men cotton White Shirts Shirts Apparel Topwear White Fall  Formal Men",
+          "score": 0.4857573,
+          "metadata": {
+            "season": "Fall",
+            "articleType": "Shirts",
+            "gender": "Men",
+            "category": "Apparel",
+            "usage": "Formal",
+            "name": "Indigo Nation Men cotton White Shirts",
+            "price": 95,
+            "color": "White",
+            "subcategory": "Topwear",
+            "image_url": "datasets/archive/fashion-dataset/images/9589.jpg"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "8d974c7e39de9ff57ac1130acbf95b970dc6df72bfbbb13824b0937f3109fc10": {
+    "status": 200,
+    "latency_ms": 29.118799982825294,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: men blue jeans.\n\nTop picks:\n1) Pepe Jeans Men Blue Jeans (52548) - $106 - Blue - Men - Apparel / Bottomwear - Good for casual.\n2) Denizen Men Blue Jeans (43246) - $182 - Blue - Men - Apparel / Bottomwear - Good for casual.\n3) Denizen Men Blue Jeans (28794) - $200 - Blue - Men - Apparel / Bottomwear - Good for casual.\n4) Denizen Men Blue Jeans (28795) - $149 - Blue - Men - Apparel / Bottomwear - Good for casual.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "52548",
+          "name": "Pepe Jeans Men Blue Jeans",
+          "image_url": "datasets/archive/fashion-dataset/images/52548.jpg",
+          "price": 106,
+          "color": "Blue",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Casual",
+          "snippet": "Pepe Jeans Men Blue Jeans Jeans Apparel Bottomwear Blue Summer Casual Men"
+        },
+        {
+          "id": "43246",
+          "name": "Denizen Men Blue Jeans",
+          "image_url": "datasets/archive/fashion-dataset/images/43246.jpg",
+          "price": 182,
+          "color": "Blue",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Casual",
+          "snippet": "Denizen Men Blue Jeans Jeans Apparel Bottomwear Blue Summer Casual Men"
+        },
+        {
+          "id": "28794",
+          "name": "Denizen Men Blue Jeans",
+          "image_url": "datasets/archive/fashion-dataset/images/28794.jpg",
+          "price": 200,
+          "color": "Blue",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Casual",
+          "snippet": "Denizen Men Blue Jeans Jeans Apparel Bottomwear Blue Summer Casual Men"
+        },
+        {
+          "id": "28795",
+          "name": "Denizen Men Blue Jeans",
+          "image_url": "datasets/archive/fashion-dataset/images/28795.jpg",
+          "price": 149,
+          "color": "Blue",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Casual",
+          "snippet": "Denizen Men Blue Jeans Jeans Apparel Bottomwear Blue Summer Casual Men"
+        },
+        {
+          "id": "51482",
+          "name": "Denizen Men Blue Jeans",
+          "image_url": "datasets/archive/fashion-dataset/images/51482.jpg",
+          "price": 167,
+          "color": "Blue",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Casual",
+          "snippet": "Denizen Men Blue Jeans Jeans Apparel Bottomwear Blue Summer Casual Men"
+        }
+      ],
+      "sources": [
+        {
+          "id": "52548",
+          "text": "Pepe Jeans Men Blue Jeans Jeans Apparel Bottomwear Blue Summer  Casual Men",
+          "score": 0.47391364,
+          "metadata": {
+            "image_url": "datasets/archive/fashion-dataset/images/52548.jpg",
+            "articleType": "Jeans",
+            "category": "Apparel",
+            "season": "Summer",
+            "gender": "Men",
+            "name": "Pepe Jeans Men Blue Jeans",
+            "color": "Blue",
+            "price": 106,
+            "subcategory": "Bottomwear",
+            "usage": "Casual"
+          }
+        },
+        {
+          "id": "43246",
+          "text": "Denizen Men Blue Jeans Jeans Apparel Bottomwear Blue Summer  Casual Men",
+          "score": 0.4773959,
+          "metadata": {
+            "price": 182,
+            "subcategory": "Bottomwear",
+            "category": "Apparel",
+            "articleType": "Jeans",
+            "usage": "Casual",
+            "image_url": "datasets/archive/fashion-dataset/images/43246.jpg",
+            "season": "Summer",
+            "gender": "Men",
+            "name": "Denizen Men Blue Jeans",
+            "color": "Blue"
+          }
+        },
+        {
+          "id": "28794",
+          "text": "Denizen Men Blue Jeans Jeans Apparel Bottomwear Blue Summer  Casual Men",
+          "score": 0.4773959,
+          "metadata": {
+            "category": "Apparel",
+            "season": "Summer",
+            "image_url": "datasets/archive/fashion-dataset/images/28794.jpg",
+            "usage": "Casual",
+            "name": "Denizen Men Blue Jeans",
+            "articleType": "Jeans",
+            "price": 200,
+            "gender": "Men",
+            "color": "Blue",
+            "subcategory": "Bottomwear"
+          }
+        },
+        {
+          "id": "28795",
+          "text": "Denizen Men Blue Jeans Jeans Apparel Bottomwear Blue Summer  Casual Men",
+          "score": 0.4773959,
+          "metadata": {
+            "name": "Denizen Men Blue Jeans",
+            "season": "Summer",
+            "category": "Apparel",
+            "usage": "Casual",
+            "color": "Blue",
+            "price": 149,
+            "articleType": "Jeans",
+            "gender": "Men",
+            "subcategory": "Bottomwear",
+            "image_url": "datasets/archive/fashion-dataset/images/28795.jpg"
+          }
+        },
+        {
+          "id": "51482",
+          "text": "Denizen Men Blue Jeans Jeans Apparel Bottomwear Blue Summer  Casual Men",
+          "score": 0.4773959,
+          "metadata": {
+            "season": "Summer",
+            "articleType": "Jeans",
+            "image_url": "datasets/archive/fashion-dataset/images/51482.jpg",
+            "color": "Blue",
+            "name": "Denizen Men Blue Jeans",
+            "price": 167,
+            "category": "Apparel",
+            "usage": "Casual",
+            "subcategory": "Bottomwear",
+            "gender": "Men"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "fbb42a21427e8d04289e8a537ce24708be344741edb51316d071e888ca882679": {
+    "status": 200,
+    "latency_ms": 32.727999991038814,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: women black jeans.\n\nTop picks:\n1) Denizen Women Black Jeans (51500) - $50 - Black - Women - Apparel / Bottomwear - Good for casual.\n2) ONLY Women Black Jeans (32559) - $165 - Black - Women - Apparel / Bottomwear - Good for casual.\n3) French Connection Women Black Jeans (48494) - $163 - Black - Women - Apparel / Bottomwear - Good for casual.\n4) Flying Machine Women Lowrise Black Jeans (11234) - $165 - Black - Women - Apparel / Bottomwear - Good for casual.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "51500",
+          "name": "Denizen Women Black Jeans",
+          "image_url": "datasets/archive/fashion-dataset/images/51500.jpg",
+          "price": 50,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Casual",
+          "snippet": "Denizen Women Black Jeans Jeans Apparel Bottomwear Black Summer Casual Women"
+        },
+        {
+          "id": "32559",
+          "name": "ONLY Women Black Jeans",
+          "image_url": "datasets/archive/fashion-dataset/images/32559.jpg",
+          "price": 165,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Casual",
+          "snippet": "ONLY Women Black Jeans Jeans Apparel Bottomwear Black Summer Casual Women"
+        },
+        {
+          "id": "48494",
+          "name": "French Connection Women Black Jeans",
+          "image_url": "datasets/archive/fashion-dataset/images/48494.jpg",
+          "price": 163,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Casual",
+          "snippet": "French Connection Women Black Jeans Jeans Apparel Bottomwear Black Winter Casual Women"
+        },
+        {
+          "id": "11234",
+          "name": "Flying Machine Women Lowrise Black Jeans",
+          "image_url": "datasets/archive/fashion-dataset/images/11234.jpg",
+          "price": 165,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Casual",
+          "snippet": "Flying Machine Women Lowrise Black Jeans Jeans Apparel Bottomwear Black Fall Casual Women"
+        },
+        {
+          "id": "50948",
+          "name": "Lee Women Black Jeans",
+          "image_url": "datasets/archive/fashion-dataset/images/50948.jpg",
+          "price": 40,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Casual",
+          "snippet": "Lee Women Black Jeans Jeans Apparel Bottomwear Black Winter Casual Women"
+        }
+      ],
+      "sources": [
+        {
+          "id": "51500",
+          "text": "Denizen Women Black Jeans Jeans Apparel Bottomwear Black Summer  Casual Women",
+          "score": 0.43327373,
+          "metadata": {
+            "season": "Summer",
+            "color": "Black",
+            "name": "Denizen Women Black Jeans",
+            "category": "Apparel",
+            "image_url": "datasets/archive/fashion-dataset/images/51500.jpg",
+            "subcategory": "Bottomwear",
+            "gender": "Women",
+            "usage": "Casual",
+            "articleType": "Jeans",
+            "price": 50
+          }
+        },
+        {
+          "id": "32559",
+          "text": "ONLY Women Black Jeans Jeans Apparel Bottomwear Black Summer  Casual Women",
+          "score": 0.4471403,
+          "metadata": {
+            "gender": "Women",
+            "category": "Apparel",
+            "color": "Black",
+            "subcategory": "Bottomwear",
+            "name": "ONLY Women Black Jeans",
+            "season": "Summer",
+            "usage": "Casual",
+            "price": 165,
+            "image_url": "datasets/archive/fashion-dataset/images/32559.jpg",
+            "articleType": "Jeans"
+          }
+        },
+        {
+          "id": "48494",
+          "text": "French Connection Women Black Jeans Jeans Apparel Bottomwear Black Winter  Casual Women",
+          "score": 0.53815,
+          "metadata": {
+            "color": "Black",
+            "articleType": "Jeans",
+            "category": "Apparel",
+            "subcategory": "Bottomwear",
+            "image_url": "datasets/archive/fashion-dataset/images/48494.jpg",
+            "name": "French Connection Women Black Jeans",
+            "season": "Winter",
+            "price": 163,
+            "usage": "Casual",
+            "gender": "Women"
+          }
+        },
+        {
+          "id": "11234",
+          "text": "Flying Machine Women Lowrise Black Jeans Jeans Apparel Bottomwear Black Fall  Casual Women",
+          "score": 0.56900394,
+          "metadata": {
+            "gender": "Women",
+            "season": "Fall",
+            "subcategory": "Bottomwear",
+            "price": 165,
+            "image_url": "datasets/archive/fashion-dataset/images/11234.jpg",
+            "articleType": "Jeans",
+            "usage": "Casual",
+            "name": "Flying Machine Women Lowrise Black Jeans",
+            "category": "Apparel",
+            "color": "Black"
+          }
+        },
+        {
+          "id": "50948",
+          "text": "Lee Women Black Jeans Jeans Apparel Bottomwear Black Winter  Casual Women",
+          "score": 0.569672,
+          "metadata": {
+            "color": "Black",
+            "usage": "Casual",
+            "articleType": "Jeans",
+            "category": "Apparel",
+            "gender": "Women",
+            "subcategory": "Bottomwear",
+            "price": 40,
+            "image_url": "datasets/archive/fashion-dataset/images/50948.jpg",
+            "season": "Winter",
+            "name": "Lee Women Black Jeans"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "26fff046458cb080f40d6f709b36061505febd92514b4dcb4ef9d20b79ee0ee8": {
+    "status": 200,
+    "latency_ms": 83.24750000610948,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: men grey formal trousers.\n\nTop picks:\n1) Basics Men Grey Trousers (12221) - $83 - Grey - Men - Apparel / Bottomwear - Good for formal.\n2) Basics Men Solid Grey Trousers (12223) - $27 - Grey - Men - Apparel / Bottomwear - Good for formal.\n3) Arrow Men Solid Grey Trousers (15117) - $41 - Grey - Men - Apparel / Bottomwear - Good for formal.\n4) Arrow Men Solid Grey Trousers (15123) - $18 - Grey - Men - Apparel / Bottomwear - Good for formal.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "12221",
+          "name": "Basics Men Grey Trousers",
+          "image_url": "datasets/archive/fashion-dataset/images/12221.jpg",
+          "price": 83,
+          "color": "Grey",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Formal",
+          "snippet": "Basics Men Grey Trousers Trousers Apparel Bottomwear Grey Summer Formal Men"
+        },
+        {
+          "id": "12223",
+          "name": "Basics Men Solid Grey Trousers",
+          "image_url": "datasets/archive/fashion-dataset/images/12223.jpg",
+          "price": 27,
+          "color": "Grey",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Formal",
+          "snippet": "Basics Men Solid Grey Trousers Trousers Apparel Bottomwear Grey Summer Formal Men"
+        },
+        {
+          "id": "15117",
+          "name": "Arrow Men Solid Grey Trousers",
+          "image_url": "datasets/archive/fashion-dataset/images/15117.jpg",
+          "price": 41,
+          "color": "Grey",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Formal",
+          "snippet": "Arrow Men Solid Grey Trousers Trousers Apparel Bottomwear Grey Fall Formal Men"
+        },
+        {
+          "id": "15123",
+          "name": "Arrow Men Solid Grey Trousers",
+          "image_url": "datasets/archive/fashion-dataset/images/15123.jpg",
+          "price": 18,
+          "color": "Grey",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Formal",
+          "snippet": "Arrow Men Solid Grey Trousers Trousers Apparel Bottomwear Grey Fall Formal Men"
+        },
+        {
+          "id": "23073",
+          "name": "Arrow Men Grey Trousers",
+          "image_url": "datasets/archive/fashion-dataset/images/23073.jpg",
+          "price": 51,
+          "color": "Grey",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Bottomwear",
+          "usage": "Formal",
+          "snippet": "Arrow Men Grey Trousers Trousers Apparel Bottomwear Grey Winter Formal Men"
+        }
+      ],
+      "sources": [
+        {
+          "id": "12221",
+          "text": "Basics Men Grey Trousers Trousers Apparel Bottomwear Grey Summer  Formal Men",
+          "score": 0.34780452,
+          "metadata": {
+            "articleType": "Trousers",
+            "category": "Apparel",
+            "subcategory": "Bottomwear",
+            "usage": "Formal",
+            "name": "Basics Men Grey Trousers",
+            "season": "Summer",
+            "gender": "Men",
+            "image_url": "datasets/archive/fashion-dataset/images/12221.jpg",
+            "color": "Grey",
+            "price": 83
+          }
+        },
+        {
+          "id": "12223",
+          "text": "Basics Men Solid Grey Trousers Trousers Apparel Bottomwear Grey Summer  Formal Men",
+          "score": 0.43228278,
+          "metadata": {
+            "subcategory": "Bottomwear",
+            "usage": "Formal",
+            "articleType": "Trousers",
+            "season": "Summer",
+            "price": 27,
+            "image_url": "datasets/archive/fashion-dataset/images/12223.jpg",
+            "name": "Basics Men Solid Grey Trousers",
+            "category": "Apparel",
+            "gender": "Men",
+            "color": "Grey"
+          }
+        },
+        {
+          "id": "15117",
+          "text": "Arrow Men Solid Grey Trousers Trousers Apparel Bottomwear Grey Fall  Formal Men",
+          "score": 0.47341406,
+          "metadata": {
+            "color": "Grey",
+            "category": "Apparel",
+            "price": 41,
+            "usage": "Formal",
+            "articleType": "Trousers",
+            "subcategory": "Bottomwear",
+            "season": "Fall",
+            "name": "Arrow Men Solid Grey Trousers",
+            "image_url": "datasets/archive/fashion-dataset/images/15117.jpg",
+            "gender": "Men"
+          }
+        },
+        {
+          "id": "15123",
+          "text": "Arrow Men Solid Grey Trousers Trousers Apparel Bottomwear Grey Fall  Formal Men",
+          "score": 0.47341406,
+          "metadata": {
+            "articleType": "Trousers",
+            "usage": "Formal",
+            "subcategory": "Bottomwear",
+            "category": "Apparel",
+            "price": 18,
+            "gender": "Men",
+            "image_url": "datasets/archive/fashion-dataset/images/15123.jpg",
+            "season": "Fall",
+            "color": "Grey",
+            "name": "Arrow Men Solid Grey Trousers"
+          }
+        },
+        {
+          "id": "23073",
+          "text": "Arrow Men Grey Trousers Trousers Apparel Bottomwear Grey Winter  Formal Men",
+          "score": 0.48425704,
+          "metadata": {
+            "price": 51,
+            "category": "Apparel",
+            "subcategory": "Bottomwear",
+            "articleType": "Trousers",
+            "name": "Arrow Men Grey Trousers",
+            "gender": "Men",
+            "usage": "Formal",
+            "season": "Winter",
+            "image_url": "datasets/archive/fashion-dataset/images/23073.jpg",
+            "color": "Grey"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "178779f6c315466e86574139b8c82f0ba119392fed18629a3fc9547b131e2d67": {
+    "status": 200,
+    "latency_ms": 138.08459998108447,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: men black shoes under $80.\n\nTop picks:\n1) Nike Men Ruckus Low Black Shoes (34628) - $35 - Black - Men - Footwear / Shoes - Good for casual.\n2) Woodland Men Black Shoes (50376) - $74 - Black - Men - Footwear / Shoes - Good for casual.\n3) Nike Men Black Shoes (42043) - $55 - Black - Men - Footwear / Shoes - Good for casual.\n4) Nike Men Black Shoes (38648) - $34 - Black - Men - Footwear / Shoes - Good for casual.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "34628",
+          "name": "Nike Men Ruckus Low Black Shoes",
+          "image_url": "datasets/archive/fashion-dataset/images/34628.jpg",
+          "price": 35,
+          "color": "Black",
+          "gender": "Men",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "Nike Men Ruckus Low Black Shoes Casual Shoes Footwear Shoes Black Summer Casual Men"
+        },
+        {
+          "id": "50376",
+          "name": "Woodland Men Black Shoes",
+          "image_url": "datasets/archive/fashion-dataset/images/50376.jpg",
+          "price": 74,
+          "color": "Black",
+          "gender": "Men",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "Woodland Men Black Shoes Casual Shoes Footwear Shoes Black Summer Casual Men"
+        },
+        {
+          "id": "42043",
+          "name": "Nike Men Black Shoes",
+          "image_url": "datasets/archive/fashion-dataset/images/42043.jpg",
+          "price": 55,
+          "color": "Black",
+          "gender": "Men",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "Nike Men Black Shoes Casual Shoes Footwear Shoes Black Summer Casual Men"
+        },
+        {
+          "id": "38648",
+          "name": "Nike Men Black Shoes",
+          "image_url": "datasets/archive/fashion-dataset/images/38648.jpg",
+          "price": 34,
+          "color": "Black",
+          "gender": "Men",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "Nike Men Black Shoes Casual Shoes Footwear Shoes Black Summer Casual Men"
+        },
+        {
+          "id": "6652",
+          "name": "Nike Men's Air 180 Black Grey Shoe",
+          "image_url": "datasets/archive/fashion-dataset/images/6652.jpg",
+          "price": 61,
+          "color": "Black",
+          "gender": "Men",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "Nike Men's Air 180 Black Grey Shoe Casual Shoes Footwear Shoes Black Summer Casual Men"
+        }
+      ],
+      "sources": [
+        {
+          "id": "34628",
+          "text": "Nike Men Ruckus Low Black Shoes Casual Shoes Footwear Shoes Black Summer  Casual Men",
+          "score": 0.49628133,
+          "metadata": {
+            "subcategory": "Shoes",
+            "season": "Summer",
+            "price": 35,
+            "category": "Footwear",
+            "gender": "Men",
+            "usage": "Casual",
+            "color": "Black",
+            "image_url": "datasets/archive/fashion-dataset/images/34628.jpg",
+            "name": "Nike Men Ruckus Low Black Shoes",
+            "articleType": "Casual Shoes"
+          }
+        },
+        {
+          "id": "50376",
+          "text": "Woodland Men Black Shoes Casual Shoes Footwear Shoes Black Summer  Casual Men",
+          "score": 0.5216206,
+          "metadata": {
+            "name": "Woodland Men Black Shoes",
+            "gender": "Men",
+            "image_url": "datasets/archive/fashion-dataset/images/50376.jpg",
+            "price": 74,
+            "articleType": "Casual Shoes",
+            "category": "Footwear",
+            "season": "Summer",
+            "subcategory": "Shoes",
+            "usage": "Casual",
+            "color": "Black"
+          }
+        },
+        {
+          "id": "42043",
+          "text": "Nike Men Black Shoes Casual Shoes Footwear Shoes Black Summer  Casual Men",
+          "score": 0.5325463,
+          "metadata": {
+            "gender": "Men",
+            "color": "Black",
+            "usage": "Casual",
+            "subcategory": "Shoes",
+            "name": "Nike Men Black Shoes",
+            "price": 55,
+            "season": "Summer",
+            "articleType": "Casual Shoes",
+            "image_url": "datasets/archive/fashion-dataset/images/42043.jpg",
+            "category": "Footwear"
+          }
+        },
+        {
+          "id": "38648",
+          "text": "Nike Men Black Shoes Casual Shoes Footwear Shoes Black Summer  Casual Men",
+          "score": 0.5325463,
+          "metadata": {
+            "price": 34,
+            "articleType": "Casual Shoes",
+            "color": "Black",
+            "season": "Summer",
+            "gender": "Men",
+            "category": "Footwear",
+            "subcategory": "Shoes",
+            "usage": "Casual",
+            "image_url": "datasets/archive/fashion-dataset/images/38648.jpg",
+            "name": "Nike Men Black Shoes"
+          }
+        },
+        {
+          "id": "6652",
+          "text": "Nike Men's Air 180 Black Grey Shoe Casual Shoes Footwear Shoes Black Summer  Casual Men",
+          "score": 0.54550815,
+          "metadata": {
+            "category": "Footwear",
+            "gender": "Men",
+            "price": 61,
+            "articleType": "Casual Shoes",
+            "image_url": "datasets/archive/fashion-dataset/images/6652.jpg",
+            "subcategory": "Shoes",
+            "name": "Nike Men's Air 180 Black Grey Shoe",
+            "color": "Black",
+            "usage": "Casual",
+            "season": "Summer"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "6cbc7a052f7fd4b2c8b6df3c3a89a2b9ded6f0d0a7a6bd6c317a3f5f5f2c04a0": {
+    "status": 200,
+    "latency_ms": 113.51789999753237,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: women white shoes.\n\nTop picks:\n1) HM Women White Sandals (56977) - $101 - White - Women - Footwear / Shoes - Good for casual.\n2) HM Women White Sandals (57004) - $73 - White - Women - Footwear / Shoes - Good for casual.\n3) HM Women White Sandals (56929) - $135 - White - Women - Footwear / Shoes - Good for casual.\n4) HM Women White Sandals (56998) - $54 - White - Women - Footwear / Shoes - Good for casual.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "56977",
+          "name": "HM Women White Sandals",
+          "image_url": "datasets/archive/fashion-dataset/images/56977.jpg",
+          "price": 101,
+          "color": "White",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "HM Women White Sandals Heels Footwear Shoes White Winter Casual Women"
+        },
+        {
+          "id": "57004",
+          "name": "HM Women White Sandals",
+          "image_url": "datasets/archive/fashion-dataset/images/57004.jpg",
+          "price": 73,
+          "color": "White",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "HM Women White Sandals Flats Footwear Shoes White Winter Casual Women"
+        },
+        {
+          "id": "56929",
+          "name": "HM Women White Sandals",
+          "image_url": "datasets/archive/fashion-dataset/images/56929.jpg",
+          "price": 135,
+          "color": "White",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "HM Women White Sandals Flats Footwear Shoes White Winter Casual Women"
+        },
+        {
+          "id": "56998",
+          "name": "HM Women White Sandals",
+          "image_url": "datasets/archive/fashion-dataset/images/56998.jpg",
+          "price": 54,
+          "color": "White",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "HM Women White Sandals Flats Footwear Shoes White Winter Casual Women"
+        },
+        {
+          "id": "57000",
+          "name": "HM Women White Sandals",
+          "image_url": "datasets/archive/fashion-dataset/images/57000.jpg",
+          "price": 34,
+          "color": "White",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "HM Women White Sandals Flats Footwear Shoes White Winter Casual Women"
+        }
+      ],
+      "sources": [
+        {
+          "id": "56977",
+          "text": "HM Women White Sandals Heels Footwear Shoes White Winter  Casual Women",
+          "score": 0.3261831,
+          "metadata": {
+            "name": "HM Women White Sandals",
+            "subcategory": "Shoes",
+            "category": "Footwear",
+            "price": 101,
+            "season": "Winter",
+            "image_url": "datasets/archive/fashion-dataset/images/56977.jpg",
+            "color": "White",
+            "usage": "Casual",
+            "gender": "Women",
+            "articleType": "Heels"
+          }
+        },
+        {
+          "id": "57004",
+          "text": "HM Women White Sandals Flats Footwear Shoes White Winter  Casual Women",
+          "score": 0.35525674,
+          "metadata": {
+            "image_url": "datasets/archive/fashion-dataset/images/57004.jpg",
+            "season": "Winter",
+            "subcategory": "Shoes",
+            "gender": "Women",
+            "usage": "Casual",
+            "articleType": "Flats",
+            "color": "White",
+            "price": 73,
+            "name": "HM Women White Sandals",
+            "category": "Footwear"
+          }
+        },
+        {
+          "id": "56929",
+          "text": "HM Women White Sandals Flats Footwear Shoes White Winter  Casual Women",
+          "score": 0.35525674,
+          "metadata": {
+            "name": "HM Women White Sandals",
+            "image_url": "datasets/archive/fashion-dataset/images/56929.jpg",
+            "articleType": "Flats",
+            "category": "Footwear",
+            "season": "Winter",
+            "subcategory": "Shoes",
+            "gender": "Women",
+            "usage": "Casual",
+            "color": "White",
+            "price": 135
+          }
+        },
+        {
+          "id": "56998",
+          "text": "HM Women White Sandals Flats Footwear Shoes White Winter  Casual Women",
+          "score": 0.35525674,
+          "metadata": {
+            "gender": "Women",
+            "price": 54,
+            "usage": "Casual",
+            "category": "Footwear",
+            "subcategory": "Shoes",
+            "image_url": "datasets/archive/fashion-dataset/images/56998.jpg",
+            "articleType": "Flats",
+            "name": "HM Women White Sandals",
+            "color": "White",
+            "season": "Winter"
+          }
+        },
+        {
+          "id": "57000",
+          "text": "HM Women White Sandals Flats Footwear Shoes White Winter  Casual Women",
+          "score": 0.35525674,
+          "metadata": {
+            "season": "Winter",
+            "color": "White",
+            "articleType": "Flats",
+            "usage": "Casual",
+            "subcategory": "Shoes",
+            "price": 34,
+            "name": "HM Women White Sandals",
+            "image_url": "datasets/archive/fashion-dataset/images/57000.jpg",
+            "category": "Footwear",
+            "gender": "Women"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "a51288b9a35a864d115135f82e27402a449d96a91f2b0db0bca46dc37cd0b68a": {
+    "status": 200,
+    "latency_ms": 19.965799991041422,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: women black heels.\n\nTop picks:\n1) HM Women Black Heels (56884) - $27 - Black - Women - Footwear / Shoes - Good for casual.\n2) HM Women Black Heels (56879) - $119 - Black - Women - Footwear / Shoes - Good for casual.\n3) HM Women Black Heels (56902) - $38 - Black - Women - Footwear / Shoes - Good for casual.\n4) HM Women Black Heels (56951) - $40 - Black - Women - Footwear / Shoes - Good for casual.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "56884",
+          "name": "HM Women Black Heels",
+          "image_url": "datasets/archive/fashion-dataset/images/56884.jpg",
+          "price": 27,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "HM Women Black Heels Heels Footwear Shoes Black Winter Casual Women"
+        },
+        {
+          "id": "56879",
+          "name": "HM Women Black Heels",
+          "image_url": "datasets/archive/fashion-dataset/images/56879.jpg",
+          "price": 119,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "HM Women Black Heels Heels Footwear Shoes Black Winter Casual Women"
+        },
+        {
+          "id": "56902",
+          "name": "HM Women Black Heels",
+          "image_url": "datasets/archive/fashion-dataset/images/56902.jpg",
+          "price": 38,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "HM Women Black Heels Heels Footwear Shoes Black Winter Casual Women"
+        },
+        {
+          "id": "56951",
+          "name": "HM Women Black Heels",
+          "image_url": "datasets/archive/fashion-dataset/images/56951.jpg",
+          "price": 40,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "HM Women Black Heels Heels Footwear Shoes Black Winter Casual Women"
+        },
+        {
+          "id": "56972",
+          "name": "HM Women Black Heels",
+          "image_url": "datasets/archive/fashion-dataset/images/56972.jpg",
+          "price": 55,
+          "color": "Black",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Casual",
+          "snippet": "HM Women Black Heels Heels Footwear Shoes Black Winter Casual Women"
+        }
+      ],
+      "sources": [
+        {
+          "id": "56884",
+          "text": "HM Women Black Heels Heels Footwear Shoes Black Winter  Casual Women",
+          "score": 0.31271774,
+          "metadata": {
+            "articleType": "Heels",
+            "season": "Winter",
+            "usage": "Casual",
+            "image_url": "datasets/archive/fashion-dataset/images/56884.jpg",
+            "name": "HM Women Black Heels",
+            "gender": "Women",
+            "subcategory": "Shoes",
+            "category": "Footwear",
+            "price": 27,
+            "color": "Black"
+          }
+        },
+        {
+          "id": "56879",
+          "text": "HM Women Black Heels Heels Footwear Shoes Black Winter  Casual Women",
+          "score": 0.31271774,
+          "metadata": {
+            "category": "Footwear",
+            "articleType": "Heels",
+            "image_url": "datasets/archive/fashion-dataset/images/56879.jpg",
+            "price": 119,
+            "season": "Winter",
+            "color": "Black",
+            "usage": "Casual",
+            "gender": "Women",
+            "name": "HM Women Black Heels",
+            "subcategory": "Shoes"
+          }
+        },
+        {
+          "id": "56902",
+          "text": "HM Women Black Heels Heels Footwear Shoes Black Winter  Casual Women",
+          "score": 0.31271774,
+          "metadata": {
+            "category": "Footwear",
+            "season": "Winter",
+            "image_url": "datasets/archive/fashion-dataset/images/56902.jpg",
+            "articleType": "Heels",
+            "subcategory": "Shoes",
+            "color": "Black",
+            "gender": "Women",
+            "name": "HM Women Black Heels",
+            "price": 38,
+            "usage": "Casual"
+          }
+        },
+        {
+          "id": "56951",
+          "text": "HM Women Black Heels Heels Footwear Shoes Black Winter  Casual Women",
+          "score": 0.31271774,
+          "metadata": {
+            "subcategory": "Shoes",
+            "articleType": "Heels",
+            "color": "Black",
+            "image_url": "datasets/archive/fashion-dataset/images/56951.jpg",
+            "usage": "Casual",
+            "category": "Footwear",
+            "name": "HM Women Black Heels",
+            "price": 40,
+            "gender": "Women",
+            "season": "Winter"
+          }
+        },
+        {
+          "id": "56972",
+          "text": "HM Women Black Heels Heels Footwear Shoes Black Winter  Casual Women",
+          "score": 0.31271774,
+          "metadata": {
+            "image_url": "datasets/archive/fashion-dataset/images/56972.jpg",
+            "name": "HM Women Black Heels",
+            "subcategory": "Shoes",
+            "season": "Winter",
+            "color": "Black",
+            "price": 55,
+            "gender": "Women",
+            "articleType": "Heels",
+            "category": "Footwear",
+            "usage": "Casual"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "7c5c683345ca1999d6a33618194f81df12b99d6503158ce3a45826247811635e": {
+    "status": 200,
+    "latency_ms": 97.72170000360347,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: men sports t-shirt.\n\nTop picks:\n1) Nike Men's Classic Patterned T-shirt (1910) - $76 - Black - Men - Apparel / Topwear - Good for sports.\n2) ADIDAS Mens Fitted T-shirt (1998) - $41 - Black - Men - Apparel / Topwear - Good for sports.\n3) Nike Mens Classic Sportswear T-shirt (1909) - $197 - Blue - Men - Apparel / Topwear - Good for sports.\n4) ADIDAS Men's Black Graphic T-shirt (3479) - $34 - Black - Men - Apparel / Topwear - Good for sports.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "1910",
+          "name": "Nike Men's Classic Patterned T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/1910.jpg",
+          "price": 76,
+          "color": "Black",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Sports",
+          "snippet": "Nike Men's Classic Patterned T-shirt Tshirts Apparel Topwear Black Fall Sports Men"
+        },
+        {
+          "id": "1998",
+          "name": "ADIDAS Mens Fitted T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/1998.jpg",
+          "price": 41,
+          "color": "Black",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Sports",
+          "snippet": "ADIDAS Mens Fitted T-shirt Tshirts Apparel Topwear Black Fall Sports Men"
+        },
+        {
+          "id": "1909",
+          "name": "Nike Mens Classic Sportswear T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/1909.jpg",
+          "price": 197,
+          "color": "Blue",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Sports",
+          "snippet": "Nike Mens Classic Sportswear T-shirt Tshirts Apparel Topwear Blue Fall Sports Men"
+        },
+        {
+          "id": "3479",
+          "name": "ADIDAS Men's Black Graphic T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/3479.jpg",
+          "price": 34,
+          "color": "Black",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Sports",
+          "snippet": "ADIDAS Men's Black Graphic T-shirt Tshirts Apparel Topwear Black Fall Sports Men"
+        },
+        {
+          "id": "22621",
+          "name": "Nike Men Printed Black T-shirt",
+          "image_url": "datasets/archive/fashion-dataset/images/22621.jpg",
+          "price": 47,
+          "color": "Black",
+          "gender": "Men",
+          "category": "Apparel",
+          "subcategory": "Topwear",
+          "usage": "Sports",
+          "snippet": "Nike Men Printed Black T-shirt Tshirts Apparel Topwear Black Fall Sports Men"
+        }
+      ],
+      "sources": [
+        {
+          "id": "1910",
+          "text": "Nike Men's Classic Patterned T-shirt Tshirts Apparel Topwear Black Fall  Sports Men",
+          "score": 0.38718104,
+          "metadata": {
+            "name": "Nike Men's Classic Patterned T-shirt",
+            "subcategory": "Topwear",
+            "usage": "Sports",
+            "gender": "Men",
+            "image_url": "datasets/archive/fashion-dataset/images/1910.jpg",
+            "color": "Black",
+            "category": "Apparel",
+            "season": "Fall",
+            "articleType": "Tshirts",
+            "price": 76
+          }
+        },
+        {
+          "id": "1998",
+          "text": "ADIDAS Mens Fitted T-shirt Tshirts Apparel Topwear Black Fall  Sports Men",
+          "score": 0.40845907,
+          "metadata": {
+            "subcategory": "Topwear",
+            "season": "Fall",
+            "name": "ADIDAS Mens Fitted T-shirt",
+            "price": 41,
+            "image_url": "datasets/archive/fashion-dataset/images/1998.jpg",
+            "articleType": "Tshirts",
+            "usage": "Sports",
+            "color": "Black",
+            "gender": "Men",
+            "category": "Apparel"
+          }
+        },
+        {
+          "id": "1909",
+          "text": "Nike Mens Classic Sportswear T-shirt Tshirts Apparel Topwear Blue Fall  Sports Men",
+          "score": 0.43834752,
+          "metadata": {
+            "articleType": "Tshirts",
+            "usage": "Sports",
+            "season": "Fall",
+            "color": "Blue",
+            "gender": "Men",
+            "subcategory": "Topwear",
+            "category": "Apparel",
+            "price": 197,
+            "name": "Nike Mens Classic Sportswear T-shirt",
+            "image_url": "datasets/archive/fashion-dataset/images/1909.jpg"
+          }
+        },
+        {
+          "id": "3479",
+          "text": "ADIDAS Men's Black Graphic T-shirt Tshirts Apparel Topwear Black Fall  Sports Men",
+          "score": 0.44492924,
+          "metadata": {
+            "color": "Black",
+            "gender": "Men",
+            "image_url": "datasets/archive/fashion-dataset/images/3479.jpg",
+            "name": "ADIDAS Men's Black Graphic T-shirt",
+            "articleType": "Tshirts",
+            "category": "Apparel",
+            "subcategory": "Topwear",
+            "price": 34,
+            "season": "Fall",
+            "usage": "Sports"
+          }
+        },
+        {
+          "id": "22621",
+          "text": "Nike Men Printed Black T-shirt Tshirts Apparel Topwear Black Fall  Sports Men",
+          "score": 0.46067464,
+          "metadata": {
+            "image_url": "datasets/archive/fashion-dataset/images/22621.jpg",
+            "gender": "Men",
+            "subcategory": "Topwear",
+            "name": "Nike Men Printed Black T-shirt",
+            "color": "Black",
+            "price": 47,
+            "usage": "Sports",
+            "category": "Apparel",
+            "articleType": "Tshirts",
+            "season": "Fall"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "16280ecb086022903fbd33e48affe512b55538f7c8ca2b30a09fac9cd29de508": {
+    "status": 200,
+    "latency_ms": 101.1304999992717,
+    "error": null,
+    "response": {
+      "answer": "Quick summary: Here are the closest matches for: women sports shoes.\n\nTop picks:\n1) Nike Women Steady VIII White Sports Shoes (9403) - $133 - White - Women - Footwear / Shoes - Good for sports.\n2) Nike Women White Dart 9 MSL Sports Shoes (22717) - $15 - White - Women - Footwear / Shoes - Good for sports.\n3) Nike Women White Court Majestic Sports Shoes (22728) - $21 - White - Women - Footwear / Shoes - Good for sports.\n4) Reebok Women Instant White Sports Shoes (10110) - $116 - White - Women - Footwear / Shoes - Good for sports.\n\nNext step: Open a product image card to verify style and details.",
+      "products": [
+        {
+          "id": "9403",
+          "name": "Nike Women Steady VIII White Sports Shoes",
+          "image_url": "datasets/archive/fashion-dataset/images/9403.jpg",
+          "price": 133,
+          "color": "White",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Sports",
+          "snippet": "Nike Women Steady VIII White Sports Shoes Sports Shoes Footwear Shoes White Fall Sports Women"
+        },
+        {
+          "id": "22717",
+          "name": "Nike Women White Dart 9 MSL Sports Shoes",
+          "image_url": "datasets/archive/fashion-dataset/images/22717.jpg",
+          "price": 15,
+          "color": "White",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Sports",
+          "snippet": "Nike Women White Dart 9 MSL Sports Shoes Sports Shoes Footwear Shoes White Fall Sports Women"
+        },
+        {
+          "id": "22728",
+          "name": "Nike Women White Court Majestic Sports Shoes",
+          "image_url": "datasets/archive/fashion-dataset/images/22728.jpg",
+          "price": 21,
+          "color": "White",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Sports",
+          "snippet": "Nike Women White Court Majestic Sports Shoes Sports Shoes Footwear Shoes White Fall Sports Women"
+        },
+        {
+          "id": "10110",
+          "name": "Reebok Women Instant White Sports Shoes",
+          "image_url": "datasets/archive/fashion-dataset/images/10110.jpg",
+          "price": 116,
+          "color": "White",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Sports",
+          "snippet": "Reebok Women Instant White Sports Shoes Sports Shoes Footwear Shoes White Fall Sports Women"
+        },
+        {
+          "id": "31957",
+          "name": "Nike Women White Sports Shoes",
+          "image_url": "datasets/archive/fashion-dataset/images/31957.jpg",
+          "price": 37,
+          "color": "White",
+          "gender": "Women",
+          "category": "Footwear",
+          "subcategory": "Shoes",
+          "usage": "Sports",
+          "snippet": "Nike Women White Sports Shoes Sports Shoes Footwear Shoes White Summer Sports Women"
+        }
+      ],
+      "sources": [
+        {
+          "id": "9403",
+          "text": "Nike Women Steady VIII White Sports Shoes Sports Shoes Footwear Shoes White Fall  Sports Women",
+          "score": 0.24350715,
+          "metadata": {
+            "gender": "Women",
+            "articleType": "Sports Shoes",
+            "color": "White",
+            "name": "Nike Women Steady VIII White Sports Shoes",
+            "usage": "Sports",
+            "price": 133,
+            "category": "Footwear",
+            "image_url": "datasets/archive/fashion-dataset/images/9403.jpg",
+            "season": "Fall",
+            "subcategory": "Shoes"
+          }
+        },
+        {
+          "id": "22717",
+          "text": "Nike Women White Dart 9 MSL Sports Shoes Sports Shoes Footwear Shoes White Fall  Sports Women",
+          "score": 0.25532585,
+          "metadata": {
+            "name": "Nike Women White Dart 9 MSL Sports Shoes",
+            "subcategory": "Shoes",
+            "season": "Fall",
+            "articleType": "Sports Shoes",
+            "price": 15,
+            "gender": "Women",
+            "category": "Footwear",
+            "image_url": "datasets/archive/fashion-dataset/images/22717.jpg",
+            "color": "White",
+            "usage": "Sports"
+          }
+        },
+        {
+          "id": "22728",
+          "text": "Nike Women White Court Majestic Sports Shoes Sports Shoes Footwear Shoes White Fall  Sports Women",
+          "score": 0.25713497,
+          "metadata": {
+            "subcategory": "Shoes",
+            "articleType": "Sports Shoes",
+            "image_url": "datasets/archive/fashion-dataset/images/22728.jpg",
+            "season": "Fall",
+            "color": "White",
+            "name": "Nike Women White Court Majestic Sports Shoes",
+            "price": 21,
+            "category": "Footwear",
+            "usage": "Sports",
+            "gender": "Women"
+          }
+        },
+        {
+          "id": "10110",
+          "text": "Reebok Women Instant White Sports Shoes Sports Shoes Footwear Shoes White Fall  Sports Women",
+          "score": 0.26374713,
+          "metadata": {
+            "name": "Reebok Women Instant White Sports Shoes",
+            "price": 116,
+            "image_url": "datasets/archive/fashion-dataset/images/10110.jpg",
+            "usage": "Sports",
+            "category": "Footwear",
+            "gender": "Women",
+            "color": "White",
+            "season": "Fall",
+            "subcategory": "Shoes",
+            "articleType": "Sports Shoes"
+          }
+        },
+        {
+          "id": "31957",
+          "text": "Nike Women White Sports Shoes Sports Shoes Footwear Shoes White Summer  Sports Women",
+          "score": 0.26871285,
+          "metadata": {
+            "subcategory": "Shoes",
+            "name": "Nike Women White Sports Shoes",
+            "color": "White",
+            "usage": "Sports",
+            "articleType": "Sports Shoes",
+            "category": "Footwear",
+            "image_url": "datasets/archive/fashion-dataset/images/31957.jpg",
+            "price": 37,
+            "season": "Summer",
+            "gender": "Women"
+          }
+        }
+      ]
+    },
+    "_cached": false
+  },
+  "bf2bf02e9231b83003c3fc9feae0efb077cc10f2d52d4bcd8121347cf8c700bf": {
+    "status": 200,
+    "latency_ms": 3.1572000007145107,
+    "error": null,
+    "response": {
+      "answer": "I don't understand your question. Please rewrite it.",
+      "products": [],
+      "sources": []
+    },
+    "_cached": false
+  }
+}
