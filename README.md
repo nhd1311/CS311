@@ -2,7 +2,6 @@
 
 Hệ thống **Fashion Search/Chatbot** theo mô hình **RAG (Retrieval‑Augmented Generation)** cho **truy vấn văn bản** và **tìm kiếm bằng hình ảnh**, triển khai bằng **FastAPI** và **ChromaDB**.
 
-Tài liệu này được viết theo phong cách “tài liệu kỹ thuật”: mô tả kiến trúc, cấu hình, hợp đồng API, luồng ingest, và cách vận hành/đánh giá.
 
 ---
 
@@ -580,5 +579,6 @@ Nguyên nhân phổ biến: gửi sai schema.
 
 - Không commit `.env` / `.env.b`.
 - Không paste `LLM_API_KEY` vào issue/public log.
+
 
 
